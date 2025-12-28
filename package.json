@@ -8,10 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "clean": "powershell -ExecutionPolicy Bypass -File ./scripts/cleanup.ps1",
-    "setup": "powershell -ExecutionPolicy Bypass -File ./scripts/setup.ps1",
-    "strapi:dev": "cd strapi-backend && npm run develop",
-    "strapi:build": "cd strapi-backend && npm run build",
-    "strapi:start": "cd strapi-backend && npm run start"
+    "setup": "powershell -ExecutionPolicy Bypass -File ./scripts/setup.ps1"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "latest",

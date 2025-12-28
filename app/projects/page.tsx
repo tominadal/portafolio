@@ -9,13 +9,15 @@ import { ExternalLink, Search, ChevronLeft, ChevronRight, ChevronDown } from "lu
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import { getStrapiMedia } from "@/lib/strapi"
+import { projects as allProjects } from "@/lib/projects-data"
 
 interface Project {
   id: number
   slug: string
   title: string
+  titleEn?: string
   description: string
+  descriptionEn?: string
   image: string
   tags: string[]
   category: string
@@ -27,50 +29,15 @@ const ITEMS_PER_PAGE = 6
 
 export default function ProjectsPage() {
   const { t, language } = useLanguage()
-  const [projects, setProjects] = useState<Project[]>([])
+  // Exclude Zevetix and Nexium from projects page (they appear only on home page)
+  const [projects] = useState<Project[]>(allProjects.filter(p => p.slug !== 'zevetix' && p.slug !== 'nexium'))
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [sortBy, setSortBy] = useState("recent")
   const [currentPage, setCurrentPage] = useState(1)
   const [isCategoryOpen, setIsCategoryOpen] = useState(false)
 
-  // Fetch projects from Strapi
-  useEffect(() => {
-    async function fetchProjects() {
-      try {
-        const headers: HeadersInit = {}
-        if (process.env.NEXT_PUBLIC_STRAPI_API_TOKEN) {
-          headers['Authorization'] = `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`
-        }
-        
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/projects?populate=*&sort[0]=order:asc`,
-          { headers }
-        )
-        const data = await response.json()
-        
-        const projectsList: Project[] = data.data?.map((item: any) => {
-          const imageUrl = item.attributes.image?.data?.attributes?.url
-          return {
-            id: item.id,
-            slug: item.attributes.slug,
-            title: item.attributes.title,
-            description: item.attributes.description,
-            image: imageUrl ? getStrapiMedia(imageUrl) : '/placeholder.png',
-            tags: item.attributes.tags || [],
-            category: item.attributes.category || 'Web App',
-            demoUrl: item.attributes.demoUrl
-          }
-        }) || []
-        
-        setProjects(projectsList)
-      } catch (error) {
-        console.error('Error fetching projects:', error)
-      }
-    }
-    
-    fetchProjects()
-  }, [])
+
 
   useEffect(() => {
     document.title = language === "es" ? "Tomás Nadal - Proyectos" : "Tomás Nadal - Projects"
@@ -132,7 +99,7 @@ export default function ProjectsPage() {
 
             <div className="flex flex-col lg:flex-row gap-8">
               <aside className="lg:w-64 shrink-0">
-                <div className="space-y-6 bg-card border border-border rounded-lg p-6 lg:sticky lg:top-24">
+                <div className="space-y-6 bg-card border-0 rounded-lg shadow-sm p-6 lg:sticky lg:top-24">
                   {/* Search */}
                   <div>
                     <h3 className="text-sm font-semibold text-foreground mb-3">{t("projects.search")}</h3>
@@ -174,11 +141,10 @@ export default function ProjectsPage() {
                                 setCurrentPage(1)
                                 setIsCategoryOpen(false)
                               }}
-                              className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                                selectedCategory === category
-                                  ? "bg-accent text-accent-foreground font-medium"
-                                  : "text-foreground hover:bg-accent/10"
-                              }`}
+                              className={`w-full text-left px-4 py-2 text-sm transition-colors ${selectedCategory === category
+                                ? "bg-accent text-accent-foreground font-medium"
+                                : "text-foreground hover:bg-accent/10"
+                                }`}
                             >
                               {category}
                             </button>
@@ -194,21 +160,19 @@ export default function ProjectsPage() {
                     <div className="space-y-2">
                       <button
                         onClick={() => setSortBy("recent")}
-                        className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
-                          sortBy === "recent"
-                            ? "bg-foreground text-background font-medium"
-                            : "text-muted-foreground hover:bg-accent/10 hover:text-foreground"
-                        }`}
+                        className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${sortBy === "recent"
+                          ? "bg-foreground text-background font-medium"
+                          : "text-muted-foreground hover:bg-accent/10 hover:text-foreground"
+                          }`}
                       >
                         {t("projects.recent")}
                       </button>
                       <button
                         onClick={() => setSortBy("oldest")}
-                        className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
-                          sortBy === "oldest"
-                            ? "bg-foreground text-background font-medium"
-                            : "text-muted-foreground hover:bg-accent/10 hover:text-foreground"
-                        }`}
+                        className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${sortBy === "oldest"
+                          ? "bg-foreground text-background font-medium"
+                          : "text-muted-foreground hover:bg-accent/10 hover:text-foreground"
+                          }`}
                       >
                         {t("projects.oldest")}
                       </button>
@@ -218,55 +182,62 @@ export default function ProjectsPage() {
               </aside>
 
               <div className="flex-1">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                   {paginatedProjects.map((project) => (
-                    <Card
-                      key={project.id}
-                      className="bg-card border-0 shadow-sm hover:shadow-lg transition-all duration-700 group overflow-hidden flex flex-col"
-                    >
-                      <div className="relative h-64 overflow-hidden">
-                        <Image
-                          src={project.image || "/placeholder.svg"}
-                          alt={project.title}
-                          fill
-                          className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                        />
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-center justify-center gap-3">
-                          <Button
-                            asChild
-                            size="sm"
-                            variant="outline"
-                            className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 transition-all duration-600"
-                          >
-                            <Link href={`/projects/${project.slug}`}>
-                              <ExternalLink className="w-4 h-4 mr-2" />
-                              {t("projects.viewDetails")}
-                            </Link>
-                          </Button>
-                          {project.demoUrl && (
+                    <div key={project.id} className="group flex flex-col">
+                      <Link href={`/projects/${project.slug}`}>
+                        <div className="relative h-64 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-500 mb-4 bg-[#1a1a1a] dark:bg-[#232323] pt-6 px-6 pb-0 flex items-end justify-center">
+                          <div className="relative w-full aspect-[16/9]">
+                            <Image
+                              src={project.image || "/placeholder.svg"}
+                              alt={project.title}
+                              fill
+                              className="object-cover rounded-t-lg group-hover:scale-105 transition-all duration-700"
+                            />
+                          </div>
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-center justify-center gap-3">
                             <Button
                               asChild
                               size="sm"
-                              className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-600"
+                              variant="outline"
+                              className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 transition-all duration-600"
                             >
-                              <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+                              <span>
                                 <ExternalLink className="w-4 h-4 mr-2" />
-                                {t("projects.visitSite")}
-                              </a>
+                                {t("projects.viewDetails")}
+                              </span>
                             </Button>
-                          )}
+                            {project.demoUrl && (
+                              <Button
+                                asChild
+                                size="sm"
+                                className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-600"
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  window.open(project.demoUrl, '_blank')
+                                }}
+                              >
+                                <span>
+                                  <ExternalLink className="w-4 h-4 mr-2" />
+                                  {t("projects.visitSite")}
+                                </span>
+                              </Button>
+                            )}
+                          </div>
                         </div>
-                      </div>
+                      </Link>
 
-                      <CardContent className="p-6 space-y-3 flex-1 flex flex-col">
-                        <h3 className="text-xl font-semibold text-foreground">{project.title}</h3>
+                      <div className="space-y-3 flex-1 flex flex-col">
+                        <h3 className="text-xl font-semibold text-foreground group-hover:text-accent transition-colors">
+                          {language === "en" && project.titleEn ? project.titleEn : project.title}
+                        </h3>
                         <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                          {project.description}
+                          {language === "en" && project.descriptionEn ? project.descriptionEn : project.description}
                         </p>
 
                         {/* Tags */}
                         <div className="flex flex-wrap gap-2">
-                          {project.tags.map((tag) => (
+                          {project.tags.slice(0, 3).map((tag) => (
                             <span
                               key={tag}
                               className="text-xs px-3 py-1 rounded-full bg-accent/10 text-accent font-medium"
@@ -275,8 +246,8 @@ export default function ProjectsPage() {
                             </span>
                           ))}
                         </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
                   ))}
                 </div>
 

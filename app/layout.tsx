@@ -80,6 +80,7 @@ export const metadata: Metadata = {
     description:
       "Portfolio profesional de Tomás Nadal - Full Stack Developer especializado en React, Next.js y soluciones digitales innovadoras.",
     images: ["/logo.png"],
+    creator: "@tomasnadal",
   },
   robots: {
     index: true,
@@ -100,6 +101,10 @@ export const metadata: Metadata = {
     shortcut: "/logo.png",
   },
   manifest: "/site.webmanifest",
+  verification: {
+    google: "google-site-verification-code",
+  },
+  category: "technology",
 }
 
 export default function RootLayout({

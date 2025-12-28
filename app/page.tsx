@@ -16,7 +16,7 @@ import { FaGithub, FaLinkedin, FaInstagram, FaWhatsapp } from "react-icons/fa"
 import Link from "next/link"
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
-import { getStrapiMedia } from "@/lib/strapi"
+import { projects as allProjects } from "@/lib/projects-data"
 
 interface Project {
   id: number
@@ -94,49 +94,18 @@ export default function HomePage() {
   const [showIniciosButton, setShowIniciosButton] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [featuredProjects, setFeaturedProjects] = useState<Project[]>([])
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   })
 
-  // Fetch featured projects from Strapi
-  useEffect(() => {
-    async function fetchProjects() {
-      try {
-        const headers: HeadersInit = {}
-        if (process.env.NEXT_PUBLIC_STRAPI_API_TOKEN) {
-          headers['Authorization'] = `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`
-        }
-        
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/projects?populate=*&sort[0]=order:asc&pagination[limit]=3`,
-          { headers }
-        )
-        const data = await response.json()
-        
-        const projects: Project[] = data.data?.map((item: any) => {
-          const imageUrl = item.attributes.image?.data?.attributes?.url
-          return {
-            id: item.id,
-            slug: item.attributes.slug,
-            title: item.attributes.title,
-            description: item.attributes.description,
-            image: imageUrl ? getStrapiMedia(imageUrl) : '/placeholder.png',
-            tags: item.attributes.tags || []
-          }
-        }) || []
-        
-        setFeaturedProjects(projects)
-      } catch (error) {
-        console.error('Error fetching projects:', error)
-        // Keep empty array on error
-      }
-    }
-    
-    fetchProjects()
-  }, [])
+  // Get featured projects from hardcoded data
+  const featuredProjects = allProjects
+    .filter(p => p.featured)
+    .sort((a, b) => a.order - b.order)
+    .slice(0, 3)
 
   useEffect(() => {
     // Update age every day
@@ -198,61 +167,115 @@ export default function HomePage() {
     <>
       <Navigation />
       <main className="min-h-screen pt-16">
-        <section className="relative py-8 sm:py-12 bg-background">
-          {/* Efecto de luces naranjas en el fondo */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#ff620a]/5 rounded-full blur-[120px] animate-pulse-slow" />
-            <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-[#ff620a]/3 rounded-full blur-[100px] animate-pulse-slow" style={{ animationDelay: '2s' }} />
-            <div className="absolute bottom-1/4 left-1/2 w-80 h-80 bg-[#ff620a]/4 rounded-full blur-[110px] animate-pulse-slow" style={{ animationDelay: '4s' }} />
-          </div>
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
-            <Card className="bg-[#1a1a1a] dark:bg-[#0f0f0f] border-0 shadow-lg overflow-hidden">
-              <CardContent className="p-8 sm:p-10 lg:p-12">
-                <div className="flex flex-col items-center text-center space-y-6 max-w-3xl mx-auto">
-                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
+        {/* Hero Section - Zevetix Style */}
+        <section className="pt-8 pb-4 md:pt-12 md:pb-6 bg-background">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div className="bg-[#1a1a1a] dark:bg-[#232323] rounded-[1.5rem] relative w-full overflow-hidden">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center p-4 md:p-6 lg:p-8 relative">
+                {/* Left side - Content */}
+                <div className="space-y-4 z-10 relative">
+                  {/* Badge */}
+                  <div className="inline-block px-5 py-2 border border-white rounded-full">
+                    <span className="text-sm font-medium text-white">{language === "es" ? "portafolio" : "portfolio"}</span>
+                  </div>
+
+                  {/* Title */}
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight text-white dark:text-white">
                     Tomás Nadal
                   </h1>
 
-                  <div className="text-xl sm:text-2xl md:text-3xl font-semibold text-accent min-h-[2.5rem] flex items-center">
+                  {/* Subtitle with Typing Effect */}
+                  <div className="text-lg sm:text-xl md:text-2xl font-medium text-white/90">
                     <TypingEffect
-                      texts={[language === "es" ? "Desarrollador Web" : "Web Developer", language === "es" ? "Estudiante de Ciencia de Datos" : "Data Science Student"]}
+                      texts={[
+                        language === "es" ? "Desarrollador web" : "Web developer",
+                        language === "es" ? "Estudiante de ciencia de datos" : "Data science student"
+                      ]}
                       typingSpeed={100}
                       deletingSpeed={50}
                       pauseDuration={2000}
                     />
                   </div>
 
-                  <p className="text-base sm:text-lg text-white/70 max-w-2xl leading-relaxed">
+                  {/* Description */}
+                  <p className="text-sm sm:text-base text-gray-300 dark:text-gray-200 max-w-md leading-relaxed">
                     {language === "es"
                       ? "Me gusta crear soluciones, convirtiendo la tecnología en una herramienta al servicio del prójimo."
                       : "I like to create solutions, turning technology into a tool to serve others."}
                   </p>
 
-                  <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                    <Button
-                      asChild
-                      size="lg"
-                      className="bg-accent hover:bg-accent/90 text-accent-foreground group transition-all duration-300"
+                  {/* CTA Buttons */}
+                  <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                    {/* Primary CTA - With Arrow */}
+                    <Link href="/contact" className="inline-flex items-center group">
+                      <div className="flex items-center rounded-l-2xl bg-[#484848] px-6 py-2.5 h-12">
+                        <span className="text-sm font-medium text-white">
+                          {language === "es" ? "Enviar mensaje" : "Send message"}
+                        </span>
+                      </div>
+                      <div className="bg-[#484848] p-1 rounded-r-2xl flex items-center justify-center h-12">
+                        <div className="bg-[#ff620a] rounded-lg flex items-center justify-center p-1.5 h-9 w-9">
+                          <ArrowRight className="h-5 w-5 text-white group-hover:translate-x-1 transition-transform duration-300" />
+                        </div>
+                      </div>
+                    </Link>
+
+                    {/* Secondary CTA */}
+                    <Link
+                      href="/projects"
+                      className="inline-flex items-center justify-center h-12 px-6 rounded-2xl bg-[#484848] hover:bg-[#5a5a5a] text-white text-sm font-medium transition-colors"
                     >
-                      <Link href="/contact" className="flex items-center gap-2">
-                        {language === "es" ? "Enviar Mensaje" : "Send Message"}
-                        <ArrowRight className="w-5 h-5" />
-                      </Link>
-                    </Button>
-                    <Button
-                      asChild
-                      size="lg"
-                      variant="outline"
-                      className="bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm transition-all duration-300"
-                    >
-                      <Link href="/projects">{language === "es" ? "Ver Proyectos" : "View Projects"}</Link>
-                    </Button>
+                      {language === "es" ? "Ver proyectos" : "View projects"}
+                    </Link>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+
+                {/* Right side - Floating Elements */}
+                <div className="absolute inset-0 pointer-events-none z-20 md:block">
+                  {/* Element 1 - Top Center-Right (como espiral) */}
+                  <div className="absolute top-4 right-[15%] w-40 h-40 lg:w-48 lg:h-48 animate-float-slow opacity-100 z-30">
+                    <div className="relative w-full h-full brightness-130 dark:brightness-100">
+                      <Image
+                        src="/elementos/1.avif"
+                        alt="Elemento 1"
+                        fill
+                        className="object-contain hover:scale-110 transition-transform duration-500"
+                        priority
+                      />
+                    </div>
+                  </div>
+
+                  {/* Element 2 - Center (como cruz/estrella) */}
+                  <div className="absolute top-[35%] left-[60%] -translate-x-1/2 w-44 h-44 lg:w-52 lg:h-52 animate-float-medium opacity-100 z-30">
+                    <div className="relative w-full h-full brightness-130 dark:brightness-100">
+                      <Image
+                        src="/elementos/2.avif"
+                        alt="Elemento 2"
+                        fill
+                        className="object-contain hover:scale-110 transition-transform duration-500"
+                        priority
+                      />
+                    </div>
+                  </div>
+
+                  {/* Element 3 - Bottom Right (como anillos) */}
+                  <div className="absolute bottom-4 right-[8%] w-40 h-40 lg:w-48 lg:h-48 animate-float-fast opacity-100 z-30">
+                    <div className="relative w-full h-full brightness-130 dark:brightness-100">
+                      <Image
+                        src="/elementos/3.avif"
+                        alt="Elemento 3"
+                        fill
+                        className="object-contain hover:scale-110 transition-transform duration-500"
+                        priority
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
+
 
         <section className="relative py-12 sm:py-16 lg:py-24 bg-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -403,10 +426,10 @@ export default function HomePage() {
                 <CardContent className="p-4 sm:p-6 h-full flex flex-col justify-center items-center text-center gap-3">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#f5f4f6] dark:bg-[#1a1a1a] flex items-center justify-center">
                     <svg className="w-6 h-6 sm:w-7 sm:h-7 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <line x1="16" y1="2" x2="16" y2="6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <line x1="8" y1="2" x2="8" y2="6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <line x1="3" y1="10" x2="21" y2="10" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <line x1="16" y1="2" x2="16" y2="6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <line x1="8" y1="2" x2="8" y2="6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <line x1="3" y1="10" x2="21" y2="10" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
                   <div className="text-3xl sm:text-4xl font-semibold text-accent">{age}</div>
@@ -436,7 +459,7 @@ export default function HomePage() {
                 </CardContent>
               </Card>
 
-              <Card className="sm:col-span-2 lg:col-span-4 bg-transparent border-2 border-black dark:border-white shadow-sm hover:border-accent dark:hover:border-accent overflow-hidden hover:scale-[1.01] transition-all duration-300 group">
+              <Card className="sm:col-span-2 lg:col-span-4 bg-transparent border-[2.5px] border-black dark:border-white shadow-sm hover:border-accent dark:hover:border-accent overflow-hidden hover:scale-[1.01] transition-all duration-300 group">
                 <div className="grid md:grid-cols-2 h-full min-h-[300px]">
                   <div className="relative h-full min-h-[250px] p-4">
                     <div className="relative w-full h-full">
@@ -473,9 +496,11 @@ export default function HomePage() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                       <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6">
-                        <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2">{featuredProjects[1].title}</h3>
+                        <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2">
+                          {language === "en" && featuredProjects[1].titleEn ? featuredProjects[1].titleEn : featuredProjects[1].title}
+                        </h3>
                         <p className="text-xs sm:text-sm text-white/90 mb-3 sm:mb-4">
-                          {featuredProjects[1].description}
+                          {language === "en" && featuredProjects[1].descriptionEn ? featuredProjects[1].descriptionEn : featuredProjects[1].description}
                         </p>
                         <div className="flex flex-wrap gap-2">
                           {featuredProjects[1].tags.map((tag) => (
@@ -505,9 +530,11 @@ export default function HomePage() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                       <div className="absolute bottom-4 left-4 right-4">
-                        <h3 className="text-lg sm:text-xl font-semibold text-white mb-1">{featuredProjects[2].title}</h3>
+                        <h3 className="text-lg sm:text-xl font-semibold text-white mb-1">
+                          {language === "en" && featuredProjects[2].titleEn ? featuredProjects[2].titleEn : featuredProjects[2].title}
+                        </h3>
                         <p className="text-xs sm:text-sm text-white/80">
-                          {featuredProjects[2].description}
+                          {language === "en" && featuredProjects[2].descriptionEn ? featuredProjects[2].descriptionEn : featuredProjects[2].description}
                         </p>
                       </div>
                     </div>
@@ -515,7 +542,7 @@ export default function HomePage() {
                 </Card>
               )}
 
-                            <Card className="lg:row-span-2 bg-transparent border-2 border-border dark:border-white hover:border-accent shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
+              <Card className="lg:row-span-2 bg-transparent border-[2.5px] border-border dark:border-white hover:border-accent shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
                 <div className="h-full flex flex-col p-4">
                   <Link
                     href="/projects/nexium"
@@ -561,9 +588,8 @@ export default function HomePage() {
                             src={img || "/placeholder.svg"}
                             alt={`Mis Inicios ${index + 1}`}
                             fill
-                            className={`object-cover rounded-lg grayscale group-hover:grayscale-0 transition-all duration-1000 ${
-                              index === currentImageIndex ? "opacity-100" : "opacity-0"
-                            }`}
+                            className={`object-cover rounded-lg grayscale group-hover:grayscale-0 transition-all duration-1000 ${index === currentImageIndex ? "opacity-100" : "opacity-0"
+                              }`}
                           />
                         ))}
                       </div>
@@ -688,7 +714,7 @@ export default function HomePage() {
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d105073.50150904932!2d-58.51520919999999!3d-34.6158037!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcca3b4ef90cbd%3A0xa0b3812e88e88e87!2sBuenos%20Aires%2C%20Argentina!5e0!3m2!1sen!2sus!4v1234567890"
                     width="100%"
                     height="100%"
-                    style={{ border: 0, pointerEvents: "none" }}
+                    style={{ border: 0 }}
                     allowFullScreen
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
@@ -715,9 +741,11 @@ export default function HomePage() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                       <div className="absolute bottom-4 left-4 right-4">
-                        <h3 className="text-lg sm:text-xl font-semibold text-white mb-1">{featuredProjects[0].title}</h3>
+                        <h3 className="text-lg sm:text-xl font-semibold text-white mb-1">
+                          {language === "en" && featuredProjects[0].titleEn ? featuredProjects[0].titleEn : featuredProjects[0].title}
+                        </h3>
                         <p className="text-xs sm:text-sm text-white/80">
-                          {featuredProjects[0].description}
+                          {language === "en" && featuredProjects[0].descriptionEn ? featuredProjects[0].descriptionEn : featuredProjects[0].description}
                         </p>
                       </div>
                     </div>
