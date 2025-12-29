@@ -27,7 +27,26 @@ interface Project {
   tags: string[]
 }
 
-const technologies = ["Java", "JavaScript", "ReactJS", "Python", "Node.js", "Firebase", "Git", "R-script"]
+const technologies = [
+  "JavaScript",
+  "TypeScript",
+  "ReactJS",
+  "Next.js",
+  "Node.js",
+  "Python",
+  "Java",
+  "Firebase",
+  "Git",
+  "HTML",
+  "CSS",
+  "Framer",
+  "R-script",
+  "Comunicación",
+  "Trabajo en equipo",
+  "Resolución de problemas",
+  "Adaptabilidad",
+  "Liderazgo"
+]
 
 const iniciosImages = ["/inicios-1.png", "/inicios-2.png", "/inicios-3.png", "/inicios-4.png"]
 
@@ -168,7 +187,7 @@ export default function HomePage() {
       <Navigation />
       <main className="min-h-screen pt-16">
         {/* Hero Section - Zevetix Style */}
-        <section className="pt-8 pb-4 md:pt-12 md:pb-6 bg-background">
+        <section className="pt-12 pb-8 md:pt-16 md:pb-12 bg-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div className="bg-[#1a1a1a] dark:bg-[#232323] rounded-[1.5rem] relative w-full overflow-hidden">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center p-4 md:p-6 lg:p-8 relative">
@@ -231,7 +250,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Right side - Floating Elements */}
-                <div className="absolute inset-0 pointer-events-none z-20 md:block">
+                <div className="absolute inset-0 pointer-events-none z-20 hidden md:block">
                   {/* Element 1 - Top Center-Right (como espiral) */}
                   <div className="absolute top-4 right-[15%] w-40 h-40 lg:w-48 lg:h-48 animate-float-slow opacity-100 z-30">
                     <div className="relative w-full h-full brightness-130 dark:brightness-100">
@@ -246,7 +265,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Element 2 - Center (como cruz/estrella) */}
-                  <div className="absolute top-[35%] left-[60%] -translate-x-1/2 w-44 h-44 lg:w-52 lg:h-52 animate-float-medium opacity-100 z-30">
+                  <div className="absolute top-[35%] left-[62%] -translate-x-1/2 w-44 h-44 lg:w-52 lg:h-52 animate-float-medium opacity-100 z-30">
                     <div className="relative w-full h-full brightness-130 dark:brightness-100">
                       <Image
                         src="/elementos/2.avif"
@@ -259,7 +278,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Element 3 - Bottom Right (como anillos) */}
-                  <div className="absolute bottom-4 right-[8%] w-40 h-40 lg:w-48 lg:h-48 animate-float-fast opacity-100 z-30">
+                  <div className="absolute bottom-4 right-[3%] w-40 h-40 lg:w-48 lg:h-48 animate-float-fast opacity-100 z-30">
                     <div className="relative w-full h-full brightness-130 dark:brightness-100">
                       <Image
                         src="/elementos/3.avif"
@@ -282,7 +301,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 auto-rows-[minmax(200px,auto)]">
               <Dialog>
                 <Card
-                  className="sm:col-span-2 lg:row-span-2 bg-card border-0 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group"
+                  className="sm:col-span-2 lg:row-span-2 bg-card border-0 shadow-sm hover:shadow-md transition-all duration-500 cursor-pointer group"
                   onMouseEnter={() => setShowModalButton(true)}
                   onMouseLeave={() => setShowModalButton(false)}
                 >
@@ -315,7 +334,7 @@ export default function HomePage() {
                           src="/andrew-kliatskyi-B_Z9jqassqE-unsplash.jpg"
                           alt="Tomás Nadal working"
                           fill
-                          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-600"
                         />
                       </div>
                     </div>
@@ -326,7 +345,7 @@ export default function HomePage() {
                           href="https://github.com/eltanook"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-accent transition-colors duration-300"
+                          className="text-muted-foreground hover:text-accent transition-colors duration-500"
                         >
                           <FaGithub className="w-5 h-5" />
                         </a>
@@ -334,7 +353,7 @@ export default function HomePage() {
                           href="https://www.linkedin.com/in/tomasnadal/"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-accent transition-colors duration-300"
+                          className="text-muted-foreground hover:text-accent transition-colors duration-500"
                         >
                           <FaLinkedin className="w-5 h-5" />
                         </a>
@@ -342,7 +361,7 @@ export default function HomePage() {
                           href="https://www.instagram.com/tominadal_/"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-accent transition-colors duration-300"
+                          className="text-muted-foreground hover:text-accent transition-colors duration-500"
                         >
                           <FaInstagram className="w-5 h-5" />
                         </a>
@@ -350,7 +369,7 @@ export default function HomePage() {
                           href="https://api.whatsapp.com/send?phone=+54%209%2011%203647%204934&text=Hola%20Tom%C3%A1s,%20vengo%20de%20tu%20portafolio!"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-accent transition-colors duration-300"
+                          className="text-muted-foreground hover:text-accent transition-colors duration-500"
                         >
                           <FaWhatsapp className="w-5 h-5" />
                         </a>
@@ -358,7 +377,7 @@ export default function HomePage() {
                       <DialogTrigger asChild>
                         <Button
                           size="sm"
-                          className={`bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 ${showModalButton ? "opacity-100" : "opacity-0"}`}
+                          className={`bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-500 ${showModalButton ? "opacity-100" : "opacity-0"}`}
                         >
                           {language === "es" ? "Ver más" : "View more"}
                         </Button>
@@ -439,9 +458,9 @@ export default function HomePage() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-0 shadow-sm group hover:-translate-y-2 transition-all duration-300">
+              <Card className="bg-card border-0 shadow-sm group hover:-translate-y-2 transition-all duration-500">
                 <CardContent className="p-4 sm:p-6 h-full flex flex-col justify-center items-center text-center gap-3">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#f5f4f6] dark:bg-[#1a1a1a] flex items-center justify-center group-hover:bg-accent/20 group-hover:rotate-12 transition-all duration-300">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#f5f4f6] dark:bg-[#1a1a1a] flex items-center justify-center group-hover:bg-accent/20 group-hover:rotate-12 transition-all duration-500">
                     <FileText className="w-6 h-6 sm:w-7 h-7 text-accent" />
                   </div>
                   <h3 className="text-base sm:text-lg font-semibold text-foreground">
@@ -450,7 +469,7 @@ export default function HomePage() {
                   <Button
                     asChild
                     size="sm"
-                    className="bg-foreground dark:bg-background text-background dark:text-foreground hover:bg-foreground/90 dark:hover:bg-background/90 transition-all duration-300"
+                    className="bg-foreground dark:bg-background text-background dark:text-foreground hover:bg-foreground/90 dark:hover:bg-background/90 transition-all duration-500"
                   >
                     <a href="/CV — Tomás Nadal 2025.pdf" download="CV-Tomas-Nadal-2025.pdf">
                       {language === "es" ? "Descargar" : "Download"}
@@ -459,7 +478,7 @@ export default function HomePage() {
                 </CardContent>
               </Card>
 
-              <Card className="sm:col-span-2 lg:col-span-4 bg-transparent border-[2.5px] border-black dark:border-white shadow-sm hover:border-accent dark:hover:border-accent overflow-hidden hover:scale-[1.01] transition-all duration-300 group">
+              <Card className="sm:col-span-2 lg:col-span-4 bg-transparent border-[2.5px] border-black dark:border-white shadow-sm hover:border-accent dark:hover:border-accent overflow-hidden hover:scale-[1.01] transition-all duration-500 group">
                 <div className="grid md:grid-cols-2 h-full min-h-[300px]">
                   <div className="relative h-full min-h-[250px] p-4">
                     <div className="relative w-full h-full">
@@ -485,7 +504,7 @@ export default function HomePage() {
               </Card>
 
               {featuredProjects.length >= 2 && (
-                <Card className="sm:col-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02] transition-all duration-300">
+                <Card className="sm:col-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02] transition-all duration-500">
                   <Link href={`/projects/${featuredProjects[1].slug}`} className="block h-full">
                     <div className="relative h-full min-h-[300px]">
                       <Image
@@ -519,7 +538,7 @@ export default function HomePage() {
               )}
 
               {featuredProjects.length >= 3 && (
-                <Card className="lg:row-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02] transition-all duration-300">
+                <Card className="lg:row-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02] transition-all duration-500">
                   <Link href={`/projects/${featuredProjects[2].slug}`} className="block h-full">
                     <div className="relative h-full min-h-[250px]">
                       <Image
@@ -542,10 +561,12 @@ export default function HomePage() {
                 </Card>
               )}
 
-              <Card className="lg:row-span-2 bg-transparent border-[2.5px] border-border dark:border-white hover:border-accent shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
+              <Card className="lg:row-span-2 bg-transparent border-[2.5px] border-border dark:border-white hover:border-accent shadow-sm hover:shadow-md transition-all duration-500 overflow-hidden group">
                 <div className="h-full flex flex-col p-4">
-                  <Link
-                    href="/projects/nexium"
+                  <a
+                    href="https://nexiumsolutions.site/"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="block flex-1 group/nexium relative overflow-hidden rounded-lg"
                   >
                     <div className="relative h-full min-h-[250px] p-6">
@@ -556,9 +577,11 @@ export default function HomePage() {
                         className="object-contain grayscale group-hover/nexium:grayscale-0 transition-all duration-500"
                       />
                     </div>
-                  </Link>
-                  <Link
-                    href="/projects/zevetix"
+                  </a>
+                  <a
+                    href="https://zevetix.netlify.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="block flex-1 group/zevetix relative overflow-hidden rounded-lg mt-3"
                   >
                     <div className="relative h-full min-h-[250px] p-6">
@@ -569,13 +592,13 @@ export default function HomePage() {
                         className="object-contain grayscale group-hover/zevetix:grayscale-0 transition-all duration-500"
                       />
                     </div>
-                  </Link>
+                  </a>
                 </div>
               </Card>
 
               <Dialog>
                 <Card
-                  className="sm:col-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02] transition-all duration-300"
+                  className="sm:col-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02] transition-all duration-500"
                   onMouseEnter={() => setShowIniciosButton(true)}
                   onMouseLeave={() => setShowIniciosButton(false)}
                 >
@@ -608,7 +631,7 @@ export default function HomePage() {
                       <DialogTrigger asChild>
                         <Button
                           size="sm"
-                          className="bg-foreground hover:bg-foreground/90 text-background mt-4 transition-all duration-300"
+                          className="bg-foreground hover:bg-foreground/90 text-background mt-4 transition-all duration-500"
                         >
                           {language === "es" ? "Ver más" : "View more"}
                         </Button>
@@ -635,7 +658,7 @@ export default function HomePage() {
                         <ExternalLink className="w-4 h-4 text-accent" />
                       </a>
                       <a
-                        href="https://tomasnadal2023.netlify.app/"
+                        href="https://tomasnadal1.netlify.app/"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-between p-3 rounded-lg bg-accent/10 hover:bg-accent/20 transition-colors duration-300"

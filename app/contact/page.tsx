@@ -27,10 +27,10 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
+
     const form = e.target as HTMLFormElement
     const formData = new FormData(form)
-    
+
     try {
       await fetch("https://formsubmit.co/tomasnadal04@gmail.com", {
         method: "POST",
@@ -158,7 +158,7 @@ export default function ContactPage() {
                   return (
                     <Card
                       key={info.label}
-                      className="bg-card border-0 shadow-sm hover:shadow-md transition-all duration-600"
+                      className="bg-card border-0 shadow-sm hover:shadow-md transition-all duration-700"
                     >
                       <CardContent className="p-5">
                         <div className="flex items-start gap-3">
@@ -170,7 +170,7 @@ export default function ContactPage() {
                             {info.href ? (
                               <a
                                 href={info.href}
-                                className="text-muted-foreground hover:text-accent transition-colors duration-600 text-sm"
+                                className="text-muted-foreground hover:text-accent transition-colors duration-700 text-sm"
                               >
                                 {info.value}
                               </a>
@@ -203,7 +203,7 @@ export default function ContactPage() {
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d105073.50150904932!2d-58.51520919999999!3d-34.6158037!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcca3b4ef90cbd%3A0xa0b3812e88e88e87!2sBuenos%20Aires%2C%20Argentina!5e0!3m2!1sen!2sus!4v1234567890"
                   width="100%"
                   height="100%"
-                  style={{ border: 0, pointerEvents: "none" }}
+                  style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"

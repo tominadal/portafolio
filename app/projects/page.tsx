@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { useLanguage } from "@/components/language-provider"
-import { ExternalLink, Search, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react"
+import { ExternalLink, Search, ChevronLeft, ChevronRight, ChevronDown, Eye } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
@@ -24,7 +24,7 @@ interface Project {
   demoUrl?: string
 }
 
-const categories = ["All", "Web App", "CMS", "Dashboard"]
+const categories = ["All", "landing page", "website corporativo", "landing page / e-commerce híbrido", "website / portal reservas"]
 const ITEMS_PER_PAGE = 6
 
 export default function ProjectsPage() {
@@ -186,24 +186,24 @@ export default function ProjectsPage() {
                   {paginatedProjects.map((project) => (
                     <div key={project.id} className="group flex flex-col">
                       <Link href={`/projects/${project.slug}`}>
-                        <div className="relative h-64 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-500 mb-4 bg-[#1a1a1a] dark:bg-[#232323] pt-6 px-6 pb-0 flex items-end justify-center">
+                        <div className="relative h-64 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-600 mb-4 bg-[#1a1a1a] dark:bg-[#232323] pt-6 px-6 pb-0 flex items-end justify-center">
                           <div className="relative w-full aspect-[16/9]">
                             <Image
                               src={project.image || "/placeholder.svg"}
                               alt={project.title}
                               fill
-                              className="object-cover rounded-t-lg group-hover:scale-105 transition-all duration-700"
+                              className="object-cover rounded-t-lg group-hover:scale-105 transition-all duration-840"
                             />
                           </div>
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-center justify-center gap-3">
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-840 flex items-center justify-center gap-3">
                             <Button
                               asChild
                               size="sm"
                               variant="outline"
-                              className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 transition-all duration-600"
+                              className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 transition-all duration-700"
                             >
                               <span>
-                                <ExternalLink className="w-4 h-4 mr-2" />
+                                <Eye className="w-4 h-4 mr-2" />
                                 {t("projects.viewDetails")}
                               </span>
                             </Button>
@@ -211,7 +211,7 @@ export default function ProjectsPage() {
                               <Button
                                 asChild
                                 size="sm"
-                                className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-600"
+                                className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-700"
                                 onClick={(e) => {
                                   e.preventDefault()
                                   window.open(project.demoUrl, '_blank')
@@ -228,7 +228,7 @@ export default function ProjectsPage() {
                       </Link>
 
                       <div className="space-y-3 flex-1 flex flex-col">
-                        <h3 className="text-xl font-semibold text-foreground group-hover:text-accent transition-colors">
+                        <h3 className="text-xl font-semibold text-foreground group-hover:text-accent transition-colors duration-500">
                           {language === "en" && project.titleEn ? project.titleEn : project.title}
                         </h3>
                         <p className="text-sm text-muted-foreground leading-relaxed flex-1">

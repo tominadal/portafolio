@@ -5,9 +5,11 @@ import { Github, Linkedin, Mail, Instagram, MapPin, Phone } from "lucide-react"
 import { FaWhatsapp } from "react-icons/fa"
 import Link from "next/link"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
 
 export function Footer() {
   const { t } = useLanguage()
+  const pathname = usePathname()
 
   const socialLinks = [
     { icon: Github, href: "https://github.com/eltanook", label: "GitHub" },
@@ -33,17 +35,34 @@ export function Footer() {
         <div className="px-6 sm:px-8 lg:px-12 py-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div className="space-y-3">
-              <Link href="/" className="inline-block hover:opacity-80 transition-opacity duration-500">
-                <div className="w-10 h-10 relative">
-                  <Image
-                    src="/logo.png"
-                    alt="Tomás Nadal Logo"
-                    fill
-                    className="object-contain"
-                    style={{ filter: "invert(1)" }}
-                  />
-                </div>
-              </Link>
+              {pathname === "/" ? (
+                <button
+                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                  className="inline-block hover:opacity-80 transition-opacity duration-500"
+                >
+                  <div className="w-10 h-10 relative">
+                    <Image
+                      src="/logo.png"
+                      alt="Tomás Nadal Logo"
+                      fill
+                      className="object-contain"
+                      style={{ filter: "invert(1)" }}
+                    />
+                  </div>
+                </button>
+              ) : (
+                <Link href="/" className="inline-block hover:opacity-80 transition-opacity duration-500">
+                  <div className="w-10 h-10 relative">
+                    <Image
+                      src="/logo.png"
+                      alt="Tomás Nadal Logo"
+                      fill
+                      className="object-contain"
+                      style={{ filter: "invert(1)" }}
+                    />
+                  </div>
+                </Link>
+              )}
               <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
                 {t("footer.description")}
               </p>

@@ -253,12 +253,12 @@
 
   /* Text selection */
   ::selection {
-    background: transparent;
+    background: hsl(var(--accent) / 0.2);
     color: hsl(var(--accent));
   }
 
   ::-moz-selection {
-    background: transparent;
+    background: hsl(var(--accent) / 0.2);
     color: hsl(var(--accent));
   }
 }
