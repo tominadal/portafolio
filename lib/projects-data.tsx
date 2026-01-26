@@ -91,7 +91,7 @@ The project was designed to offer a modern online shopping experience, while mai
     category: "landing page / e-commerce híbrido",
     demoUrl: "https://vancouvercanning.com.ar/",
     featured: true,
-    order: 1,
+    order: 2,
     technologies: "Next.js",
     year: 2025
   },
@@ -114,7 +114,7 @@ The site offers an attractive, dynamic and modern visual experience, designed to
     category: "landing page",
     demoUrl: "https://collaborative-domain-946706.framer.app/",
     featured: true,
-    order: 2,
+    order: 1,
     technologies: "Framer",
     year: 2024
   },

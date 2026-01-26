@@ -478,8 +478,8 @@ export default function HomePage() {
                 </CardContent>
               </Card>
 
-              <Card className="sm:col-span-2 lg:col-span-4 bg-transparent border-[2.5px] border-black dark:border-white shadow-sm hover:border-accent dark:hover:border-accent overflow-hidden hover:scale-[1.01] transition-all duration-500 group">
-                <div className="grid md:grid-cols-2 h-full min-h-[300px]">
+              <Card className="sm:col-span-2 lg:col-span-4 bg-transparent border-[2.5px] border-black dark:border-white hover:border-accent dark:hover:border-accent overflow-hidden hover:scale-[1.01] transition-all duration-500 group">
+                <div className="grid md:grid-cols-[35%_65%] h-full min-h-[300px]">
                   <div className="relative h-full min-h-[250px] p-4">
                     <div className="relative w-full h-full">
                       <Image
@@ -499,38 +499,55 @@ export default function HomePage() {
                         ? "Empecé en 2020 cuando compré mi primera computadora. Aprendí de manera autodidacta, participé en bootcamps y construí proyectos personales. Desde 2023 estudio la Licenciatura en Ciencia de Datos en la Universidad Nacional de San Martín. Mi pasión es crear soluciones innovadoras al servicio de los demás. Hoy lidero el desarrollo completo en Nexium Solutions y creo experiencias digitales únicas en Zevetix."
                         : "I started in 2020 when I bought my first computer. I learned self-taught, participated in bootcamps and built personal projects. Since 2023 I've been studying Data Science at the National University of San Martín. My passion is creating innovative solutions to serve others. Today I lead full development at Nexium Solutions and create unique digital experiences at Zevetix."}
                     </p>
+                    {/* CTA Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      {/* Primary CTA */}
+                      <Button
+                        asChild
+                        size="sm"
+                        className="bg-foreground hover:bg-foreground/90 text-background transition-all duration-500 group/btn"
+                      >
+                        <Link href="/contact" className="inline-flex items-center gap-2">
+                          {language === "es" ? "Enviar mensaje" : "Send message"}
+                          <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                        </Link>
+                      </Button>
+
+                      {/* Secondary CTA */}
+                      <Button
+                        asChild
+                        size="sm"
+                        variant="outline"
+                        className="bg-transparent dark:border-white transition-all duration-500"
+                      >
+                        <Link href="/projects">
+                          {language === "es" ? "Ver proyectos" : "View projects"}
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </Card>
 
               {featuredProjects.length >= 2 && (
-                <Card className="sm:col-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02] transition-all duration-500">
+                <Card className="sm:col-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02]" style={{ transition: 'transform 1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 1s cubic-bezier(0.4, 0, 0.2, 1)' }}>
                   <Link href={`/projects/${featuredProjects[1].slug}`} className="block h-full">
                     <div className="relative h-full min-h-[300px]">
                       <Image
                         src={featuredProjects[1].image || "/placeholder.svg"}
                         alt={featuredProjects[1].title}
                         fill
-                        className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
+                        style={{ transition: 'filter 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                        className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                       <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6">
                         <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2">
                           {language === "en" && featuredProjects[1].titleEn ? featuredProjects[1].titleEn : featuredProjects[1].title}
                         </h3>
-                        <p className="text-xs sm:text-sm text-white/90 mb-3 sm:mb-4">
+                        <p className="text-xs sm:text-sm text-white/90">
                           {language === "en" && featuredProjects[1].descriptionEn ? featuredProjects[1].descriptionEn : featuredProjects[1].description}
                         </p>
-                        <div className="flex flex-wrap gap-2">
-                          {featuredProjects[1].tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="text-xs px-2 py-1 rounded-full bg-accent/10 text-accent font-medium backdrop-blur-sm"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
                       </div>
                     </div>
                   </Link>
@@ -538,14 +555,15 @@ export default function HomePage() {
               )}
 
               {featuredProjects.length >= 3 && (
-                <Card className="lg:row-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02] transition-all duration-500">
+                <Card className="lg:row-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02]" style={{ transition: 'transform 1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 1s cubic-bezier(0.4, 0, 0.2, 1)' }}>
                   <Link href={`/projects/${featuredProjects[2].slug}`} className="block h-full">
                     <div className="relative h-full min-h-[250px]">
                       <Image
                         src={featuredProjects[2].image || "/placeholder.svg"}
                         alt={featuredProjects[2].title}
                         fill
-                        className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
+                        style={{ transition: 'filter 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                        className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                       <div className="absolute bottom-4 left-4 right-4">
@@ -561,7 +579,7 @@ export default function HomePage() {
                 </Card>
               )}
 
-              <Card className="lg:row-span-2 bg-transparent border-[2.5px] border-border dark:border-white hover:border-accent shadow-sm hover:shadow-md transition-all duration-500 overflow-hidden group">
+              <Card className="lg:row-span-2 bg-transparent border-[2.5px] border-border dark:border-white hover:border-accent transition-all duration-500 overflow-hidden group">
                 <div className="h-full flex flex-col p-4">
                   <a
                     href="https://nexiumsolutions.site/"
@@ -753,14 +771,15 @@ export default function HomePage() {
               </Card>
 
               {featuredProjects.length >= 1 && (
-                <Card className="sm:col-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02] transition-all duration-300">
+                <Card className="sm:col-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02]" style={{ transition: 'transform 1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 1s cubic-bezier(0.4, 0, 0.2, 1)' }}>
                   <Link href={`/projects/${featuredProjects[0].slug}`} className="block h-full">
                     <div className="relative h-full min-h-[250px]">
                       <Image
                         src={featuredProjects[0].image || "/placeholder.svg"}
                         alt={featuredProjects[0].title}
                         fill
-                        className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
+                        style={{ transition: 'filter 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                        className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                       <div className="absolute bottom-4 left-4 right-4">

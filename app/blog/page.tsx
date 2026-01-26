@@ -54,7 +54,7 @@ export default function BlogPage() {
                           src={post.image || "/placeholder.svg"}
                           alt={language === "es" ? post.title : post.titleEn}
                           fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          className="object-cover grayscale-[0.4] group-hover:grayscale-0 group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>
                       <div className="space-y-3">
@@ -103,7 +103,7 @@ export default function BlogPage() {
                           src={post.image || "/placeholder.svg"}
                           alt={language === "es" ? post.title : post.titleEn}
                           fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          className="object-cover grayscale-[0.4] group-hover:grayscale-0 group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>
                       <div className="space-y-3">
