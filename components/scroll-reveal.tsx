@@ -4,46 +4,45 @@ import { useEffect } from "react"
 
 export function ScrollReveal() {
     useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("revealed")
+        const observerOptions = { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("revealed")
+                    observer.unobserve(entry.target)
+                }
+            })
+        }, observerOptions)
+
+        // Observe existing elements
+        const observe = (el: Element) => {
+            if (!el.classList.contains("revealed")) {
+                observer.observe(el)
+            }
+        }
+
+        document.querySelectorAll(".scroll-reveal").forEach(observe)
+
+        // Watch for dynamically added elements (Sanity async loads)
+        const mutation = new MutationObserver((mutations) => {
+            mutations.forEach((m) => {
+                m.addedNodes.forEach((node) => {
+                    if (node instanceof HTMLElement) {
+                        if (node.classList.contains("scroll-reveal")) observe(node)
+                        node.querySelectorAll?.(".scroll-reveal").forEach(observe)
                     }
                 })
-            },
-            { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
-        )
+            })
+        })
 
-        // Observe all elements with scroll-reveal class
-        const elements = document.querySelectorAll(".scroll-reveal")
-        elements.forEach((el) => observer.observe(el))
+        mutation.observe(document.body, { childList: true, subtree: true })
 
-        return () => observer.disconnect()
+        return () => {
+            observer.disconnect()
+            mutation.disconnect()
+        }
     }, [])
-
-    // Re-run when route changes (SPA navigation)
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add("revealed")
-                        }
-                    })
-                },
-                { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
-            )
-
-            const elements = document.querySelectorAll(".scroll-reveal:not(.revealed)")
-            elements.forEach((el) => observer.observe(el))
-
-            return () => observer.disconnect()
-        }, 100)
-
-        return () => clearTimeout(timeout)
-    })
 
     return null
 }
