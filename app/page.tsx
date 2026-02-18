@@ -603,7 +603,7 @@ export default function HomePage() {
                     </div>
                   </a>
                   <a
-                    href="https://zevetix.netlify.app/"
+                    href="https://zevetix.site/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block flex-1 group/zevetix relative overflow-hidden rounded-lg mt-3"

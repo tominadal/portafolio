@@ -83,7 +83,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
     if (project?.slug.current === 'nexium') {
       window.location.href = 'https://nexiumsolutions.site/'
     } else if (project?.slug.current === 'zevetix') {
-      window.location.href = 'https://zevetix.netlify.app/'
+      window.location.href = 'https://zevetix.site/'
     }
   }, [project])
 

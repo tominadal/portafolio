@@ -1,7 +1,6 @@
 import { createClient } from '@sanity/client'
 import { readFileSync } from 'fs'
 
-// Load .env.local manually
 const envFile = readFileSync('.env.local', 'utf-8')
 envFile.split('\n').forEach(line => {
     const [key, ...val] = line.split('=')
@@ -16,30 +15,22 @@ const client = createClient({
     useCdn: false,
 })
 
-// Find all documents containing zevetix.online
-const allProjects = await client.fetch('*[_type == "project"]')
-const allPosts = await client.fetch('*[_type == "blogPost"]')
+const allDocs = await client.fetch('*[_type in ["project", "blogPost"]]')
+const matches = allDocs.filter(d => JSON.stringify(d).includes('zevetix.netlify.app'))
 
-const allDocs = [...allProjects, ...allPosts]
-const matches = allDocs.filter(d => JSON.stringify(d).includes('zevetix.online'))
-
-console.log(`Found ${matches.length} documents with zevetix.online:`)
+console.log(`Found ${matches.length} documents with zevetix.netlify.app:`)
 for (const doc of matches) {
     console.log(`  - [${doc._type}] ${doc.title} (${doc._id})`)
-
-    // Build patches for string fields
     const patch = {}
     for (const [key, val] of Object.entries(doc)) {
-        if (typeof val === 'string' && val.includes('zevetix.online')) {
-            patch[key] = val.replace(/zevetix\.online/g, 'zevetix.site')
+        if (typeof val === 'string' && val.includes('zevetix.netlify.app')) {
+            patch[key] = val.replace(/zevetix\.netlify\.app/g, 'zevetix.site')
             console.log(`    ${key}: ${val} → ${patch[key]}`)
         }
     }
-
     if (Object.keys(patch).length > 0) {
         await client.patch(doc._id).set(patch).commit()
         console.log(`    ✅ Updated!`)
     }
 }
-
 console.log('\n✨ Done!')
