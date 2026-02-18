@@ -4,9 +4,9 @@ import { Manrope } from "next/font/google"
 import { Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
-import { CustomCursor } from "@/components/custom-cursor"
 import { LanguageProvider } from "@/components/language-provider"
 import { WhatsAppFloat } from "@/components/whatsapp-float"
+import { ScrollReveal } from "@/components/scroll-reveal"
 import "./globals.css"
 
 const manrope = Manrope({
@@ -117,7 +117,7 @@ export default function RootLayout({
       <body className={`${manrope.variable} ${geistMono.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange={false}>
           <LanguageProvider>
-            <CustomCursor />
+            <ScrollReveal />
             {children}
             <WhatsAppFloat />
           </LanguageProvider>

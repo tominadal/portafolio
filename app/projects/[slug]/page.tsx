@@ -11,44 +11,81 @@ import { ArrowLeft, ExternalLink, Calendar, ChevronLeft, ChevronRight, X } from 
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { projects as allProjects } from "@/lib/projects-data"
+import { client } from "@/sanity/lib/client"
+import { projectBySlugQuery, allProjectsQuery } from "@/sanity/lib/queries"
+
+interface SanityProject {
+  _id: string
+  slug: { current: string }
+  title: string
+  titleEn?: string
+  description: string
+  descriptionEn?: string
+  content?: string
+  contentEn?: string
+  image: string
+  gallery?: string[]
+  tags: string[]
+  category: string
+  demoUrl?: string
+  githubUrl?: string
+  featured: boolean
+  order: number
+  year?: number
+  technologies?: string
+}
 
 export default function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { t, language } = useLanguage()
   const { slug } = use(params)
-  const project = allProjects.find(p => p.slug === slug)
+  const [project, setProject] = useState<SanityProject | null>(null)
+  const [relatedProjects, setRelatedProjects] = useState<SanityProject[]>([])
+  const [loading, setLoading] = useState(true)
   const [isGalleryOpen, setIsGalleryOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  if (!project) {
-    notFound()
-  }
+  useEffect(() => {
+    async function fetchData() {
+      const proj = await client.fetch(projectBySlugQuery, { slug })
+      if (!proj) {
+        setLoading(false)
+        return
+      }
+      setProject(proj)
+
+      // Fetch all projects for related
+      const allProjects: SanityProject[] = await client.fetch(allProjectsQuery)
+      const sameCategory = allProjects
+        .filter((p) => p.slug.current !== slug && p.category === proj.category)
+        .slice(0, 3)
+
+      // If not enough in same category, fill with any other projects
+      if (sameCategory.length < 3) {
+        const remaining = allProjects
+          .filter((p) => p.slug.current !== slug && !sameCategory.includes(p))
+          .slice(0, 3 - sameCategory.length)
+        sameCategory.push(...remaining)
+      }
+      setRelatedProjects(sameCategory)
+      setLoading(false)
+    }
+    fetchData()
+  }, [slug])
+
+  useEffect(() => {
+    if (project) {
+      document.title = `Tomás Nadal - ${project.title}`
+    }
+  }, [project])
 
   // Redirect Nexium and Zevetix to their external websites
   useEffect(() => {
-    if (project.slug === 'nexium') {
+    if (project?.slug.current === 'nexium') {
       window.location.href = 'https://nexiumsolutions.site/'
-    } else if (project.slug === 'zevetix') {
+    } else if (project?.slug.current === 'zevetix') {
       window.location.href = 'https://zevetix.netlify.app/'
     }
-  }, [project.slug])
-
-  // Get 3 related projects (excluding current one)
-  const relatedProjects = allProjects
-    .filter(p => p.slug !== slug && p.category === project.category)
-    .slice(0, 3)
-
-  // If not enough in same category, fill with any other projects
-  if (relatedProjects.length < 3) {
-    const remaining = allProjects
-      .filter(p => p.slug !== slug && !relatedProjects.includes(p))
-      .slice(0, 3 - relatedProjects.length)
-    relatedProjects.push(...remaining)
-  }
-
-  useEffect(() => {
-    document.title = `Tomás Nadal - ${project.title}`
-  }, [project.title])
+  }, [project])
 
   const openGallery = (index: number) => {
     setCurrentImageIndex(index)
@@ -56,15 +93,33 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
   }
 
   const nextImage = () => {
-    if (project.gallery) {
+    if (project?.gallery) {
       setCurrentImageIndex((prev) => (prev + 1) % project.gallery!.length)
     }
   }
 
   const prevImage = () => {
-    if (project.gallery) {
+    if (project?.gallery) {
       setCurrentImageIndex((prev) => (prev - 1 + project.gallery!.length) % project.gallery!.length)
     }
+  }
+
+  if (loading) {
+    return (
+      <>
+        <Navigation />
+        <main className="min-h-screen pt-16 bg-background">
+          <div className="container mx-auto px-4 py-24 text-center">
+            <p className="text-muted-foreground">{language === "es" ? "Cargando proyecto..." : "Loading project..."}</p>
+          </div>
+        </main>
+        <Footer />
+      </>
+    )
+  }
+
+  if (!project) {
+    notFound()
   }
 
   return (
@@ -105,7 +160,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
 
               {/* Tags */}
               <div className="flex flex-wrap gap-2 mb-6">
-                {project.tags.map((tag: string) => (
+                {project.tags && project.tags.map((tag: string) => (
                   <span
                     key={tag}
                     className="text-sm px-4 py-2 rounded-full border border-border text-foreground bg-transparent"
@@ -239,8 +294,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {relatedProjects.map((relatedProject) => (
                   <Link
-                    key={relatedProject.slug}
-                    href={`/projects/${relatedProject.slug}`}
+                    key={relatedProject._id}
+                    href={`/projects/${relatedProject.slug.current}`}
                     className="group block"
                   >
                     <div className="rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-4">

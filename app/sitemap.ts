@@ -1,9 +1,21 @@
 import type { MetadataRoute } from 'next'
-import { projects } from '@/lib/projects-data'
-import { blogPosts } from '@/lib/blog-data'
+import { createClient } from '@sanity/client'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+const client = createClient({
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
+    apiVersion: '2026-02-18',
+    useCdn: false,
+})
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://tomasnadal.com'
+
+    // Fetch slugs from Sanity
+    const [projectSlugs, blogSlugs] = await Promise.all([
+        client.fetch<{ slug: string }[]>(`*[_type == "project"] { "slug": slug.current }`),
+        client.fetch<{ slug: string }[]>(`*[_type == "blogPost"] { "slug": slug.current, date }`),
+    ])
 
     // Static pages
     const staticPages: MetadataRoute.Sitemap = [
@@ -34,17 +46,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ]
 
     // Dynamic project pages
-    const projectPages: MetadataRoute.Sitemap = projects.map((project) => ({
-        url: `${baseUrl}/projects/${project.slug}`,
+    const projectPages: MetadataRoute.Sitemap = projectSlugs.map((p) => ({
+        url: `${baseUrl}/projects/${p.slug}`,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.6,
     }))
 
     // Dynamic blog pages
-    const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
-        url: `${baseUrl}/blog/${post.slug}`,
-        lastModified: new Date(post.date),
+    const blogPages: MetadataRoute.Sitemap = blogSlugs.map((p: any) => ({
+        url: `${baseUrl}/blog/${p.slug}`,
+        lastModified: p.date ? new Date(p.date) : new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.6,
     }))

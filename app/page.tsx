@@ -16,15 +16,19 @@ import { FaGithub, FaLinkedin, FaInstagram, FaWhatsapp } from "react-icons/fa"
 import Link from "next/link"
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
-import { projects as allProjects } from "@/lib/projects-data"
+import { client } from "@/sanity/lib/client"
+import { featuredProjectsQuery } from "@/sanity/lib/queries"
 
-interface Project {
-  id: number
-  slug: string
+interface FeaturedProject {
+  _id: string
+  slug: { current: string }
   title: string
+  titleEn?: string
   description: string
+  descriptionEn?: string
   image: string
-  tags: string[]
+  technologies?: string
+  category?: string
 }
 
 const technologies = [
@@ -120,11 +124,13 @@ export default function HomePage() {
     message: "",
   })
 
-  // Get featured projects from hardcoded data
-  const featuredProjects = allProjects
-    .filter(p => p.featured)
-    .sort((a, b) => a.order - b.order)
-    .slice(0, 3)
+  const [featuredProjects, setFeaturedProjects] = useState<FeaturedProject[]>([])
+
+  useEffect(() => {
+    client.fetch(featuredProjectsQuery).then((projects: FeaturedProject[]) => {
+      setFeaturedProjects(projects.slice(0, 3))
+    })
+  }, [])
 
   useEffect(() => {
     // Update age every day
@@ -187,7 +193,7 @@ export default function HomePage() {
       <Navigation />
       <main className="min-h-screen pt-16">
         {/* Hero Section - Zevetix Style */}
-        <section className="pt-12 pb-8 md:pt-16 md:pb-12 bg-background">
+        <section className="pt-16 pb-12 md:pt-24 md:pb-16 bg-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div className="bg-[#1a1a1a] dark:bg-[#232323] rounded-[1.5rem] relative w-full overflow-hidden">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center p-4 md:p-6 lg:p-8 relative">
@@ -531,7 +537,7 @@ export default function HomePage() {
 
               {featuredProjects.length >= 2 && (
                 <Card className="sm:col-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02]" style={{ transition: 'transform 1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 1s cubic-bezier(0.4, 0, 0.2, 1)' }}>
-                  <Link href={`/projects/${featuredProjects[1].slug}`} className="block h-full">
+                  <Link href={`/projects/${featuredProjects[1].slug.current}`} className="block h-full">
                     <div className="relative h-full min-h-[300px]">
                       <Image
                         src={featuredProjects[1].image || "/placeholder.svg"}
@@ -556,7 +562,7 @@ export default function HomePage() {
 
               {featuredProjects.length >= 3 && (
                 <Card className="lg:row-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02]" style={{ transition: 'transform 1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 1s cubic-bezier(0.4, 0, 0.2, 1)' }}>
-                  <Link href={`/projects/${featuredProjects[2].slug}`} className="block h-full">
+                  <Link href={`/projects/${featuredProjects[2].slug.current}`} className="block h-full">
                     <div className="relative h-full min-h-[250px]">
                       <Image
                         src={featuredProjects[2].image || "/placeholder.svg"}
@@ -772,7 +778,7 @@ export default function HomePage() {
 
               {featuredProjects.length >= 1 && (
                 <Card className="sm:col-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02]" style={{ transition: 'transform 1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 1s cubic-bezier(0.4, 0, 0.2, 1)' }}>
-                  <Link href={`/projects/${featuredProjects[0].slug}`} className="block h-full">
+                  <Link href={`/projects/${featuredProjects[0].slug.current}`} className="block h-full">
                     <div className="relative h-full min-h-[250px]">
                       <Image
                         src={featuredProjects[0].image || "/placeholder.svg"}

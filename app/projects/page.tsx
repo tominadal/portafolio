@@ -9,11 +9,12 @@ import { ExternalLink, Search, ChevronLeft, ChevronRight, ChevronDown, Eye } fro
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import { projects as allProjects } from "@/lib/projects-data"
+import { client } from "@/sanity/lib/client"
+import { allProjectsQuery } from "@/sanity/lib/queries"
 
 interface Project {
-  id: number
-  slug: string
+  _id: string
+  slug: { current: string }
   title: string
   titleEn?: string
   description: string
@@ -22,6 +23,7 @@ interface Project {
   tags: string[]
   category: string
   demoUrl?: string
+  order: number
 }
 
 const categories = ["All", "landing page", "website corporativo", "landing page / e-commerce híbrido", "website / portal reservas"]
@@ -29,19 +31,29 @@ const ITEMS_PER_PAGE = 6
 
 export default function ProjectsPage() {
   const { t, language } = useLanguage()
-  // Exclude Zevetix and Nexium from projects page (they appear only on home page)
-  const [projects] = useState<Project[]>(allProjects.filter(p => p.slug !== 'zevetix' && p.slug !== 'nexium'))
+  const [allProjects, setAllProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [sortBy, setSortBy] = useState("recent")
   const [currentPage, setCurrentPage] = useState(1)
   const [isCategoryOpen, setIsCategoryOpen] = useState(false)
 
-
-
   useEffect(() => {
     document.title = language === "es" ? "Tomás Nadal - Proyectos" : "Tomás Nadal - Projects"
   }, [language])
+
+  useEffect(() => {
+    client.fetch(allProjectsQuery).then((projects: Project[]) => {
+      // Exclude Zevetix and Nexium from projects page (they appear only on home page)
+      const filtered = projects.filter((p: Project) => {
+        const slug = p.slug?.current || ''
+        return slug !== 'zevetix' && slug !== 'nexium'
+      })
+      setAllProjects(filtered)
+      setLoading(false)
+    })
+  }, [])
 
   useEffect(() => {
     const elements = document.querySelectorAll(
@@ -63,7 +75,7 @@ export default function ProjectsPage() {
     })
   }, [])
 
-  const filteredProjects = projects
+  const filteredProjects = allProjects
     .filter((project) => {
       const matchesSearch =
         project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -72,14 +84,52 @@ export default function ProjectsPage() {
       return matchesSearch && matchesCategory
     })
     .sort((a, b) => {
-      if (sortBy === "recent") return b.id - a.id
-      if (sortBy === "oldest") return a.id - b.id
+      if (sortBy === "recent") return (a.order || 0) - (b.order || 0)
+      if (sortBy === "oldest") return (b.order || 0) - (a.order || 0)
       return 0
     })
 
   const totalPages = Math.max(1, Math.ceil(filteredProjects.length / ITEMS_PER_PAGE))
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
   const paginatedProjects = filteredProjects.slice(startIndex, startIndex + ITEMS_PER_PAGE)
+
+  if (loading) {
+    return (
+      <>
+        <Navigation />
+        <main className="min-h-screen pt-16 bg-background">
+          <section className="relative py-16 sm:py-20 overflow-hidden">
+            <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+              <div className="text-center mb-12">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-foreground mb-4 text-balance">
+                  {t("projects.title")}
+                </h1>
+              </div>
+              <div className="flex flex-col lg:flex-row gap-8">
+                {/* Skeleton filter panel */}
+                <aside className="lg:w-64 shrink-0">
+                  <div className="skeleton h-80 w-full" />
+                </aside>
+                {/* Skeleton cards */}
+                <div className="flex-1">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                      <div key={i}>
+                        <div className="skeleton h-64 w-full mb-4" />
+                        <div className="skeleton h-5 w-3/4 mb-2" />
+                        <div className="skeleton h-4 w-1/2" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+        <Footer />
+      </>
+    )
+  }
 
   return (
     <>
@@ -183,9 +233,9 @@ export default function ProjectsPage() {
 
               <div className="flex-1">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                  {paginatedProjects.map((project) => (
-                    <div key={project.id} className="group flex flex-col">
-                      <Link href={`/projects/${project.slug}`}>
+                  {paginatedProjects.map((project, index) => (
+                    <div key={project._id} className="group flex flex-col scroll-reveal" style={{ transitionDelay: `${index * 100}ms` }}>
+                      <Link href={`/projects/${project.slug.current}`}>
                         <div className="relative h-64 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-600 mb-4 bg-[#1a1a1a] dark:bg-[#232323] pt-6 px-6 pb-0 flex items-end justify-center">
                           <div className="relative w-full aspect-[16/9]">
                             <Image
@@ -237,7 +287,7 @@ export default function ProjectsPage() {
 
                         {/* Tags */}
                         <div className="flex flex-wrap gap-2">
-                          {project.tags.slice(0, 3).map((tag) => (
+                          {project.tags && project.tags.slice(0, 3).map((tag) => (
                             <span
                               key={tag}
                               className="text-xs px-3 py-1 rounded-full bg-accent/10 text-accent font-medium"

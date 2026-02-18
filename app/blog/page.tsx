@@ -8,19 +8,84 @@ import { useLanguage } from "@/components/language-provider"
 import { Clock } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { blogPosts } from "@/lib/blog-data"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { client } from "@/sanity/lib/client"
+import { allBlogPostsQuery } from "@/sanity/lib/queries"
+
+interface SanityBlogPost {
+  _id: string
+  title: string
+  titleEn: string
+  slug: { current: string }
+  excerpt: string
+  excerptEn: string
+  image: string
+  category: string
+  categoryEn: string
+  date: string
+  readTime: number
+  author: string
+}
 
 export default function BlogPage() {
   const { t, language } = useLanguage()
+  const [blogPosts, setBlogPosts] = useState<SanityBlogPost[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    document.title = language === "es" ? "Tomás Nadal - Blog" : "Tomás Nadal - Blog"
+  }, [language])
+
+  useEffect(() => {
+    client.fetch(allBlogPostsQuery).then((posts: SanityBlogPost[]) => {
+      setBlogPosts(posts)
+      setLoading(false)
+    })
+  }, [])
 
   // Get featured articles (first 2)
   const featuredPosts = blogPosts.slice(0, 2)
   const regularPosts = blogPosts.slice(2)
 
-  useEffect(() => {
-    document.title = language === "es" ? "Tomás Nadal - Blog" : "Tomás Nadal - Blog"
-  }, [language])
+  if (loading) {
+    return (
+      <>
+        <Navigation />
+        <main className="min-h-screen pt-16 bg-background">
+          <section className="relative py-16 sm:py-24 bg-background">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+              <div className="text-center max-w-3xl mx-auto mb-16">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground mb-4">
+                  {language === "es" ? "Blog" : "Blog"}
+                </h1>
+              </div>
+              {/* Skeleton featured */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                {[1, 2].map((i) => (
+                  <div key={i}>
+                    <div className="skeleton h-72 w-full mb-4" />
+                    <div className="skeleton h-5 w-3/4 mb-2" />
+                    <div className="skeleton h-4 w-1/2" />
+                  </div>
+                ))}
+              </div>
+              {/* Skeleton regular */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i}>
+                    <div className="skeleton h-72 w-full mb-4" />
+                    <div className="skeleton h-5 w-3/4 mb-2" />
+                    <div className="skeleton h-4 w-1/2" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </main>
+        <Footer />
+      </>
+    )
+  }
 
   return (
     <>
@@ -46,9 +111,9 @@ export default function BlogPage() {
                 {language === "es" ? "Artículos destacados" : "Featured articles"}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {featuredPosts.map((post) => (
-                  <div key={post.id} className="group">
-                    <Link href={`/blog/${post.slug}`} className="block">
+                {featuredPosts.map((post, index) => (
+                  <div key={post._id} className="group scroll-reveal" style={{ transitionDelay: `${index * 100}ms` }}>
+                    <Link href={`/blog/${post.slug.current}`} className="block">
                       <div className="relative h-72 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-500 mb-4">
                         <Image
                           src={post.image || "/placeholder.svg"}
@@ -95,9 +160,9 @@ export default function BlogPage() {
                 {language === "es" ? "Todos los artículos" : "All articles"}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {regularPosts.map((post) => (
-                  <div key={post.id} className="group">
-                    <Link href={`/blog/${post.slug}`} className="block">
+                {regularPosts.map((post, index) => (
+                  <div key={post._id} className="group scroll-reveal" style={{ transitionDelay: `${index * 80}ms` }}>
+                    <Link href={`/blog/${post.slug.current}`} className="block">
                       <div className="relative h-72 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-500 mb-4">
                         <Image
                           src={post.image || "/placeholder.svg"}

@@ -9,29 +9,80 @@ import { ArrowLeft, Calendar, Clock } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { blogPosts } from "@/lib/blog-data"
 import { notFound } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { client } from "@/sanity/lib/client"
+import { blogPostBySlugQuery, allBlogPostsQuery } from "@/sanity/lib/queries"
+
+interface SanityBlogPost {
+  _id: string
+  title: string
+  titleEn: string
+  slug: { current: string }
+  excerpt: string
+  excerptEn: string
+  image: string
+  content: string
+  contentEn: string
+  category: string
+  categoryEn: string
+  date: string
+  readTime: number
+  author: string
+}
 
 export default function BlogArticlePage() {
   const { t, language } = useLanguage()
   const params = useParams()
+  const [blogPost, setBlogPost] = useState<SanityBlogPost | null>(null)
+  const [relatedPosts, setRelatedPosts] = useState<SanityBlogPost[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const blogPost = blogPosts.find((post) => post.slug === params.slug)
+  useEffect(() => {
+    async function fetchData() {
+      const post = await client.fetch(blogPostBySlugQuery, { slug: params.slug })
+      if (!post) {
+        setLoading(false)
+        return
+      }
+      setBlogPost(post)
+
+      // Fetch all posts for related
+      const allPosts: SanityBlogPost[] = await client.fetch(allBlogPostsQuery)
+      const related = allPosts
+        .filter((p) => p.slug.current !== params.slug)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 2)
+      setRelatedPosts(related)
+      setLoading(false)
+    }
+    fetchData()
+  }, [params.slug])
+
+  useEffect(() => {
+    if (blogPost) {
+      const title = language === "es" ? blogPost.title : blogPost.titleEn
+      document.title = `Tomás Nadal - ${title}`
+    }
+  }, [blogPost, language])
+
+  if (loading) {
+    return (
+      <>
+        <Navigation />
+        <main className="min-h-screen pt-16 bg-background">
+          <div className="container mx-auto px-4 py-24 text-center">
+            <p className="text-muted-foreground">{language === "es" ? "Cargando artículo..." : "Loading article..."}</p>
+          </div>
+        </main>
+        <Footer />
+      </>
+    )
+  }
 
   if (!blogPost) {
     notFound()
   }
-
-  const relatedPosts = blogPosts
-    .filter((post) => post.slug !== blogPost.slug)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 2)
-
-  useEffect(() => {
-    const title = language === "es" ? blogPost.title : blogPost.titleEn
-    document.title = `Tomás Nadal - ${title}`
-  }, [blogPost, language])
 
   return (
     <>
@@ -113,10 +164,10 @@ export default function BlogArticlePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {relatedPosts.map((post) => (
                   <Card
-                    key={post.id}
+                    key={post._id}
                     className="bg-card border-0 shadow-sm hover:shadow-md transition-all group overflow-hidden"
                   >
-                    <Link href={`/blog/${post.slug}`} className="block">
+                    <Link href={`/blog/${post.slug.current}`} className="block">
                       <div className="relative h-48 overflow-hidden">
                         <Image
                           src={post.image || "/placeholder.svg"}

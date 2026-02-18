@@ -11,16 +11,23 @@
     "setup": "powershell -ExecutionPolicy Bypass -File ./scripts/setup.ps1"
   },
   "dependencies": {
+    "@portabletext/react": "^6.0.2",
     "@radix-ui/react-dialog": "latest",
+    "@sanity/client": "^7.15.0",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "4",
     "@vercel/analytics": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.454.0",
     "next": "15.1.9",
+    "next-sanity": "^11.6.12",
     "next-themes": "latest",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "react-icons": "latest",
+    "sanity": "^4.22.0",
+    "styled-components": "6",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "tw-animate-css": "latest"

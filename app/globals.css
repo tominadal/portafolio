@@ -194,8 +194,6 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    cursor: none;
-    /* Hide default cursor for custom cursor */
   }
 
   /* Custom scrollbar styling */
@@ -378,45 +376,59 @@
       transform: scale(1);
     }
   }
+
+  /* Scroll-reveal animations */
+  @keyframes scrollRevealUp {
+    0% {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Custom cursor styles */
-.custom-cursor {
-  position: fixed;
-  pointer-events: none;
-  z-index: 9999;
+/* Skeleton shimmer loading animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
-.cursor-dot {
-  width: 8px;
-  height: 8px;
-  background: hsl(var(--accent));
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.skeleton {
+  background: linear-gradient(90deg,
+      hsl(var(--muted)) 25%,
+      hsl(var(--muted-foreground) / 0.08) 50%,
+      hsl(var(--muted)) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 0.75rem;
 }
 
-.cursor-ring {
-  width: 32px;
-  height: 32px;
-  border: 2px solid hsl(var(--accent));
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s ease, height 0.2s ease;
-}
-
-.cursor-hover .cursor-ring {
-  width: 48px;
-  height: 48px;
-}
-
-.cursor-hover .cursor-dot {
-  transform: translate(-50%, -50%) scale(1.5);
+.dark .skeleton {
+  background: linear-gradient(90deg,
+      hsl(var(--muted)) 25%,
+      hsl(var(--muted-foreground) / 0.12) 50%,
+      hsl(var(--muted)) 75%);
+  background-size: 200% 100%;
 }
 
 /* Faster transitions for smoother hover effects throughout the project */
