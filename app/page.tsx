@@ -307,7 +307,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 auto-rows-[minmax(200px,auto)]">
               <Dialog>
                 <Card
-                  className="sm:col-span-2 lg:row-span-2 bg-card border-0 shadow-sm hover:shadow-md transition-all duration-500 cursor-pointer group"
+                  className="scroll-reveal sm:col-span-2 lg:row-span-2 bg-card border-0 shadow-sm hover:shadow-md transition-all duration-500 cursor-pointer group"
                   onMouseEnter={() => setShowModalButton(true)}
                   onMouseLeave={() => setShowModalButton(false)}
                 >
@@ -435,7 +435,7 @@ export default function HomePage() {
                 </DialogContent>
               </Dialog>
 
-              <Card className="sm:col-span-2 bg-card border-0 shadow-sm">
+              <Card className="scroll-reveal sm:col-span-2 bg-card border-0 shadow-sm">
                 <CardContent className="p-4 sm:p-6 h-full">
                   <div className="grid grid-cols-3 gap-2 sm:gap-4 h-full">
                     <CounterCard end={70} label={language === "es" ? "Proyectos" : "Projects"} />
@@ -447,7 +447,7 @@ export default function HomePage() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-0 shadow-sm">
+              <Card className="scroll-reveal bg-card border-0 shadow-sm">
                 <CardContent className="p-4 sm:p-6 h-full flex flex-col justify-center items-center text-center gap-3">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#f5f4f6] dark:bg-[#1a1a1a] flex items-center justify-center">
                     <svg className="w-6 h-6 sm:w-7 sm:h-7 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -464,7 +464,7 @@ export default function HomePage() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-0 shadow-sm group hover:-translate-y-2 transition-all duration-500">
+              <Card className="scroll-reveal bg-card border-0 shadow-sm group hover:-translate-y-2 transition-all duration-500">
                 <CardContent className="p-4 sm:p-6 h-full flex flex-col justify-center items-center text-center gap-3">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#f5f4f6] dark:bg-[#1a1a1a] flex items-center justify-center group-hover:bg-accent/20 group-hover:rotate-12 transition-all duration-500">
                     <FileText className="w-6 h-6 sm:w-7 h-7 text-accent" />
@@ -484,7 +484,7 @@ export default function HomePage() {
                 </CardContent>
               </Card>
 
-              <Card className="sm:col-span-2 lg:col-span-4 bg-transparent border-[2.5px] border-black dark:border-white hover:border-accent dark:hover:border-accent overflow-hidden hover:scale-[1.01] transition-all duration-500 group">
+              <Card className="scroll-reveal sm:col-span-2 lg:col-span-4 bg-transparent border-[2.5px] border-black dark:border-white hover:border-accent dark:hover:border-accent overflow-hidden hover:scale-[1.01] transition-all duration-500 group">
                 <div className="grid md:grid-cols-[35%_65%] h-full min-h-[300px]">
                   <div className="relative h-full min-h-[250px] p-4">
                     <div className="relative w-full h-full">
@@ -585,7 +585,7 @@ export default function HomePage() {
                 </Card>
               )}
 
-              <Card className="lg:row-span-2 bg-transparent border-[2.5px] border-border dark:border-white hover:border-accent transition-all duration-500 overflow-hidden group">
+              <Card className="scroll-reveal lg:row-span-2 bg-transparent border-[2.5px] border-border dark:border-white hover:border-accent transition-all duration-500 overflow-hidden group">
                 <div className="h-full flex flex-col p-4">
                   <a
                     href="https://nexiumsolutions.site/"
@@ -755,7 +755,7 @@ export default function HomePage() {
                 </DialogContent>
               </Dialog>
 
-              <Card className="sm:col-span-2 bg-card border-0 shadow-sm hover:shadow-md overflow-hidden">
+              <Card className="scroll-reveal sm:col-span-2 bg-card border-0 shadow-sm hover:shadow-md overflow-hidden">
                 <div className="relative h-full min-h-[250px]">
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d105073.50150904932!2d-58.51520919999999!3d-34.6158037!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcca3b4ef90cbd%3A0xa0b3812e88e88e87!2sBuenos%20Aires%2C%20Argentina!5e0!3m2!1sen!2sus!4v1234567890"
@@ -802,7 +802,7 @@ export default function HomePage() {
               )}
             </div>
 
-            <Card className="mt-8 sm:mt-12 lg:mt-16 bg-card border-0 shadow-sm">
+            <Card className="scroll-reveal mt-8 sm:mt-12 lg:mt-16 bg-card border-0 shadow-sm">
               <CardContent className="p-6 sm:p-8">
                 <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
                   <div className="flex flex-col justify-between h-full">
