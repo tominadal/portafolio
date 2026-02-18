@@ -148,8 +148,8 @@ export default function ProjectsPage() {
             </div>
 
             <div className="flex flex-col lg:flex-row gap-8">
-              <aside className="lg:w-64 shrink-0">
-                <div className="space-y-6 bg-card border-0 rounded-lg shadow-sm p-6 lg:sticky lg:top-24">
+              <aside className="lg:w-64 shrink-0 lg:sticky lg:top-24 lg:self-start">
+                <div className="space-y-6 bg-card border-0 rounded-lg shadow-sm p-6">
                   {/* Search */}
                   <div>
                     <h3 className="text-sm font-semibold text-foreground mb-3">{t("projects.search")}</h3>
