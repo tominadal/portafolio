@@ -130,8 +130,8 @@ export function Navigation() {
           <Button
             asChild
             className={`${scrolled
-                ? "bg-white text-black hover:bg-accent hover:text-white dark:bg-white dark:text-black dark:hover:bg-accent dark:hover:text-white px-3 py-3 h-auto"
-                : "bg-foreground text-background hover:bg-foreground/90 dark:bg-[#232323] dark:text-white dark:hover:bg-[#353535] px-6 py-2"
+              ? "bg-white text-black hover:bg-accent hover:text-white dark:bg-white dark:text-black dark:hover:bg-accent dark:hover:text-white px-3 py-3 h-auto"
+              : "bg-foreground text-background hover:bg-foreground/90 dark:bg-[#232323] dark:text-white dark:hover:bg-[#353535] px-6 py-2"
               } rounded-md transition-all duration-500 ease-in-out font-medium whitespace-nowrap`}
           >
             <Link href="/contact">{t("nav.sendMessage")}</Link>

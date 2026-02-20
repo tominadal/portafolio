@@ -198,7 +198,7 @@ export default function HomePage() {
             <div className="bg-[#1a1a1a] dark:bg-[#232323] rounded-[1.5rem] relative w-full overflow-hidden">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center px-4 py-8 md:px-6 md:py-12 lg:px-8 lg:py-14 relative">
                 {/* Left side - Content */}
-                <div className="space-y-4 z-10 relative">
+                <div className="space-y-4 z-10 relative text-center lg:text-left items-center lg:items-start flex flex-col">
                   {/* Badge */}
                   <div className="inline-block px-5 py-2 border border-white rounded-full">
                     <span className="text-sm font-medium text-white">{language === "es" ? "portafolio" : "portfolio"}</span>
@@ -230,11 +230,11 @@ export default function HomePage() {
                   </p>
 
                   {/* CTA Buttons */}
-                  <div className="pt-2 flex flex-col sm:flex-row gap-3">
-                    {/* Primary CTA - With Arrow */}
-                    <Link href="/contact" className="inline-flex items-center group">
-                      <div className="flex items-center rounded-l-2xl bg-[#484848] px-6 py-2.5 h-12">
-                        <span className="text-sm font-medium text-white">
+                  <div className="pt-2 flex flex-row gap-3 w-full">
+                    {/* Primary CTA - 70% on mobile */}
+                    <Link href="/contact" className="inline-flex items-center group" style={{ flex: '7 1 0%' }}>
+                      <div className="flex items-center justify-center rounded-l-2xl bg-[#484848] px-4 sm:px-6 py-2.5 h-12 flex-1">
+                        <span className="text-sm font-medium text-white whitespace-nowrap">
                           {language === "es" ? "Enviar mensaje" : "Send message"}
                         </span>
                       </div>
@@ -245,12 +245,14 @@ export default function HomePage() {
                       </div>
                     </Link>
 
-                    {/* Secondary CTA */}
+                    {/* Secondary CTA - 30% on mobile */}
                     <Link
                       href="/projects"
-                      className="inline-flex items-center justify-center h-12 px-6 rounded-2xl bg-[#484848] hover:bg-[#5a5a5a] text-white text-sm font-medium transition-colors"
+                      className="inline-flex items-center justify-center h-12 px-4 sm:px-6 rounded-2xl bg-[#484848] hover:bg-[#5a5a5a] text-white text-sm font-medium transition-colors"
+                      style={{ flex: '3 1 0%' }}
                     >
-                      {language === "es" ? "Ver proyectos" : "View projects"}
+                      <span className="sm:hidden">{language === "es" ? "Proyectos" : "Projects"}</span>
+                      <span className="hidden sm:inline">{language === "es" ? "Ver proyectos" : "View projects"}</span>
                     </Link>
                   </div>
                 </div>
@@ -264,7 +266,7 @@ export default function HomePage() {
                         src="/elementos/1.avif"
                         alt="Elemento 1"
                         fill
-                        className="object-contain hover:scale-110 transition-transform duration-500"
+                        className="object-contain hover:scale-110 transition-transform duration-1000"
                         priority
                       />
                     </div>
@@ -277,7 +279,7 @@ export default function HomePage() {
                         src="/elementos/2.avif"
                         alt="Elemento 2"
                         fill
-                        className="object-contain hover:scale-110 transition-transform duration-500"
+                        className="object-contain hover:scale-110 transition-transform duration-1000"
                         priority
                       />
                     </div>
@@ -290,7 +292,7 @@ export default function HomePage() {
                         src="/elementos/3.avif"
                         alt="Elemento 3"
                         fill
-                        className="object-contain hover:scale-110 transition-transform duration-500"
+                        className="object-contain hover:scale-110 transition-transform duration-1000"
                         priority
                       />
                     </div>
@@ -307,7 +309,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 auto-rows-[minmax(200px,auto)]">
               <Dialog>
                 <Card
-                  className="scroll-reveal sm:col-span-2 lg:row-span-2 bg-card border-0 shadow-sm hover:shadow-md transition-all duration-500 cursor-pointer group"
+                  className="scroll-reveal sm:col-span-2 lg:row-span-2 bg-card border-0 shadow-sm hover:shadow-md transition-all duration-1000 cursor-pointer group"
                   onMouseEnter={() => setShowModalButton(true)}
                   onMouseLeave={() => setShowModalButton(false)}
                 >
@@ -351,7 +353,7 @@ export default function HomePage() {
                           href="https://github.com/eltanook"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-accent transition-colors duration-500"
+                          className="text-muted-foreground hover:text-accent transition-colors duration-1000"
                         >
                           <FaGithub className="w-5 h-5" />
                         </a>
@@ -359,7 +361,7 @@ export default function HomePage() {
                           href="https://www.linkedin.com/in/tomasnadal/"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-accent transition-colors duration-500"
+                          className="text-muted-foreground hover:text-accent transition-colors duration-1000"
                         >
                           <FaLinkedin className="w-5 h-5" />
                         </a>
@@ -367,7 +369,7 @@ export default function HomePage() {
                           href="https://www.instagram.com/tominadal_/"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-accent transition-colors duration-500"
+                          className="text-muted-foreground hover:text-accent transition-colors duration-1000"
                         >
                           <FaInstagram className="w-5 h-5" />
                         </a>
@@ -375,7 +377,7 @@ export default function HomePage() {
                           href="https://api.whatsapp.com/send?phone=+54%209%2011%203647%204934&text=Hola%20Tom%C3%A1s,%20vengo%20de%20tu%20portafolio!"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-accent transition-colors duration-500"
+                          className="text-muted-foreground hover:text-accent transition-colors duration-1000"
                         >
                           <FaWhatsapp className="w-5 h-5" />
                         </a>
@@ -383,7 +385,7 @@ export default function HomePage() {
                       <DialogTrigger asChild>
                         <Button
                           size="sm"
-                          className={`bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-500 ${showModalButton ? "opacity-100" : "opacity-0"}`}
+                          className={`bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-1000 ${showModalButton ? "opacity-100" : "opacity-0"}`}
                         >
                           {language === "es" ? "Ver más" : "View more"}
                         </Button>
@@ -439,7 +441,7 @@ export default function HomePage() {
                 <CardContent className="p-4 sm:p-6 h-full">
                   <div className="grid grid-cols-3 gap-2 sm:gap-4 h-full">
                     <CounterCard end={70} label={language === "es" ? "Proyectos" : "Projects"} />
-                    <div className="flex flex-col justify-center items-center text-center border-x border-border">
+                    <div className="flex flex-col justify-center items-center text-center sm:border-x sm:border-border">
                       <CounterCard end={40} label={language === "es" ? "Clientes" : "Clients"} />
                     </div>
                     <CounterCard end={5} label={language === "es" ? "Años" : "Years"} />
@@ -447,7 +449,49 @@ export default function HomePage() {
                 </CardContent>
               </Card>
 
-              <Card className="scroll-reveal bg-card border-0 shadow-sm">
+              {/* Mobile: combined age + CV card */}
+              <Card className="scroll-reveal sm:hidden bg-card border-0 shadow-sm">
+                <CardContent className="p-4 h-full">
+                  <div className="flex items-center justify-center gap-8">
+                    {/* Age side */}
+                    <div className="flex-1 flex flex-col items-center text-center gap-1.5">
+                      <div className="w-10 h-10 rounded-xl bg-[#f5f4f6] dark:bg-[#1a1a1a] flex items-center justify-center">
+                        <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <line x1="16" y1="2" x2="16" y2="6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <line x1="8" y1="2" x2="8" y2="6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <line x1="3" y1="10" x2="21" y2="10" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                      <div className="text-2xl font-semibold text-accent">{age}</div>
+                      <span className="text-xs font-medium text-muted-foreground">
+                        {language === "es" ? "años" : "years old"}
+                      </span>
+                    </div>
+                    {/* CV side */}
+                    <div className="flex-1 flex flex-col items-center text-center gap-1.5">
+                      <div className="w-10 h-10 rounded-xl bg-[#f5f4f6] dark:bg-[#1a1a1a] flex items-center justify-center">
+                        <FileText className="w-5 h-5 text-accent" />
+                      </div>
+                      <h3 className="text-sm font-semibold text-foreground">
+                        {language === "es" ? "Mi CV" : "My CV"}
+                      </h3>
+                      <Button
+                        asChild
+                        size="sm"
+                        className="bg-foreground dark:bg-background text-background dark:text-foreground hover:bg-foreground/90 dark:hover:bg-background/90 transition-all duration-1000 text-xs h-8"
+                      >
+                        <a href="/CV — Tomás Nadal 2025.pdf" download="CV-Tomas-Nadal-2025.pdf">
+                          {language === "es" ? "Descargar" : "Download"}
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Desktop: separate age and CV cards (unchanged) */}
+              <Card className="scroll-reveal hidden sm:block bg-card border-0 shadow-sm">
                 <CardContent className="p-4 sm:p-6 h-full flex flex-col justify-center items-center text-center gap-3">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#f5f4f6] dark:bg-[#1a1a1a] flex items-center justify-center">
                     <svg className="w-6 h-6 sm:w-7 sm:h-7 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -464,9 +508,9 @@ export default function HomePage() {
                 </CardContent>
               </Card>
 
-              <Card className="scroll-reveal bg-card border-0 shadow-sm group hover:-translate-y-2 transition-all duration-500">
+              <Card className="scroll-reveal hidden sm:block bg-card border-0 shadow-sm group hover:-translate-y-2 transition-all duration-1000">
                 <CardContent className="p-4 sm:p-6 h-full flex flex-col justify-center items-center text-center gap-3">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#f5f4f6] dark:bg-[#1a1a1a] flex items-center justify-center group-hover:bg-accent/20 group-hover:rotate-12 transition-all duration-500">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#f5f4f6] dark:bg-[#1a1a1a] flex items-center justify-center group-hover:bg-accent/20 group-hover:rotate-12 transition-all duration-1000">
                     <FileText className="w-6 h-6 sm:w-7 h-7 text-accent" />
                   </div>
                   <h3 className="text-base sm:text-lg font-semibold text-foreground">
@@ -475,7 +519,7 @@ export default function HomePage() {
                   <Button
                     asChild
                     size="sm"
-                    className="bg-foreground dark:bg-background text-background dark:text-foreground hover:bg-foreground/90 dark:hover:bg-background/90 transition-all duration-500"
+                    className="bg-foreground dark:bg-background text-background dark:text-foreground hover:bg-foreground/90 dark:hover:bg-background/90 transition-all duration-1000"
                   >
                     <a href="/CV — Tomás Nadal 2025.pdf" download="CV-Tomas-Nadal-2025.pdf">
                       {language === "es" ? "Descargar" : "Download"}
@@ -484,16 +528,26 @@ export default function HomePage() {
                 </CardContent>
               </Card>
 
-              <Card className="scroll-reveal sm:col-span-2 lg:col-span-4 bg-transparent border-[2.5px] border-black dark:border-white hover:border-accent dark:hover:border-accent overflow-hidden hover:scale-[1.01] transition-all duration-500 group">
+              <Card className="scroll-reveal sm:col-span-2 lg:col-span-4 bg-transparent border-[2.5px] border-black dark:border-white hover:border-accent dark:hover:border-accent overflow-hidden hover:scale-[1.01] transition-all duration-1000 group">
                 <div className="grid md:grid-cols-[35%_65%] h-full min-h-[300px]">
                   <div className="relative h-full min-h-[250px] p-4">
-                    <div className="relative w-full h-full">
+                    <div className="relative w-full h-full overflow-hidden rounded-lg">
                       <Image
-                        src="/Gemini_Generated_Image_xml7o8xml7o8xml7.png"
+                        src="/liquid-black.jpg"
                         alt="Mi trayectoria"
                         fill
-                        className="object-cover rounded-lg grayscale group-hover:grayscale-0 transition-all duration-500"
+                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000"
                       />
+                      {/* Logo overlay */}
+                      <div className="absolute top-4 left-8 w-12 h-12 sm:w-14 sm:h-14 opacity-80 group-hover:opacity-100 transition-opacity duration-1000">
+                        <Image
+                          src="/logo.png"
+                          alt="Logo"
+                          fill
+                          className="object-contain"
+                          style={{ filter: 'invert(1) brightness(2)' }}
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="p-6 sm:p-8 flex flex-col justify-center">
@@ -511,7 +565,7 @@ export default function HomePage() {
                       <Button
                         asChild
                         size="sm"
-                        className="bg-foreground hover:bg-foreground/90 text-background transition-all duration-500 group/btn"
+                        className="bg-foreground hover:bg-foreground/90 text-background transition-all duration-1000 group/btn"
                       >
                         <Link href="/contact" className="inline-flex items-center gap-2">
                           {language === "es" ? "Enviar mensaje" : "Send message"}
@@ -524,7 +578,7 @@ export default function HomePage() {
                         asChild
                         size="sm"
                         variant="outline"
-                        className="bg-transparent dark:border-white transition-all duration-500"
+                        className="bg-transparent dark:border-white transition-all duration-1000"
                       >
                         <Link href="/projects">
                           {language === "es" ? "Ver proyectos" : "View projects"}
@@ -585,7 +639,7 @@ export default function HomePage() {
                 </Card>
               )}
 
-              <Card className="scroll-reveal lg:row-span-2 bg-transparent border-[2.5px] border-border dark:border-white hover:border-accent transition-all duration-500 overflow-hidden group">
+              <Card className="scroll-reveal lg:row-span-2 bg-transparent border-[2.5px] border-black dark:border-white hover:border-accent dark:hover:border-accent overflow-hidden hover:scale-[1.01] transition-all duration-1000 group">
                 <div className="h-full flex flex-col p-4">
                   <a
                     href="https://nexiumsolutions.site/"
@@ -598,7 +652,7 @@ export default function HomePage() {
                         src="/logo-nexium.png"
                         alt="Nexium"
                         fill
-                        className="object-contain grayscale group-hover/nexium:grayscale-0 transition-all duration-500"
+                        className="object-contain grayscale group-hover/nexium:grayscale-0 transition-all duration-1000"
                       />
                     </div>
                   </a>
@@ -613,7 +667,7 @@ export default function HomePage() {
                         src="/logo-zevetix.png"
                         alt="Zevetix"
                         fill
-                        className="object-contain grayscale group-hover/zevetix:grayscale-0 transition-all duration-500"
+                        className="object-contain grayscale group-hover/zevetix:grayscale-0 transition-all duration-1000"
                       />
                     </div>
                   </a>
@@ -622,7 +676,7 @@ export default function HomePage() {
 
               <Dialog>
                 <Card
-                  className="sm:col-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02] transition-all duration-500"
+                  className="sm:col-span-2 bg-card border-0 shadow-sm hover:shadow-md group overflow-hidden hover:scale-[1.02] transition-all duration-1000"
                   onMouseEnter={() => setShowIniciosButton(true)}
                   onMouseLeave={() => setShowIniciosButton(false)}
                 >
@@ -655,7 +709,7 @@ export default function HomePage() {
                       <DialogTrigger asChild>
                         <Button
                           size="sm"
-                          className="bg-foreground hover:bg-foreground/90 text-background mt-4 transition-all duration-500"
+                          className="bg-foreground hover:bg-foreground/90 text-background mt-4 transition-all duration-1000"
                         >
                           {language === "es" ? "Ver más" : "View more"}
                         </Button>

@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     siteName: "Tomás Nadal Portfolio",
     images: [
       {
-        url: "/logo.png",
+        url: "/liquid-black.jpg",
         width: 1200,
         height: 630,
         alt: "Tomás Nadal - Full Stack Developer",
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     title: "Tomás Nadal - Full Stack Developer",
     description:
       "Portfolio profesional de Tomás Nadal - Full Stack Developer especializado en React, Next.js y soluciones digitales innovadoras.",
-    images: ["/logo.png"],
+    images: ["/liquid-black.jpg"],
     creator: "@tomasnadal",
   },
   robots: {
@@ -115,6 +115,24 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={`${manrope.variable} ${geistMono.variable} font-sans antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Tomás Nadal",
+              url: "https://tomasnadal.com",
+              jobTitle: "Full Stack Developer",
+              sameAs: [
+                "https://github.com/eltanook",
+                "https://www.linkedin.com/in/tomasnadal/",
+                "https://www.instagram.com/tominadal_/",
+              ],
+              description: "Full Stack Developer especializado en React, Next.js y soluciones digitales innovadoras.",
+            }),
+          }}
+        />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange={false}>
           <LanguageProvider>
             <ScrollReveal />

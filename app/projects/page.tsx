@@ -27,7 +27,7 @@ interface Project {
 }
 
 const categories = ["All", "landing page", "website corporativo", "landing page / e-commerce híbrido", "website / portal reservas"]
-const ITEMS_PER_PAGE = 6
+const ITEMS_PER_PAGE = 8
 
 export default function ProjectsPage() {
   const { t, language } = useLanguage()
@@ -136,20 +136,103 @@ export default function ProjectsPage() {
       <Navigation />
       <main className="min-h-screen pt-16 bg-background">
         {/* Hero Section */}
-        <section className="relative py-16 sm:py-20 overflow-hidden">
+        <section className="relative py-10 sm:py-16 lg:py-20">
           <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-            <div className="text-center mb-12">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-foreground mb-4 text-balance">
+            <div className="text-center mb-8 sm:mb-12">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground mb-3 sm:mb-4 text-balance">
                 {t("projects.title")}
               </h1>
-              <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto text-pretty leading-relaxed">
+              <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto text-pretty leading-relaxed">
                 {t("projects.subtitle")}
               </p>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-8">
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
               <aside className="lg:w-64 shrink-0 lg:sticky lg:top-24 lg:self-start">
-                <div className="space-y-6 bg-card border-0 rounded-lg shadow-sm p-6">
+                {/* Mobile/Tablet: compact horizontal filter bar */}
+                <div className="lg:hidden bg-card border-0 rounded-lg shadow-sm p-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {/* Search */}
+                    <div className="sm:col-span-1">
+                      <label className="text-xs font-semibold text-foreground mb-1.5 block">{t("projects.search")}</label>
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <input
+                          type="text"
+                          placeholder={t("projects.searchPlaceholder")}
+                          value={searchQuery}
+                          onChange={(e) => {
+                            setSearchQuery(e.target.value)
+                            setCurrentPage(1)
+                          }}
+                          className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-md text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent transition-all"
+                        />
+                      </div>
+                    </div>
+                    {/* Category */}
+                    <div className="sm:col-span-1">
+                      <label className="text-xs font-semibold text-foreground mb-1.5 block">{t("projects.categories")}</label>
+                      <div className="relative">
+                        <button
+                          onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+                          className="w-full flex items-center justify-between px-4 py-2 bg-background border border-border rounded-md text-sm text-foreground hover:border-accent transition-colors"
+                        >
+                          <span className="truncate">{selectedCategory}</span>
+                          <ChevronDown
+                            className={`w-4 h-4 shrink-0 ml-2 transition-transform duration-200 ${isCategoryOpen ? "rotate-180" : ""}`}
+                          />
+                        </button>
+                        {isCategoryOpen && (
+                          <div className="absolute z-10 w-full mt-1 bg-background border border-border rounded-md shadow-lg overflow-hidden">
+                            {categories.map((category) => (
+                              <button
+                                key={category}
+                                onClick={() => {
+                                  setSelectedCategory(category)
+                                  setCurrentPage(1)
+                                  setIsCategoryOpen(false)
+                                }}
+                                className={`w-full text-left px-4 py-2 text-sm transition-colors ${selectedCategory === category
+                                  ? "bg-accent text-accent-foreground font-medium"
+                                  : "text-foreground hover:bg-accent/10"
+                                  }`}
+                              >
+                                {category}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    {/* Sort */}
+                    <div className="sm:col-span-1">
+                      <label className="text-xs font-semibold text-foreground mb-1.5 block">{t("projects.sortBy")}</label>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setSortBy("recent")}
+                          className={`flex-1 text-center px-3 py-2 rounded-md text-sm transition-colors ${sortBy === "recent"
+                            ? "bg-foreground text-background font-medium"
+                            : "text-muted-foreground bg-background border border-border hover:bg-accent/10 hover:text-foreground"
+                            }`}
+                        >
+                          {t("projects.recent")}
+                        </button>
+                        <button
+                          onClick={() => setSortBy("oldest")}
+                          className={`flex-1 text-center px-3 py-2 rounded-md text-sm transition-colors ${sortBy === "oldest"
+                            ? "bg-foreground text-background font-medium"
+                            : "text-muted-foreground bg-background border border-border hover:bg-accent/10 hover:text-foreground"
+                            }`}
+                        >
+                          {t("projects.oldest")}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Desktop: vertical sidebar (unchanged) */}
+                <div className="hidden lg:block space-y-6 bg-card border-0 rounded-lg shadow-sm p-6">
                   {/* Search */}
                   <div>
                     <h3 className="text-sm font-semibold text-foreground mb-3">{t("projects.search")}</h3>
@@ -232,11 +315,11 @@ export default function ProjectsPage() {
               </aside>
 
               <div className="flex-1">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 lg:gap-6 items-start">
                   {paginatedProjects.map((project, index) => (
                     <div key={project._id} className="group flex flex-col scroll-reveal" style={{ transitionDelay: `${index * 100}ms` }}>
                       <Link href={`/projects/${project.slug.current}`}>
-                        <div className="relative h-64 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-600 mb-4 bg-[#1a1a1a] dark:bg-[#232323] pt-6 px-6 pb-0 flex items-end justify-center">
+                        <div className="relative h-48 sm:h-56 lg:h-64 overflow-hidden rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-600 mb-3 sm:mb-4 bg-[#1a1a1a] dark:bg-[#232323] pt-4 px-4 sm:pt-6 sm:px-6 pb-0 flex items-end justify-center">
                           <div className="relative w-full aspect-[16/9]">
                             <Image
                               src={project.image || "/placeholder.svg"}
@@ -277,20 +360,20 @@ export default function ProjectsPage() {
                         </div>
                       </Link>
 
-                      <div className="space-y-3 flex-1 flex flex-col">
-                        <h3 className="text-xl font-semibold text-foreground group-hover:text-accent transition-colors duration-500">
+                      <div className="space-y-2 sm:space-y-3 flex-1 flex flex-col">
+                        <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground group-hover:text-accent transition-colors duration-1000">
                           {language === "en" && project.titleEn ? project.titleEn : project.title}
                         </h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed flex-1">
+                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed flex-1">
                           {language === "en" && project.descriptionEn ? project.descriptionEn : project.description}
                         </p>
 
                         {/* Tags */}
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2">
                           {project.tags && project.tags.slice(0, 3).map((tag) => (
                             <span
                               key={tag}
-                              className="text-xs px-3 py-1 rounded-full bg-accent/10 text-accent font-medium"
+                              className="text-[10px] sm:text-xs px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-accent/10 text-accent font-medium"
                             >
                               {tag}
                             </span>
@@ -307,7 +390,7 @@ export default function ProjectsPage() {
                   </div>
                 )}
 
-                <div className="flex items-center justify-center gap-2 mt-12">
+                <div className="flex items-center justify-center gap-1.5 sm:gap-2 mt-8 sm:mt-12">
                   <Button
                     variant="outline"
                     size="sm"

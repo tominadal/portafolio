@@ -33,8 +33,8 @@ export function Footer() {
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl mb-8">
       <footer className="bg-[#0f0f0f] text-white rounded-2xl shadow-sm">
         <div className="px-6 sm:px-8 lg:px-12 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div className="space-y-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8">
+            <div className="col-span-2 md:col-span-1 space-y-3">
               {pathname === "/" ? (
                 <button
                   onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -86,7 +86,7 @@ export function Footer() {
             </div>
 
             {/* Contact */}
-            <div className="space-y-3">
+            <div className="col-span-2 md:col-span-1 space-y-3">
               <h3 className="text-sm font-semibold text-white uppercase tracking-wider">{t("footer.contact")}</h3>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2">

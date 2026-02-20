@@ -114,12 +114,12 @@ export default function BlogPage() {
                 {featuredPosts.map((post, index) => (
                   <div key={post._id} className="group scroll-reveal" style={{ transitionDelay: `${index * 100}ms` }}>
                     <Link href={`/blog/${post.slug.current}`} className="block">
-                      <div className="relative h-72 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-500 mb-4">
+                      <div className="relative h-72 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-1000 mb-4">
                         <Image
                           src={post.image || "/placeholder.svg"}
                           alt={language === "es" ? post.title : post.titleEn}
                           fill
-                          className="object-cover grayscale-[0.4] group-hover:grayscale-0 group-hover:scale-105 transition-transform duration-500"
+                          className="object-cover grayscale-[0.4] group-hover:grayscale-0 group-hover:scale-105 transition-transform duration-1000"
                         />
                       </div>
                       <div className="space-y-3">
@@ -163,12 +163,12 @@ export default function BlogPage() {
                 {regularPosts.map((post, index) => (
                   <div key={post._id} className="group scroll-reveal" style={{ transitionDelay: `${index * 80}ms` }}>
                     <Link href={`/blog/${post.slug.current}`} className="block">
-                      <div className="relative h-72 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-500 mb-4">
+                      <div className="relative h-72 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-1000 mb-4">
                         <Image
                           src={post.image || "/placeholder.svg"}
                           alt={language === "es" ? post.title : post.titleEn}
                           fill
-                          className="object-cover grayscale-[0.4] group-hover:grayscale-0 group-hover:scale-105 transition-transform duration-500"
+                          className="object-cover grayscale-[0.4] group-hover:grayscale-0 group-hover:scale-105 transition-transform duration-1000"
                         />
                       </div>
                       <div className="space-y-3">
