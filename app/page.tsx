@@ -196,7 +196,7 @@ export default function HomePage() {
         <section className="pt-16 pb-12 md:pt-24 md:pb-16 bg-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div className="bg-[#1a1a1a] dark:bg-[#232323] rounded-[1.5rem] relative w-full overflow-hidden">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center p-4 md:p-6 lg:p-8 relative">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center px-4 py-8 md:px-6 md:py-12 lg:px-8 lg:py-14 relative">
                 {/* Left side - Content */}
                 <div className="space-y-4 z-10 relative">
                   {/* Badge */}

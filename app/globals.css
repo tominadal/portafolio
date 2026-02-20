@@ -346,15 +346,15 @@
   }
 
   .animate-float-slow {
-    animation: float-slow 20s ease-in-out infinite;
+    animation: float-slow 28s ease-in-out infinite;
   }
 
   .animate-float-medium {
-    animation: float-medium 16s ease-in-out infinite;
+    animation: float-medium 22s ease-in-out infinite;
   }
 
   .animate-float-fast {
-    animation: float-fast 14s ease-in-out infinite;
+    animation: float-fast 18s ease-in-out infinite;
   }
 
   .animate-pulse-slow {
@@ -434,7 +434,7 @@
 /* Faster transitions for smoother hover effects throughout the project */
 * {
   transition-property: background-color, border-color, color, transform, opacity, box-shadow;
-  transition-duration: 300ms;
+  transition-duration: 700ms;
   transition-timing-function: ease-in-out;
 }
 
