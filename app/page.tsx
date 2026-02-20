@@ -425,12 +425,12 @@ export default function HomePage() {
                         </div>
                       </div>
                     </div>
-                    <div className="relative w-full h-64 overflow-hidden rounded-lg mt-4">
+                    <div className="relative w-full h-34 overflow-hidden rounded-lg mt-4">
                       <Image
-                        src="/Gemini_Generated_Image_xml7o8xml7o8xml7.png"
+                        src="/andrew-kliatskyi-B_Z9jqassqE-unsplash.jpg"
                         alt="Tomás Nadal working"
                         fill
-                        className="object-cover"
+                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-600"
                       />
                     </div>
                   </div>
