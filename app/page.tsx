@@ -230,9 +230,9 @@ export default function HomePage() {
                   </p>
 
                   {/* CTA Buttons */}
-                  <div className="pt-2 flex flex-row gap-3 w-full">
+                  <div className="pt-2 flex flex-row gap-3 w-full lg:w-fit">
                     {/* Primary CTA - 70% on mobile */}
-                    <Link href="/contact" className="inline-flex items-center group" style={{ flex: '7 1 0%' }}>
+                    <Link href="/contact" className="inline-flex items-center group lg:flex-none" style={{ flex: '7 1 0%' }}>
                       <div className="flex items-center justify-center rounded-l-2xl bg-[#484848] px-4 sm:px-6 py-2.5 h-12 flex-1">
                         <span className="text-sm font-medium text-white whitespace-nowrap">
                           {language === "es" ? "Enviar mensaje" : "Send message"}
@@ -248,11 +248,10 @@ export default function HomePage() {
                     {/* Secondary CTA - 30% on mobile */}
                     <Link
                       href="/projects"
-                      className="inline-flex items-center justify-center h-12 px-4 sm:px-6 rounded-2xl bg-[#484848] hover:bg-[#5a5a5a] text-white text-sm font-medium transition-colors"
+                      className="inline-flex items-center justify-center h-12 px-4 sm:px-6 rounded-2xl bg-[#484848] hover:bg-[#5a5a5a] text-white text-sm font-medium transition-colors lg:flex-none"
                       style={{ flex: '3 1 0%' }}
                     >
-                      <span className="sm:hidden">{language === "es" ? "Proyectos" : "Projects"}</span>
-                      <span className="hidden sm:inline">{language === "es" ? "Ver proyectos" : "View projects"}</span>
+                      {language === "es" ? "Proyectos" : "Projects"}
                     </Link>
                   </div>
                 </div>
@@ -560,12 +559,12 @@ export default function HomePage() {
                         : "I started in 2020 when I bought my first computer. I learned self-taught, participated in bootcamps and built personal projects. Since 2023 I've been studying Data Science at the National University of San Martín. My passion is creating innovative solutions to serve others. Today I lead full development at Nexium Solutions and create unique digital experiences at Zevetix."}
                     </p>
                     {/* CTA Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-fit">
                       {/* Primary CTA */}
                       <Button
                         asChild
                         size="sm"
-                        className="bg-foreground hover:bg-foreground/90 text-background transition-all duration-1000 group/btn"
+                        className="bg-foreground hover:bg-foreground/90 text-background transition-all duration-1000 group/btn lg:flex-1"
                       >
                         <Link href="/contact" className="inline-flex items-center gap-2">
                           {language === "es" ? "Enviar mensaje" : "Send message"}
@@ -578,10 +577,10 @@ export default function HomePage() {
                         asChild
                         size="sm"
                         variant="outline"
-                        className="bg-transparent dark:border-white transition-all duration-1000"
+                        className="bg-transparent dark:border-white transition-all duration-1000 lg:flex-1"
                       >
                         <Link href="/projects">
-                          {language === "es" ? "Ver proyectos" : "View projects"}
+                          {language === "es" ? "Proyectos" : "Projects"}
                         </Link>
                       </Button>
                     </div>
