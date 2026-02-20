@@ -46,7 +46,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
 
   useEffect(() => {
     async function fetchData() {
-      const proj = await client.fetch(projectBySlugQuery, { slug })
+      const decodedSlug = decodeURIComponent(slug)
+      const proj = await client.fetch(projectBySlugQuery, { slug: decodedSlug })
       if (!proj) {
         setLoading(false)
         return

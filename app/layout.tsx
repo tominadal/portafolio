@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     siteName: "Tomás Nadal Portfolio",
     images: [
       {
-        url: "/liquid-black.jpg",
+        url: "/andrew-kliatskyi-B_Z9jqassqE-unsplash.jpg",
         width: 1200,
         height: 630,
         alt: "Tomás Nadal - Full Stack Developer",
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     title: "Tomás Nadal - Full Stack Developer",
     description:
       "Portfolio profesional de Tomás Nadal - Full Stack Developer especializado en React, Next.js y soluciones digitales innovadoras.",
-    images: ["/liquid-black.jpg"],
+    images: ["/andrew-kliatskyi-B_Z9jqassqE-unsplash.jpg"],
     creator: "@tomasnadal",
   },
   robots: {

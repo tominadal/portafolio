@@ -87,16 +87,16 @@ export function Navigation() {
                 key={item.href}
                 href={item.href}
                 className={`px-3 py-1 text-sm font-medium transition-colors duration-500 relative ${scrolled
-                  ? pathname === item.href
+                  ? (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href))
                     ? "text-white font-medium"
                     : "text-gray-300 hover:text-white"
-                  : pathname === item.href
+                  : (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href))
                     ? "text-foreground font-medium"
                     : "text-foreground/70 hover:text-foreground"
                   }`}
               >
                 {item.label}
-                {pathname === item.href && (
+                {(item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)) && (
                   <span
                     className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full ${scrolled ? "bg-white" : "bg-foreground"}`}
                   />
@@ -192,7 +192,7 @@ export function Navigation() {
               key={item.href}
               href={item.href}
               onClick={() => setIsOpen(false)}
-              className={`px-6 py-3 text-base font-medium text-white transition-colors duration-500 relative ${pathname === item.href ? "bg-white/10" : "hover:bg-white/5"
+              className={`px-6 py-3 text-base font-medium text-white transition-colors duration-500 relative ${(item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)) ? "bg-white/10" : "hover:bg-white/5"
                 }`}
             >
               {item.label}

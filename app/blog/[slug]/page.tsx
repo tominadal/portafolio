@@ -40,7 +40,8 @@ export default function BlogArticlePage() {
 
   useEffect(() => {
     async function fetchData() {
-      const post = await client.fetch(blogPostBySlugQuery, { slug: params.slug })
+      const decodedSlug = decodeURIComponent(params.slug as string)
+      const post = await client.fetch(blogPostBySlugQuery, { slug: decodedSlug })
       if (!post) {
         setLoading(false)
         return
