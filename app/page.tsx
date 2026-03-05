@@ -240,7 +240,7 @@ export default function HomePage() {
                       </div>
                       <div className="bg-[#484848] p-1 rounded-r-2xl flex items-center justify-center h-12">
                         <div className="bg-[#ff620a] rounded-lg flex items-center justify-center p-1.5 h-9 w-9">
-                          <ArrowRight className="h-5 w-5 text-white group-hover:translate-x-1 transition-transform duration-300" />
+                          <ArrowRight aria-hidden="true" className="h-5 w-5 text-white group-hover:translate-x-1 transition-transform duration-300" />
                         </div>
                       </div>
                     </Link>
@@ -568,7 +568,7 @@ export default function HomePage() {
                       >
                         <Link href="/contact" className="inline-flex items-center gap-2">
                           {language === "es" ? "Enviar mensaje" : "Send message"}
-                          <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                          <ArrowRight aria-hidden="true" className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
                         </Link>
                       </Button>
 
@@ -912,7 +912,7 @@ export default function HomePage() {
                       >
                         <Link href="/projects">
                           {language === "es" ? "Ver Todos los Proyectos" : "See All Projects"}
-                          <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                          <ArrowRight aria-hidden="true" className="ml-2 group-hover:translate-x-1 transition-transform duration-300" />
                         </Link>
                       </Button>
                       <Button

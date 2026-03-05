@@ -15,22 +15,14 @@ const client = createClient({
     useCdn: false,
 })
 
-const allDocs = await client.fetch('*[_type in ["project", "blogPost"]]')
-const matches = allDocs.filter(d => JSON.stringify(d).includes('zevetix.netlify.app'))
+// Find Eduardo Rivera project
+const docs = await client.fetch('*[_type == "project" && (title match "*Rivera*" || title match "*Eduardo*" || title match "*Seguros*")]{_id, title, demoUrl}')
+console.log('Found:', JSON.stringify(docs, null, 2))
 
-console.log(`Found ${matches.length} documents with zevetix.netlify.app:`)
-for (const doc of matches) {
-    console.log(`  - [${doc._type}] ${doc.title} (${doc._id})`)
-    const patch = {}
-    for (const [key, val] of Object.entries(doc)) {
-        if (typeof val === 'string' && val.includes('zevetix.netlify.app')) {
-            patch[key] = val.replace(/zevetix\.netlify\.app/g, 'zevetix.site')
-            console.log(`    ${key}: ${val} → ${patch[key]}`)
-        }
-    }
-    if (Object.keys(patch).length > 0) {
-        await client.patch(doc._id).set(patch).commit()
-        console.log(`    ✅ Updated!`)
-    }
+// Update demoUrl
+for (const doc of docs) {
+    await client.patch(doc._id).set({ demoUrl: 'https://eduardoriveraseguros.netlify.app/' }).commit()
+    console.log(`✅ Updated ${doc.title} -> https://eduardoriveraseguros.netlify.app/`)
 }
-console.log('\n✨ Done!')
+
+console.log('Done!')
