@@ -224,12 +224,12 @@ export default function HomePage() {
                   </div>
 
                   {/* Title */}
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight text-white dark:text-white">
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-tight text-white dark:text-white">
                     Tomás Nadal
                   </h1>
 
                   {/* Subtitle with Typing Effect */}
-                  <div className="text-lg sm:text-xl md:text-2xl font-medium text-white/90">
+                  <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-medium text-white/90">
                     <TypingEffect
                       texts={[
                         language === "es" ? "Desarrollador web" : "Web developer",
@@ -242,24 +242,24 @@ export default function HomePage() {
                   </div>
 
                   {/* Description */}
-                  <p className="text-sm sm:text-base text-gray-300 dark:text-gray-200 max-w-md leading-relaxed">
+                  <p className="text-base sm:text-lg lg:text-xl text-gray-300 dark:text-gray-200 max-w-xl leading-relaxed">
                     {language === "es"
                       ? "Me gusta crear soluciones, convirtiendo la tecnología en una herramienta al servicio del prójimo."
                       : "I like to create solutions, turning technology into a tool to serve others."}
                   </p>
 
                   {/* CTA Buttons */}
-                  <div className="pt-2 flex flex-row gap-3 w-full lg:w-fit">
+                  <div className="pt-4 flex flex-row gap-4 w-full lg:w-fit">
                     {/* Primary CTA - 70% on mobile */}
                     <Link href="/contact" className="inline-flex items-center group lg:flex-none" style={{ flex: '7 1 0%' }}>
-                      <div className="flex items-center justify-center rounded-l-2xl bg-[#484848] px-4 sm:px-6 py-2.5 h-12 flex-1">
-                        <span className="text-sm font-medium text-white whitespace-nowrap">
+                      <div className="flex items-center justify-center rounded-l-2xl bg-[#484848] px-6 sm:px-8 py-3 h-14 flex-1">
+                        <span className="text-base font-medium text-white whitespace-nowrap">
                           {language === "es" ? "Enviar mensaje" : "Send message"}
                         </span>
                       </div>
-                      <div className="bg-[#484848] p-1 rounded-r-2xl flex items-center justify-center h-12">
-                        <div className="bg-[#ff620a] rounded-lg flex items-center justify-center p-1.5 h-9 w-9">
-                          <ArrowRight aria-hidden="true" className="h-5 w-5 text-white group-hover:translate-x-1 transition-transform duration-300" />
+                      <div className="bg-[#484848] p-1 rounded-r-2xl flex items-center justify-center h-14">
+                        <div className="bg-[#ff620a] rounded-lg flex items-center justify-center p-2 h-11 w-11">
+                          <ArrowRight aria-hidden="true" className="h-6 w-6 text-white group-hover:translate-x-1 transition-transform duration-300" />
                         </div>
                       </div>
                     </Link>
@@ -267,7 +267,7 @@ export default function HomePage() {
                     {/* Secondary CTA - 30% on mobile */}
                     <Link
                       href="/projects"
-                      className="inline-flex items-center justify-center h-12 px-4 sm:px-6 rounded-2xl bg-[#484848] hover:bg-[#5a5a5a] text-white text-sm font-medium transition-colors lg:flex-none"
+                      className="inline-flex items-center justify-center h-14 px-6 sm:px-8 rounded-2xl bg-[#484848] hover:bg-[#5a5a5a] text-white text-base font-medium transition-colors lg:flex-none"
                       style={{ flex: '3 1 0%' }}
                     >
                       {language === "es" ? "Proyectos" : "Projects"}
@@ -278,7 +278,7 @@ export default function HomePage() {
                 {/* Right side - Floating Elements */}
                 <div className="absolute inset-0 pointer-events-none z-20 hidden md:block">
                   {/* Element 1 - Top Center-Right (como espiral) */}
-                  <div className="absolute top-4 right-[15%] w-40 h-40 lg:w-48 lg:h-48 animate-float-slow opacity-100 z-30">
+                  <div className="absolute top-4 right-[15%] w-48 h-48 lg:w-56 lg:h-56 animate-float-slow opacity-100 z-30">
                     <div className="relative w-full h-full brightness-130 dark:brightness-100">
                       <Image
                         src="/elementos/1.avif"
@@ -291,7 +291,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Element 2 - Center (como cruz/estrella) */}
-                  <div className="absolute top-[35%] left-[62%] -translate-x-1/2 w-44 h-44 lg:w-52 lg:h-52 animate-float-medium opacity-100 z-30">
+                  <div className="absolute top-[45%] left-[65%] -translate-x-1/2 w-52 h-52 lg:w-60 lg:h-60 animate-float-medium opacity-100 z-30">
                     <div className="relative w-full h-full brightness-130 dark:brightness-100">
                       <Image
                         src="/elementos/2.avif"
@@ -304,7 +304,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Element 3 - Bottom Right (como anillos) */}
-                  <div className="absolute bottom-4 right-[3%] w-40 h-40 lg:w-48 lg:h-48 animate-float-fast opacity-100 z-30">
+                  <div className="absolute bottom-2 right-[3%] w-56 h-56 lg:w-64 lg:h-64 animate-float-fast opacity-100 z-30">
                     <div className="relative w-full h-full brightness-130 dark:brightness-100">
                       <Image
                         src="/elementos/3.avif"
@@ -343,7 +343,7 @@ export default function HomePage() {
                       <div className="relative overflow-hidden mb-6 h-8">
                         <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-card to-transparent z-10" />
                         <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-card to-transparent z-10" />
-                        <div className="flex gap-2 animate-[scroll-left_20s_linear_infinite] hover:[animation-play-state:paused]">
+                        <div className="flex w-max gap-2 animate-[scroll-left_30s_linear_infinite] hover:[animation-play-state:paused]">
                           {[...technologies, ...technologies].map((tech, index) => (
                             <span
                               key={`${tech}-${index}`}
