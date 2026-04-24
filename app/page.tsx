@@ -17,7 +17,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 import { client } from "@/sanity/lib/client"
-import { featuredProjectsQuery } from "@/sanity/lib/queries"
+import { featuredProjectsQuery, projectCountQuery, landingPageProjectsQuery } from "@/sanity/lib/queries"
 
 interface FeaturedProject {
   _id: string
@@ -125,10 +125,29 @@ export default function HomePage() {
   })
 
   const [featuredProjects, setFeaturedProjects] = useState<FeaturedProject[]>([])
+  const [projectCount, setProjectCount] = useState<number>(0)
+  const [landingPageProjects, setLandingPageProjects] = useState<FeaturedProject[]>([])
 
   useEffect(() => {
     client.fetch(featuredProjectsQuery).then((projects: FeaturedProject[]) => {
-      setFeaturedProjects(projects.slice(0, 3))
+      // Deduplicate projects by slug
+      const uniqueProjects = projects.filter((project, index, self) =>
+        index === self.findIndex((p) => p.slug?.current === project.slug?.current)
+      )
+      setFeaturedProjects(uniqueProjects.slice(0, 3))
+    })
+
+    client.fetch(projectCountQuery).then((slugs: string[]) => {
+      const uniqueSlugs = Array.from(new Set(slugs.filter(s => s)))
+      setProjectCount(uniqueSlugs.length)
+    })
+
+    client.fetch(landingPageProjectsQuery).then((projects: FeaturedProject[]) => {
+      // Deduplicate projects by slug
+      const uniqueProjects = projects.filter((project, index, self) =>
+        index === self.findIndex((p) => p.slug?.current === project.slug?.current)
+      )
+      setLandingPageProjects(uniqueProjects)
     })
   }, [])
 
@@ -439,7 +458,7 @@ export default function HomePage() {
               <Card className="scroll-reveal sm:col-span-2 bg-card border-0 shadow-sm">
                 <CardContent className="p-4 sm:p-6 h-full">
                   <div className="grid grid-cols-3 gap-2 sm:gap-4 h-full">
-                    <CounterCard end={70} label={language === "es" ? "Proyectos" : "Projects"} />
+                    <CounterCard end={projectCount || 30} label={language === "es" ? "Proyectos" : "Projects"} />
                     <div className="flex flex-col justify-center items-center text-center sm:border-x sm:border-border">
                       <CounterCard end={40} label={language === "es" ? "Clientes" : "Clients"} />
                     </div>
@@ -640,6 +659,7 @@ export default function HomePage() {
 
               <Card className="scroll-reveal lg:row-span-2 bg-transparent border-[2.5px] border-black dark:border-white hover:border-accent dark:hover:border-accent overflow-hidden hover:scale-[1.01] transition-all duration-1000 group">
                 <div className="h-full flex flex-col p-4">
+                  {/* Nexium Card */}
                   <a
                     href="https://nexiumsolutions.site/"
                     target="_blank"
@@ -648,13 +668,14 @@ export default function HomePage() {
                   >
                     <div className="relative h-full min-h-[250px] p-6">
                       <Image
-                        src="/logo-nexium.png"
+                        src={landingPageProjects.find(p => p.slug.current === 'nexium')?.image || "/logo-nexium.png"}
                         alt="Nexium"
                         fill
                         className="object-contain grayscale group-hover/nexium:grayscale-0 transition-all duration-1000"
                       />
                     </div>
                   </a>
+                  {/* Zevetix Card */}
                   <a
                     href="https://zevetix.site/"
                     target="_blank"
@@ -663,7 +684,7 @@ export default function HomePage() {
                   >
                     <div className="relative h-full min-h-[250px] p-6">
                       <Image
-                        src="/logo-zevetix.png"
+                        src={landingPageProjects.find(p => p.slug.current === 'zevetix')?.image || "/logo-zevetix.png"}
                         alt="Zevetix"
                         fill
                         className="object-contain grayscale group-hover/zevetix:grayscale-0 transition-all duration-1000"

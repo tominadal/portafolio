@@ -38,7 +38,11 @@ export default function BlogPage() {
 
   useEffect(() => {
     client.fetch(allBlogPostsQuery).then((posts: SanityBlogPost[]) => {
-      setBlogPosts(posts)
+      // Deduplicate posts by slug
+      const uniquePosts = posts.filter((post, index, self) =>
+        index === self.findIndex((p) => p.slug?.current === post.slug?.current)
+      )
+      setBlogPosts(uniquePosts)
       setLoading(false)
     })
   }, [])

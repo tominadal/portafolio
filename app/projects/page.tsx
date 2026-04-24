@@ -45,8 +45,13 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     client.fetch(allProjectsQuery).then((projects: Project[]) => {
+      // Deduplicate projects by slug
+      const uniqueProjects = projects.filter((project, index, self) =>
+        index === self.findIndex((p) => p.slug?.current === project.slug?.current)
+      )
+
       // Exclude Zevetix and Nexium from projects page (they appear only on home page)
-      const filtered = projects.filter((p: Project) => {
+      const filtered = uniqueProjects.filter((p: Project) => {
         const slug = p.slug?.current || ''
         return slug !== 'zevetix' && slug !== 'nexium'
       })

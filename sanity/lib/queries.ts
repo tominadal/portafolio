@@ -109,3 +109,15 @@ export const allBlogSlugsQuery = `
 export const allProjectSlugsQuery = `
   *[_type == "project"] { "slug": slug.current }
 `
+export const projectCountQuery = `
+  *[_type == "project" && !(_id in path("drafts.**"))].slug.current
+`
+
+export const landingPageProjectsQuery = `
+  *[_type == "project" && (slug.current == "nexium" || slug.current == "zevetix")] {
+    _id,
+    title,
+    slug,
+    "image": mainImage.asset->url
+  }
+`
