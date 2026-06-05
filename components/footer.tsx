@@ -1,143 +1,78 @@
 "use client"
 
-import { useLanguage } from "@/components/language-provider"
-import { Github, Linkedin, Mail, Instagram, MapPin, Phone } from "lucide-react"
-import { FaWhatsapp } from "react-icons/fa"
-import Link from "next/link"
-import Image from "next/image"
-import { usePathname } from "next/navigation"
+import { FaInstagram, FaLinkedinIn, FaGithub } from "react-icons/fa"
+import { useLanguage } from "./language-provider"
 
-export function Footer() {
+// Assuming a custom X icon or similar if needed. For now we use text "X" inside a circle
+export default function Footer() {
   const { t } = useLanguage()
-  const pathname = usePathname()
-
-  const socialLinks = [
-    { icon: Github, href: "https://github.com/eltanook", label: "GitHub" },
-    { icon: Linkedin, href: "https://www.linkedin.com/in/tomasnadal/", label: "LinkedIn" },
-    { icon: Instagram, href: "https://www.instagram.com/tominadal_/", label: "Instagram" },
-    {
-      icon: FaWhatsapp,
-      href: "https://api.whatsapp.com/send?phone=+54%209%2011%203647%204934&text=Hola%20Tom%C3%A1s,%20vengo%20de%20tu%20portafolio!",
-      label: "WhatsApp",
-    },
-  ]
-
-  const footerLinks = [
-    { href: "/", label: t("nav.home") },
-    { href: "/projects", label: t("nav.projects") },
-    { href: "/blog", label: t("nav.blog") },
-    { href: "/contact", label: t("nav.contact") },
-  ]
-
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl mb-8">
-      <footer className="bg-[#0f0f0f] text-white rounded-2xl shadow-sm">
-        <div className="px-6 sm:px-8 lg:px-12 py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8">
-            <div className="col-span-2 md:col-span-1 space-y-3">
-              {pathname === "/" ? (
-                <button
-                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                  className="inline-block hover:opacity-80 transition-opacity duration-500"
-                >
-                  <div className="w-10 h-10 relative">
-                    <Image
-                      src="/logo.png"
-                      alt="Tomás Nadal Logo"
-                      fill
-                      className="object-contain"
-                      style={{ filter: "invert(1)" }}
-                    />
-                  </div>
-                </button>
-              ) : (
-                <Link href="/" className="inline-block hover:opacity-80 transition-opacity duration-500">
-                  <div className="w-10 h-10 relative">
-                    <Image
-                      src="/logo.png"
-                      alt="Tomás Nadal Logo"
-                      fill
-                      className="object-contain"
-                      style={{ filter: "invert(1)" }}
-                    />
-                  </div>
-                </Link>
-              )}
-              <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
-                {t("footer.description")}
-              </p>
-            </div>
-
-            {/* Links */}
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wider">{t("footer.links")}</h3>
-              <ul className="space-y-2">
-                {footerLinks.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-gray-400 hover:text-accent transition-colors duration-500"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Contact */}
-            <div className="col-span-2 md:col-span-1 space-y-3">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wider">{t("footer.contact")}</h3>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2">
-                  <Phone className="w-4 h-4 text-accent mt-0.5 shrink-0" />
-                  <span className="text-sm text-gray-400">+54 11 3647-4934</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-accent mt-0.5 shrink-0" />
-                  <span className="text-sm text-gray-400">Buenos Aires, Argentina</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Mail className="w-4 h-4 text-accent mt-0.5 shrink-0" />
-                  <a
-                    href="mailto:tomasnadal04@gmail.com"
-                    className="text-sm text-gray-400 hover:text-accent transition-colors duration-500"
-                  >
-                    tomasnadal04@gmail.com
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Social Links */}
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wider">{t("footer.social")}</h3>
-              <div className="flex flex-col gap-2">
-                {socialLinks.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 text-gray-400 hover:text-accent transition-colors duration-500 group"
-                    aria-label={social.label}
-                  >
-                    <social.icon className="w-5 h-5" />
-                    <span className="text-sm">{social.label}</span>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Bar - Centered copyright */}
-          <div className="pt-6 border-t border-gray-800">
-            <p className="text-sm text-gray-500 text-center">
-              © <span className="text-accent">Tomás Nadal</span> {new Date().getFullYear()}. {t("footer.rights")}
+    <footer className="w-full bg-[#111111] text-white pt-24 pb-0 px-8 rounded-t-[2.5rem] relative z-20">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
+        
+        {/* Col 1 */}
+        <div className="space-y-8">
+          <div>
+            <p className="text-white/50 text-sm mb-4">{t("footer.office")}</p>
+            <p className="text-sm leading-relaxed">
+              Buenos Aires,<br />
+              Argentina
             </p>
           </div>
+          <div>
+            <p className="text-white/50 text-sm mb-4">{t("footer.contact")}</p>
+            <p className="text-sm">+54 11 3647-4934</p>
+          </div>
         </div>
-      </footer>
-    </div>
+
+        {/* Col 2 */}
+        <div>
+          <p className="text-white/50 text-sm mb-4">{t("footer.nav")}</p>
+          <ul className="space-y-3 text-sm">
+            <li><a href="#" className="hover:text-accent transition-colors">{t("footer.home")}</a></li>
+            <li><a href="#about" className="hover:text-accent transition-colors">{t("nav.expertise")}</a></li>
+            <li><a href="#works" className="hover:text-accent transition-colors">{t("nav.works")}</a></li>
+            <li><a href="#expertise" className="hover:text-accent transition-colors">{t("nav.expertise")}</a></li>
+            <li><a href="#approach" className="hover:text-accent transition-colors">{t("nav.expertise")}</a></li>
+          </ul>
+        </div>
+
+        {/* Col 3 & 4 (Email and Socials) */}
+        <div className="md:col-span-2 flex flex-col justify-between">
+          <div>
+            <p className="text-white/50 italic text-sm mb-6">{t("footer.touch")}</p>
+            <a href="mailto:tomasnadal04@gmail.com" className="text-2xl md:text-4xl lg:text-5xl font-medium hover:text-accent transition-colors break-all">
+              tomasnadal04@gmail.com
+            </a>
+          </div>
+          
+          <div className="flex items-center justify-between mt-16 border-t border-white/10 pt-8">
+            <p className="text-white/50 text-sm">{t("footer.social")}</p>
+            <div className="flex gap-3">
+              <a href="https://github.com/eltanook" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors">
+                <FaGithub size={18} />
+              </a>
+              <a href="https://www.instagram.com/tominadal_/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors">
+                <FaInstagram size={18} />
+              </a>
+              <a href="https://www.linkedin.com/in/tomasnadal/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors">
+                <FaLinkedinIn size={18} />
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Horizontal Line Divider */}
+      <div className="max-w-7xl mx-auto border-t border-white/10 pt-6 pb-12 scroll-reveal"></div>
+
+      {/* Massive Text */}
+      <div className="w-full overflow-hidden flex justify-center items-end scroll-reveal">
+        <h1 className="text-[clamp(3rem,14vw,11rem)] leading-[0.8] font-bold tracking-tighter text-center opacity-80 whitespace-nowrap">
+          <span className="text-accent align-top mr-4">&copy;</span>Tomás Nadal
+        </h1>
+      </div>
+    </footer>
   )
 }

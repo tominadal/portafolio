@@ -2,7 +2,16 @@
 
 # dependencies
 /node_modules
-/strapi-backend/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
 
 # next.js
 /.next/
@@ -10,9 +19,10 @@
 
 # production
 /build
-/strapi-backend/dist
-/strapi-backend/build
-/strapi-backend/.tmp
+
+# misc
+.DS_Store
+*.pem
 
 # debug
 npm-debug.log*
@@ -20,10 +30,8 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files
+# env files (can opt-in for committing if needed)
 .env*
-!.env.example
-!.env.production.example
 
 # vercel
 .vercel
@@ -31,12 +39,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# strapi
-.strapi/
-/strapi-backend/.strapi/
-/strapi-backend/public/uploads
-
-# deployment
-*.log
-.DS_Store
+web_anterior/

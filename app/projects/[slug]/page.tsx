@@ -1,18 +1,43 @@
 "use client"
 
 import { use, useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
+
+import Footer from "@/components/footer"
 import { useLanguage } from "@/components/language-provider"
-import { ArrowLeft, ExternalLink, Calendar, ChevronLeft, ChevronRight, X } from "lucide-react"
+import { ArrowLeft, Calendar, Clock, ArrowRight, ArrowUpRight, ExternalLink, ChevronLeft, ChevronRight, X, ZoomIn } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { client } from "@/sanity/lib/client"
-import { projectBySlugQuery, allProjectsQuery } from "@/sanity/lib/queries"
+
+// Use same query logic but inside the component
+const projectBySlugQuery = `*[_type == "project" && slug.current == $slug][0]{
+  _id,
+  title,
+  titleEn,
+  description,
+  descriptionEn,
+  content,
+  contentEn,
+  "image": mainImage.asset->url,
+  "gallery": gallery[].asset->url,
+  category,
+  year,
+  demoUrl,
+  githubUrl,
+  slug,
+  tags,
+  technologies
+}`
+
+const allProjectsQuery = `*[_type == "project"] | order(order asc, year desc) {
+  _id,
+  title,
+  description,
+  "image": mainImage.asset->url,
+  category,
+  slug
+}`
 
 interface SanityProject {
   _id: string
@@ -29,8 +54,6 @@ interface SanityProject {
   category: string
   demoUrl?: string
   githubUrl?: string
-  featured: boolean
-  order: number
   year?: number
   technologies?: string
 }
@@ -46,29 +69,34 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
 
   useEffect(() => {
     async function fetchData() {
-      const decodedSlug = decodeURIComponent(slug)
-      const proj = await client.fetch(projectBySlugQuery, { slug: decodedSlug })
-      if (!proj) {
+      try {
+        const decodedSlug = decodeURIComponent(slug)
+        const proj = await client.fetch(projectBySlugQuery, { slug: decodedSlug })
+        if (!proj) {
+          setLoading(false)
+          return
+        }
+        setProject(proj)
+
+        const allData: SanityProject[] = await client.fetch(allProjectsQuery)
+        const allProjects = Array.from(new Map(allData.map(p => [p.slug.current, p])).values()) as SanityProject[]
+        
+        const sameCategory = allProjects
+          .filter((p) => p.slug.current !== slug && p.category === proj.category)
+          .slice(0, 3)
+
+        if (sameCategory.length < 3) {
+          const remaining = allProjects
+            .filter((p) => p.slug.current !== slug && !sameCategory.includes(p))
+            .slice(0, 3 - sameCategory.length)
+          sameCategory.push(...remaining)
+        }
+        setRelatedProjects(sameCategory)
+      } catch (error) {
+        console.error("Error fetching project:", error)
+      } finally {
         setLoading(false)
-        return
       }
-      setProject(proj)
-
-      // Fetch all projects for related
-      const allProjects: SanityProject[] = await client.fetch(allProjectsQuery)
-      const sameCategory = allProjects
-        .filter((p) => p.slug.current !== slug && p.category === proj.category)
-        .slice(0, 3)
-
-      // If not enough in same category, fill with any other projects
-      if (sameCategory.length < 3) {
-        const remaining = allProjects
-          .filter((p) => p.slug.current !== slug && !sameCategory.includes(p))
-          .slice(0, 3 - sameCategory.length)
-        sameCategory.push(...remaining)
-      }
-      setRelatedProjects(sameCategory)
-      setLoading(false)
     }
     fetchData()
   }, [slug])
@@ -76,15 +104,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
   useEffect(() => {
     if (project) {
       document.title = `Tomás Nadal - ${project.title}`
-    }
-  }, [project])
-
-  // Redirect Nexium and Zevetix to their external websites
-  useEffect(() => {
-    if (project?.slug.current === 'nexium') {
-      window.location.href = 'https://nexiumsolutions.site/'
-    } else if (project?.slug.current === 'zevetix') {
-      window.location.href = 'https://zevetix.site/'
     }
   }, [project])
 
@@ -107,15 +126,12 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
 
   if (loading) {
     return (
-      <>
-        <Navigation />
-        <main className="min-h-screen pt-16 bg-background">
-          <div className="container mx-auto px-4 py-24 text-center">
-            <p className="text-muted-foreground">{language === "es" ? "Cargando proyecto..." : "Loading project..."}</p>
-          </div>
-        </main>
-        <Footer />
-      </>
+      <main className="min-h-screen pt-32 bg-background">
+        <div className="max-w-7xl mx-auto px-8 py-24 text-center">
+          <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-8"></div>
+          <p className="text-muted-foreground">{language === "es" ? "Cargando proyecto..." : "Loading project..."}</p>
+        </div>
+      </main>
     )
   }
 
@@ -124,207 +140,200 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
   }
 
   return (
-    <>
-      <Navigation />
-      <main className="min-h-screen pt-16 bg-background">
-        <section className="relative py-16 sm:py-20 overflow-hidden">
-          <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
-            <Link
-              href="/projects"
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              {t("projects.backToProjects")}
-            </Link>
+    <main className="min-h-screen pt-32 bg-background">
+      <div className="max-w-5xl mx-auto px-8 pb-24">
+        <Link
+          href="/projects"
+          className="inline-flex items-center gap-2 text-sm font-bold tracking-widest  text-muted-foreground hover:text-accent transition-colors mb-12 scroll-reveal"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          {language === "es" ? "Volver a Proyectos" : "Back to Projects"}
+        </Link>
 
-            {/* Project Header */}
-            <div className="mb-12 max-w-3xl">
-              <div className="flex flex-wrap items-center gap-4 mb-4">
-                <span className="text-sm px-3 py-1 rounded-full bg-accent/10 text-accent font-medium">
-                  {project.category}
-                </span>
-                {project.year && (
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="w-4 h-4" />
-                    {project.year}
-                  </div>
-                )}
-              </div>
-
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground mb-4 text-balance">
-                {project.title}
-              </h1>
-
-              <p className="text-base sm:text-lg text-muted-foreground mb-6 text-pretty leading-relaxed">
-                {language === "es" ? project.content || project.description : project.contentEn || project.descriptionEn || project.description}
-              </p>
-
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                {project.tags && project.tags.map((tag: string) => (
-                  <span
-                    key={tag}
-                    className="text-sm px-4 py-2 rounded-full border border-border text-foreground bg-transparent"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              {/* CTAs */}
-              <div className="flex gap-3">
-                {project.demoUrl && (
-                  <Button asChild size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                    <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      {t("projects.viewDemo")}
-                    </a>
-                  </Button>
-                )}
-                {project.githubUrl && (
-                  <Button asChild size="sm" variant="outline">
-                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      GitHub
-                    </a>
-                  </Button>
-                )}
-              </div>
-            </div>
-
-            {/* Project Gallery - 2 Column Grid with Modal */}
-            {project.gallery && project.gallery.length > 0 && (
-              <div className="mb-12">
-                <h2 className="text-2xl font-semibold text-foreground mb-6">Galería</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {project.gallery.map((img, index) => (
-                    <div
-                      key={index}
-                      className="rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
-                      onClick={() => openGallery(index)}
-                    >
-                      <div className="relative h-64">
-                        <Image
-                          src={img}
-                          alt={`${project.title} - Imagen ${index + 1}`}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
+        {/* Project Header */}
+        <div className="mb-16 scroll-reveal">
+          <div className="flex flex-wrap items-center gap-4 mb-6">
+            <span className="text-[10px] font-bold  tracking-widest text-accent px-4 py-2 bg-accent/10 rounded-full">
+              {project.category}
+            </span>
+            {project.year && (
+              <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground bg-muted/20 px-4 py-2 rounded-full">
+                <Calendar className="w-4 h-4" />
+                {project.year}
               </div>
             )}
+          </div>
 
-            {/* Gallery Modal */}
-            <Dialog open={isGalleryOpen} onOpenChange={setIsGalleryOpen}>
-              <DialogContent className="max-w-5xl p-0 bg-black/95 border-0">
-                <DialogHeader className="sr-only">
-                  <DialogTitle>Galería de Imágenes</DialogTitle>
-                </DialogHeader>
+          <h1 className="text-[clamp(2.5rem,6vw,4.5rem)] font-medium leading-[1.1] tracking-tight text-foreground mb-8">
+            {language === "en" ? (project.titleEn || project.title) : project.title}
+          </h1>
 
-                <button
-                  onClick={() => setIsGalleryOpen(false)}
-                  className="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-                  aria-label="Cerrar galería"
+          <p className="text-xl md:text-2xl text-foreground/70 leading-relaxed max-w-3xl mb-10">
+            {language === "es" ? project.content || project.description : project.contentEn || project.descriptionEn || project.description}
+          </p>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2 mb-10">
+            {project.tags && project.tags.map((tag: string) => (
+              <span
+                key={tag}
+                className="text-[11px] font-bold  tracking-wider px-4 py-2 rounded-full bg-muted/30 text-foreground/80"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {/* CTAs */}
+          <div className="flex gap-4">
+            {project.demoUrl && (
+              <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-4 bg-foreground text-background font-bold text-sm rounded-full hover:bg-accent hover:text-white transition-all shadow-xl hover:-translate-y-1">
+                <ExternalLink size={18} />
+                {language === "es" ? "Ver Demo" : "View Demo"}
+              </a>
+            )}
+            {project.githubUrl && (
+              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-4 bg-muted/20 text-foreground border border-border/50 font-bold text-sm rounded-full hover:bg-muted/50 transition-all hover:-translate-y-1">
+                <ExternalLink size={18} />
+                GitHub
+              </a>
+            )}
+          </div>
+        </div>
+
+        {/* Project Gallery */}
+        {project.gallery && project.gallery.length > 0 && (
+          <div className="mb-24 scroll-reveal" style={{ transitionDelay: "200ms" }}>
+            <h2 className="text-3xl font-medium tracking-tight mb-10">{language === "es" ? "Galería" : "Gallery"}</h2>
+            <div className="flex overflow-x-auto gap-6 md:gap-8 pb-8 snap-x snap-mandatory scrollbar-hide">
+              {project.gallery.map((img, index) => (
+                <div
+                  key={index}
+                  className="rounded-[2.5rem] overflow-hidden bg-muted/20 cursor-pointer group relative aspect-[4/3] flex-shrink-0 w-[85vw] md:w-[600px] snap-center"
+                  onClick={() => openGallery(index)}
                 >
-                  <X className="w-6 h-6 text-white" />
-                </button>
-
-                {project.gallery && (
-                  <div className="relative w-full h-[80vh] flex items-center justify-center">
-                    <button
-                      onClick={prevImage}
-                      className="absolute left-4 z-40 p-3 rounded-full bg-white/20 hover:bg-white/30 transition-colors shadow-lg"
-                      aria-label="Imagen anterior"
-                    >
-                      <ChevronLeft className="w-8 h-8 text-[#ff620a]" />
-                    </button>
-
-                    <div className="relative w-full h-full p-12">
-                      <Image
-                        src={project.gallery[currentImageIndex]}
-                        alt={`${project.title} - Imagen ${currentImageIndex + 1}`}
-                        fill
-                        className="object-contain"
-                      />
-                    </div>
-
-                    <button
-                      onClick={nextImage}
-                      className="absolute right-4 z-40 p-3 rounded-full bg-white/20 hover:bg-white/30 transition-colors shadow-lg"
-                      aria-label="Imagen siguiente"
-                    >
-                      <ChevronRight className="w-8 h-8 text-[#ff620a]" />
-                    </button>
-
-                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-sm bg-black/50 px-4 py-2 rounded-full">
-                      {currentImageIndex + 1} / {project.gallery.length}
+                  <Image
+                    src={img}
+                    alt={`${project.title} - Image ${index + 1}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center transform scale-50 group-hover:scale-100 transition-transform duration-300 shadow-xl">
+                      <ZoomIn size={24} />
                     </div>
                   </div>
-                )}
-              </DialogContent>
-            </Dialog>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
-            {/* Project Info Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              <div className="rounded-2xl shadow-sm bg-card p-6">
-                <h3 className="text-sm font-semibold text-muted-foreground mb-2">{t("projects.category")}</h3>
-                <p className="text-lg text-foreground">{project.category}</p>
+        {/* Gallery Modal - Fallback if shadcn Dialog is missing or styling needs adjusting */}
+        {isGalleryOpen && project.gallery && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/95 backdrop-blur-md">
+            <button
+              onClick={() => setIsGalleryOpen(false)}
+              className="absolute top-8 right-8 z-[110] p-4 rounded-full bg-muted/50 hover:bg-accent hover:text-white transition-colors"
+            >
+              <X size={24} />
+            </button>
+            <div className="relative w-full h-full flex items-center justify-center p-8 md:p-24">
+              <button
+                onClick={prevImage}
+                className="absolute left-8 z-[110] p-4 rounded-full bg-muted/50 hover:bg-accent hover:text-white transition-colors"
+              >
+                <ChevronLeft size={32} />
+              </button>
+              
+              <div className="relative w-full h-full max-w-6xl max-h-[80vh]">
+                <Image
+                  src={project.gallery[currentImageIndex]}
+                  alt={`${project.title} - Image ${currentImageIndex + 1}`}
+                  fill
+                  className="object-contain"
+                />
               </div>
 
-              {project.year && (
-                <div className="rounded-2xl shadow-sm bg-card p-6">
-                  <h3 className="text-sm font-semibold text-muted-foreground mb-2">{t("projects.date")}</h3>
-                  <p className="text-lg text-foreground">{project.year}</p>
-                </div>
-              )}
+              <button
+                onClick={nextImage}
+                className="absolute right-8 z-[110] p-4 rounded-full bg-muted/50 hover:bg-accent hover:text-white transition-colors"
+              >
+                <ChevronRight size={32} />
+              </button>
 
-              {project.technologies && (
-                <div className="rounded-2xl shadow-sm bg-card p-6">
-                  <h3 className="text-sm font-semibold text-muted-foreground mb-2">Tecnologías</h3>
-                  <p className="text-lg text-foreground">{project.technologies}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Related Projects */}
-            <div className="pt-12 border-t border-border">
-              <h2 className="text-3xl font-semibold text-foreground mb-8">{t("projects.relatedProjects")}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {relatedProjects.map((relatedProject) => (
-                  <Link
-                    key={relatedProject._id}
-                    href={`/projects/${relatedProject.slug.current}`}
-                    className="group block"
-                  >
-                    <div className="rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-4">
-                      <div className="relative h-48">
-                        <Image
-                          src={relatedProject.image || "/placeholder.svg"}
-                          alt={relatedProject.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="text-lg font-semibold text-foreground group-hover:text-accent transition-colors">
-                        {relatedProject.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {relatedProject.description}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
+              <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-[11px] font-bold tracking-widest px-6 py-2 bg-muted/50 rounded-full">
+                {currentImageIndex + 1} / {project.gallery.length}
               </div>
             </div>
           </div>
-        </section>
-      </main>
+        )}
+
+        {/* Project Info Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24 scroll-reveal">
+          <div className="rounded-[2.5rem] bg-muted/10 border border-border/5 p-8 hover:-translate-y-2 transition-transform duration-300">
+            <h3 className="text-[10px] font-bold  tracking-widest text-muted-foreground mb-4">{language === "es" ? "Categoría" : "Category"}</h3>
+            <p className="text-xl font-medium">{project.category}</p>
+          </div>
+
+          {project.year && (
+            <div className="rounded-[2.5rem] bg-muted/10 border border-border/5 p-8 hover:-translate-y-2 transition-transform duration-300">
+              <h3 className="text-[10px] font-bold  tracking-widest text-muted-foreground mb-4">{language === "es" ? "Año" : "Year"}</h3>
+              <p className="text-xl font-medium">{project.year}</p>
+            </div>
+          )}
+
+          {project.technologies && (
+            <div className="rounded-[2.5rem] bg-muted/10 border border-border/5 p-8 hover:-translate-y-2 transition-transform duration-300">
+              <h3 className="text-[10px] font-bold  tracking-widest text-muted-foreground mb-4">{language === "es" ? "Tecnologías" : "Technologies"}</h3>
+              <p className="text-xl font-medium">{project.technologies}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Related Projects */}
+        <div className="pt-20 border-t border-border/10 scroll-reveal">
+          <h2 className="text-4xl font-medium tracking-tight mb-12">
+            {language === "es" ? "Proyectos Relacionados" : "Related Projects"}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {relatedProjects.map((relatedProject) => (
+              <Link
+                key={relatedProject._id}
+                href={`/projects/${relatedProject.slug.current}`}
+                className="group block"
+              >
+                <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden bg-muted/20 mb-6">
+                  {relatedProject.image ? (
+                    <Image
+                      src={relatedProject.image}
+                      alt={relatedProject.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-muted flex items-center justify-center text-xs">No Image</div>
+                  )}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <ArrowUpRight size={32} className="text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300" />
+                  </div>
+                </div>
+                <div className="px-2">
+                  <h3 className="text-xl font-bold group-hover:text-accent transition-colors mb-2">
+                    {relatedProject.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {relatedProject.description}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
       <Footer />
-    </>
+    </main>
   )
 }

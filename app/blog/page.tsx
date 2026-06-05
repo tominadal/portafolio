@@ -1,215 +1,253 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
+import { useEffect, useState } from "react"
 import { useLanguage } from "@/components/language-provider"
-import { Clock } from "lucide-react"
+import { client } from "@/sanity/lib/client"
+import { urlForImage } from "@/sanity/lib/image"
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useState } from "react"
-import { client } from "@/sanity/lib/client"
-import { allBlogPostsQuery } from "@/sanity/lib/queries"
+import Footer from "@/components/footer"
+import { Clock, ArrowRight, ArrowUpRight, ChevronDown } from "lucide-react"
 
-interface SanityBlogPost {
+interface BlogPost {
   _id: string
   title: string
-  titleEn: string
-  slug: { current: string }
+  titleEn?: string
   excerpt: string
-  excerptEn: string
+  excerptEn?: string
   image: string
   category: string
-  categoryEn: string
+  categoryEn?: string
   date: string
   readTime: number
-  author: string
+  slug: { current: string }
+  author?: string
 }
 
 export default function BlogPage() {
   const { t, language } = useLanguage()
-  const [blogPosts, setBlogPosts] = useState<SanityBlogPost[]>([])
+  const [posts, setPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    document.title = language === "es" ? "Tomás Nadal - Blog" : "Tomás Nadal - Blog"
-  }, [language])
-
-  useEffect(() => {
-    client.fetch(allBlogPostsQuery).then((posts: SanityBlogPost[]) => {
-      // Deduplicate posts by slug
-      const uniquePosts = posts.filter((post, index, self) =>
-        index === self.findIndex((p) => p.slug?.current === post.slug?.current)
-      )
-      setBlogPosts(uniquePosts)
-      setLoading(false)
-    })
+    const fetchPosts = async () => {
+      try {
+        const query = `*[_type == "blogPost"] | order(date desc) {
+          _id,
+          title,
+          titleEn,
+          excerpt,
+          excerptEn,
+          "image": mainImage.asset->url,
+          category,
+          categoryEn,
+          date,
+          readTime,
+          slug,
+          author
+        }`
+        const data = await client.fetch(query)
+        
+        // Deduplicate by slug
+        const uniquePosts = data.filter((post: BlogPost, index: number, self: BlogPost[]) =>
+          index === self.findIndex((p) => p.slug?.current === post.slug?.current)
+        )
+        
+        setPosts(uniquePosts)
+      } catch (error) {
+        console.error("Error fetching blog posts:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchPosts()
   }, [])
 
-  // Get featured articles (first 2)
-  const featuredPosts = blogPosts.slice(0, 2)
-  const regularPosts = blogPosts.slice(2)
+  const [selectedCategory, setSelectedCategory] = useState<string>("all")
 
-  if (loading) {
-    return (
-      <>
-        <Navigation />
-        <main className="min-h-screen pt-16 bg-background">
-          <section className="relative py-16 sm:py-24 bg-background">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-              <div className="text-center max-w-3xl mx-auto mb-16">
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground mb-4">
-                  {language === "es" ? "Blog" : "Blog"}
-                </h1>
-              </div>
-              {/* Skeleton featured */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                {[1, 2].map((i) => (
-                  <div key={i}>
-                    <div className="skeleton h-72 w-full mb-4" />
-                    <div className="skeleton h-5 w-3/4 mb-2" />
-                    <div className="skeleton h-4 w-1/2" />
-                  </div>
-                ))}
-              </div>
-              {/* Skeleton regular */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div key={i}>
-                    <div className="skeleton h-72 w-full mb-4" />
-                    <div className="skeleton h-5 w-3/4 mb-2" />
-                    <div className="skeleton h-4 w-1/2" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        </main>
-        <Footer />
-      </>
-    )
-  }
+  // Treat the first post as the featured post (always static, unaffected by filter)
+  const featuredPosts = posts.slice(0, 1)
+  
+  // Extract unique categories from all posts for the dropdown
+  const categories = ["all", ...Array.from(new Set(posts.map(p => language === "en" ? (p.categoryEn || p.category) : p.category).filter(Boolean)))]
+
+  // Filter regular posts (excluding the featured one) based on selected category
+  const regularPosts = posts.slice(1).filter(p => {
+    if (selectedCategory === "all") return true
+    const postCat = language === "en" ? (p.categoryEn || p.category) : p.category
+    return postCat === selectedCategory
+  })
 
   return (
-    <>
-      <Navigation />
-      <main className="min-h-screen pt-16 bg-background">
-        {/* Header */}
-        <section className="relative py-16 sm:py-24 bg-background">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground mb-4">
-                {language === "es" ? "Blog" : "Blog"}
-              </h1>
-              <p className="text-lg text-muted-foreground">
-                {language === "es"
-                  ? "Reflexiones, aprendizajes y experiencias sobre tecnología, desarrollo y emprendimiento"
-                  : "Reflections, learnings and experiences about technology, development and entrepreneurship"}
-              </p>
-            </div>
+    <main className="min-h-screen bg-background pt-32">
+      <div className="max-w-7xl mx-auto px-8 pb-24">
+        <header className="mb-20 scroll-reveal">
+          <h1 className="text-[clamp(2.5rem,8vw,5.5rem)] leading-tight font-medium tracking-tight mb-6">
+            {t("blog.title")}
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mt-4 font-medium tracking-tight leading-relaxed">
+            {language === "es"
+              ? "Reflexiones, aprendizajes y experiencias sobre tecnología, desarrollo y emprendimiento"
+              : "Reflections, learnings and experiences about technology, development and entrepreneurship"}
+          </p>
+        </header>
 
-            {/* Featured Articles */}
-            <div className="mb-16">
-              <h2 className="text-2xl font-semibold text-foreground mb-8">
-                {language === "es" ? "Artículos destacados" : "Featured articles"}
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {featuredPosts.map((post, index) => (
-                  <div key={post._id} className="group scroll-reveal" style={{ transitionDelay: `${index * 100}ms` }}>
-                    <Link href={`/blog/${post.slug.current}`} className="block">
-                      <div className="relative h-72 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-1000 mb-4">
-                        <Image
-                          src={post.image || "/placeholder.svg"}
-                          alt={language === "es" ? post.title : post.titleEn}
-                          fill
-                          className="object-cover grayscale-[0.4] group-hover:grayscale-0 group-hover:scale-105 transition-transform duration-1000"
+        {/* Featured Section */}
+        {featuredPosts.length > 0 && (
+          <div className="mb-24">
+            <h2 className="text-xs font-bold  tracking-[0.2em] text-accent mb-10 scroll-reveal">
+              {language === "es" ? "Artículo destacado" : "Featured article"}
+            </h2>
+            <div className="flex flex-col">
+              {loading ? (
+                <div className="h-[500px] bg-muted animate-pulse rounded-[3.5rem]"></div>
+              ) : (
+                featuredPosts.map((post) => (
+                  <Link 
+                    key={post._id} 
+                    href={`/blog/${post.slug.current}`}
+                    className="group flex flex-col lg:flex-row gap-8 lg:gap-12 items-center scroll-reveal"
+                  >
+                    <div className="relative w-full lg:w-1/2 h-[225px] lg:h-[255px] overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-1000 bg-muted/20 shrink-0">
+                      {post.image ? (
+                        <Image 
+                          src={post.image} 
+                          alt={language === "en" ? (post.titleEn || post.title) : post.title} 
+                          fill 
+                          sizes="(max-width: 1024px) 100vw, 50vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-1000"
                         />
-                      </div>
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between text-xs text-muted-foreground">
-                          <span>
-                            {new Date(post.date).toLocaleDateString(language === "es" ? "es-ES" : "en-US", {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            })}
-                          </span>
-                          <span className="text-accent">{language === "es" ? post.category : post.categoryEn}</span>
-                        </div>
-                        <h3 className="text-xl font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2">
-                          {language === "es" ? post.title : post.titleEn}
-                        </h3>
-                        <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
-                          {language === "es" ? post.excerpt : post.excerptEn}
-                        </p>
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <Clock className="w-3 h-3" />
-                          <span>
-                            {post.readTime} {t("blog.minRead")}
-                          </span>
-                          <span className="mx-2">·</span>
-                          <span>{post.author}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </div>
+                      ) : (
+                        <div className="w-full h-full bg-muted flex items-center justify-center">No Image</div>
+                      )}
+                    </div>
 
-            {/* All Articles */}
-            <div>
-              <h2 className="text-2xl font-semibold text-foreground mb-8">
-                {language === "es" ? "Todos los artículos" : "All articles"}
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {regularPosts.map((post, index) => (
-                  <div key={post._id} className="group scroll-reveal" style={{ transitionDelay: `${index * 80}ms` }}>
-                    <Link href={`/blog/${post.slug.current}`} className="block">
-                      <div className="relative h-72 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-1000 mb-4">
-                        <Image
-                          src={post.image || "/placeholder.svg"}
-                          alt={language === "es" ? post.title : post.titleEn}
-                          fill
-                          className="object-cover grayscale-[0.4] group-hover:grayscale-0 group-hover:scale-105 transition-transform duration-1000"
-                        />
+                    <div className="space-y-4 w-full lg:w-1/2">
+                      <div className="flex items-center justify-between text-sm text-muted-foreground">
+                        <span>
+                          {new Date(post.date).toLocaleDateString(language === "es" ? "es-ES" : "en-US", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </span>
+                        <span className="text-accent font-medium">{language === "en" ? (post.categoryEn || post.category) : post.category}</span>
                       </div>
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between text-xs text-muted-foreground">
-                          <span>
-                            {new Date(post.date).toLocaleDateString(language === "es" ? "es-ES" : "en-US", {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            })}
-                          </span>
-                          <span className="text-accent">{language === "es" ? post.category : post.categoryEn}</span>
-                        </div>
-                        <h3 className="text-xl font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2">
-                          {language === "es" ? post.title : post.titleEn}
-                        </h3>
-                        <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
-                          {language === "es" ? post.excerpt : post.excerptEn}
-                        </p>
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <Clock className="w-3 h-3" />
-                          <span>
-                            {post.readTime} {t("blog.minRead")}
-                          </span>
-                          <span className="mx-2">·</span>
-                          <span>{post.author}</span>
-                        </div>
+                      <h3 className="text-3xl lg:text-4xl font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-3">
+                        {language === "en" ? (post.titleEn || post.title) : post.title}
+                      </h3>
+                      <p className="text-lg text-muted-foreground line-clamp-3 leading-relaxed mt-4">
+                        {language === "en" ? (post.excerptEn || post.excerpt) : post.excerpt}
+                      </p>
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground pt-4">
+                        <Clock className="w-4 h-4" />
+                        <span>
+                          {post.readTime} min
+                        </span>
+                        {post.author && (
+                          <>
+                            <span className="mx-2">·</span>
+                            <span>{post.author}</span>
+                          </>
+                        )}
                       </div>
-                    </Link>
-                  </div>
-                ))}
-              </div>
+                    </div>
+                  </Link>
+                ))
+              )}
             </div>
           </div>
-        </section>
-      </main>
+        )}
+
+        {/* Regular Section */}
+        {regularPosts.length > 0 && (
+          <div className="mb-24 pt-12 border-t border-border/10">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-4 scroll-reveal">
+              <h2 className="text-xs font-bold tracking-[0.2em] text-foreground/40">
+                {language === "es" ? "Todos los artículos" : "All articles"}
+              </h2>
+              
+              <div className="relative min-w-[200px] w-full sm:w-auto">
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full pl-4 pr-10 py-3 bg-muted/30 border border-border/50 rounded-xl text-sm font-medium focus:outline-none focus:border-accent transition-all appearance-none cursor-pointer"
+                >
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat === "all" ? (language === "es" ? "Todas las categorías" : "All categories") : cat}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40 pointer-events-none" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {regularPosts.map((post, idx) => (
+                  <Link 
+                    key={post._id} 
+                    href={`/blog/${post.slug.current}`}
+                    className="group flex flex-col h-full scroll-reveal"
+                    style={{ transitionDelay: `${(idx % 3) * 80}ms` }}
+                  >
+                    <div className="relative h-56 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-1000 mb-4 shrink-0">
+                      {post.image ? (
+                        <Image 
+                          src={post.image} 
+                          alt={language === "en" ? (post.titleEn || post.title) : post.title} 
+                          fill 
+                          sizes="(max-width: 1024px) 100vw, 33vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-1000"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-muted flex items-center justify-center">No Image</div>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col flex-1 space-y-3">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span>
+                          {new Date(post.date).toLocaleDateString(language === "es" ? "es-ES" : "en-US", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </span>
+                        <span className="text-accent">{language === "en" ? (post.categoryEn || post.category) : post.category}</span>
+                      </div>
+                      <h3 className="text-xl font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2">
+                        {language === "en" ? (post.titleEn || post.title) : post.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed mb-4">
+                        {language === "en" ? (post.excerptEn || post.excerpt) : post.excerpt}
+                      </p>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground mt-auto pt-2">
+                        <Clock className="w-3 h-3" />
+                        <span>
+                          {post.readTime} min
+                        </span>
+                        {post.author && (
+                          <>
+                            <span className="mx-2">·</span>
+                            <span>{post.author}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+            {!loading && posts.length === 0 && (
+              <div className="text-center py-24 bg-muted/10 rounded-[3rem] border border-dashed border-border/50">
+                <p className="text-foreground/40 font-medium">No articles found.</p>
+              </div>
+            )}
+      </div>
       <Footer />
-    </>
+    </main>
   )
 }

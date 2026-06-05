@@ -1,33 +1,32 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
+import { useEffect, useState, useMemo } from "react"
 import { useLanguage } from "@/components/language-provider"
-import { ExternalLink, Search, ChevronLeft, ChevronRight, ChevronDown, Eye } from "lucide-react"
+import { client } from "@/sanity/lib/client"
+import { urlForImage } from "@/sanity/lib/image"
 import Image from "next/image"
 import Link from "next/link"
-import { useState, useEffect } from "react"
-import { client } from "@/sanity/lib/client"
-import { allProjectsQuery } from "@/sanity/lib/queries"
+import Footer from "@/components/footer"
+import { ExternalLink, ArrowUpRight, Search, ChevronLeft, ChevronRight, LayoutGrid, List, Eye, ChevronDown } from "lucide-react"
 
 interface Project {
   _id: string
-  slug: { current: string }
   title: string
   titleEn?: string
   description: string
   descriptionEn?: string
   image: string
-  tags: string[]
   category: string
+  year?: number
   demoUrl?: string
+  slug: { current: string }
+  tags?: string[]
   order: number
 }
 
 const categories = ["All", "landing page", "website corporativo", "landing page / e-commerce híbrido", "website / portal reservas"]
-const ITEMS_PER_PAGE = 8
+const LIST_ITEMS_PER_PAGE = 6
+const GRID_ITEMS_PER_PAGE = 8
 
 export default function ProjectsPage() {
   const { t, language } = useLanguage()
@@ -37,408 +36,329 @@ export default function ProjectsPage() {
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [sortBy, setSortBy] = useState("recent")
   const [currentPage, setCurrentPage] = useState(1)
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list")
   const [isCategoryOpen, setIsCategoryOpen] = useState(false)
 
-  useEffect(() => {
-    document.title = language === "es" ? "Tomás Nadal - Proyectos" : "Tomás Nadal - Projects"
-  }, [language])
+  const itemsPerPage = viewMode === "grid" ? GRID_ITEMS_PER_PAGE : LIST_ITEMS_PER_PAGE
+
+  const handleViewMode = (mode: "list" | "grid") => {
+    setViewMode(mode)
+    setCurrentPage(1)
+  }
 
   useEffect(() => {
-    client.fetch(allProjectsQuery).then((projects: Project[]) => {
-      // Deduplicate projects by slug
-      const uniqueProjects = projects.filter((project, index, self) =>
-        index === self.findIndex((p) => p.slug?.current === project.slug?.current)
-      )
+    const fetchAllProjects = async () => {
+      try {
+        const query = `*[_type == "project"] | order(order asc, year desc) {
+          _id,
+          title,
+          titleEn,
+          description,
+          descriptionEn,
+          "image": mainImage.asset->url,
+          category,
+          year,
+          demoUrl,
+          slug,
+          tags,
+          order
+        }`
+        const data = await client.fetch(query)
+        
+        // Deduplicate by slug as in V1
+        const uniqueProjects = data.filter((project: Project, index: number, self: Project[]) =>
+          index === self.findIndex((p) => p.slug?.current === project.slug?.current)
+        )
+        
+        setAllProjects(uniqueProjects)
+      } catch (error) {
+        console.error("Error fetching projects:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchAllProjects()
+  }, [])
 
-      // Exclude Zevetix and Nexium from projects page (they appear only on home page)
-      const filtered = uniqueProjects.filter((p: Project) => {
-        const slug = p.slug?.current || ''
-        return slug !== 'zevetix' && slug !== 'nexium'
+  const filteredProjects = useMemo(() => {
+    return allProjects
+      .filter((project) => {
+        const title = language === "en" ? (project.titleEn || project.title) : project.title
+        const desc = language === "en" ? (project.descriptionEn || project.description) : project.description
+        
+        const matchesSearch =
+          title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (project.tags && project.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())))
+          
+        const matchesCategory = selectedCategory === "All" || project.category === selectedCategory
+        return matchesSearch && matchesCategory
       })
-      setAllProjects(filtered)
-      setLoading(false)
-    })
-  }, [])
+      .sort((a, b) => {
+        if (sortBy === "recent") return (a.order || 0) - (b.order || 0)
+        if (sortBy === "oldest") return (b.order || 0) - (a.order || 0)
+        return 0
+      })
+  }, [allProjects, searchQuery, selectedCategory, sortBy, language])
 
-  useEffect(() => {
-    const elements = document.querySelectorAll(
-      ".animate-on-scroll, .animate-on-scroll-left, .animate-on-scroll-right, .animate-on-scroll-scale",
-    )
-    elements.forEach((el) => {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("in-view")
-            }
-          })
-        },
-        { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
-      )
-      observer.observe(el)
-      return () => observer.disconnect()
-    })
-  }, [])
+  const totalPages = Math.max(1, Math.ceil(filteredProjects.length / itemsPerPage))
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const paginatedProjects = filteredProjects.slice(startIndex, startIndex + itemsPerPage)
 
-  const filteredProjects = allProjects
-    .filter((project) => {
-      const matchesSearch =
-        project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        project.description.toLowerCase().includes(searchQuery.toLowerCase())
-      const matchesCategory = selectedCategory === "All" || project.category === selectedCategory
-      return matchesSearch && matchesCategory
-    })
-    .sort((a, b) => {
-      if (sortBy === "recent") return (a.order || 0) - (b.order || 0)
-      if (sortBy === "oldest") return (b.order || 0) - (a.order || 0)
-      return 0
-    })
-
-  const totalPages = Math.max(1, Math.ceil(filteredProjects.length / ITEMS_PER_PAGE))
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-  const paginatedProjects = filteredProjects.slice(startIndex, startIndex + ITEMS_PER_PAGE)
-
-  if (loading) {
-    return (
-      <>
-        <Navigation />
-        <main className="min-h-screen pt-16 bg-background">
-          <section className="relative py-16 sm:py-20 overflow-hidden">
-            <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-              <div className="text-center mb-12">
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-foreground mb-4 text-balance">
-                  {t("projects.title")}
-                </h1>
-              </div>
-              <div className="flex flex-col lg:flex-row gap-8">
-                {/* Skeleton filter panel */}
-                <aside className="lg:w-64 shrink-0">
-                  <div className="skeleton h-80 w-full" />
-                </aside>
-                {/* Skeleton cards */}
-                <div className="flex-1">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {[1, 2, 3, 4, 5, 6].map((i) => (
-                      <div key={i}>
-                        <div className="skeleton h-64 w-full mb-4" />
-                        <div className="skeleton h-5 w-3/4 mb-2" />
-                        <div className="skeleton h-4 w-1/2" />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        </main>
-        <Footer />
-      </>
-    )
+  const getPaginationItems = (): (number | "...")[] => {
+    // No ellipsis needed when 6 pages or fewer
+    if (totalPages <= 6) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1)
+    }
+    // Smart ellipsis: always show first & last, then a window around current
+    const pages: (number | "...")[] = []
+    if (currentPage <= 3) {
+      // Near start: show 1 2 3 4 ... last
+      pages.push(1, 2, 3, 4, "...", totalPages)
+    } else if (currentPage >= totalPages - 2) {
+      // Near end: show 1 ... last-3 last-2 last-1 last
+      pages.push(1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages)
+    } else {
+      // Middle: show 1 ... prev current next ... last
+      pages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages)
+    }
+    return pages
   }
 
   return (
-    <>
-      <Navigation />
-      <main className="min-h-screen pt-16 bg-background">
-        {/* Hero Section */}
-        <section className="relative py-10 sm:py-16 lg:py-20">
-          <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-            <div className="text-center mb-8 sm:mb-12">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground mb-3 sm:mb-4 text-balance">
-                {t("projects.title")}
-              </h1>
-              <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto text-pretty leading-relaxed">
-                {t("projects.subtitle")}
-              </p>
-            </div>
+    <main className="min-h-screen bg-background pt-32">
+      <div className="max-w-7xl mx-auto px-8 pb-24">
+        <header className="mb-16 scroll-reveal">
+          <h1 className="text-[clamp(2.5rem,8vw,5.5rem)] leading-tight font-medium tracking-tight mb-6">
+            {t("projects.title")}
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mt-4 font-medium tracking-tight leading-relaxed">
+            {t("projects.subtitle")}
+          </p>
+        </header>
 
-            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-              <aside className="lg:w-64 shrink-0 lg:sticky lg:top-24 lg:self-start">
-                {/* Mobile/Tablet: compact horizontal filter bar */}
-                <div className="lg:hidden bg-card border-0 rounded-lg shadow-sm p-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {/* Search */}
-                    <div className="sm:col-span-1">
-                      <label className="text-xs font-semibold text-foreground mb-1.5 block">{t("projects.search")}</label>
-                      <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <input
-                          type="text"
-                          placeholder={t("projects.searchPlaceholder")}
-                          value={searchQuery}
-                          onChange={(e) => {
-                            setSearchQuery(e.target.value)
-                            setCurrentPage(1)
-                          }}
-                          className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-md text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent transition-all"
-                        />
-                      </div>
-                    </div>
-                    {/* Category */}
-                    <div className="sm:col-span-1">
-                      <label className="text-xs font-semibold text-foreground mb-1.5 block">{t("projects.categories")}</label>
-                      <div className="relative">
-                        <button
-                          onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-                          className="w-full flex items-center justify-between px-4 py-2 bg-background border border-border rounded-md text-sm text-foreground hover:border-accent transition-colors"
-                        >
-                          <span className="truncate">{selectedCategory}</span>
-                          <ChevronDown
-                            className={`w-4 h-4 shrink-0 ml-2 transition-transform duration-200 ${isCategoryOpen ? "rotate-180" : ""}`}
-                          />
-                        </button>
-                        {isCategoryOpen && (
-                          <div className="absolute z-10 w-full mt-1 bg-background border border-border rounded-md shadow-lg overflow-hidden">
-                            {categories.map((category) => (
-                              <button
-                                key={category}
-                                onClick={() => {
-                                  setSelectedCategory(category)
-                                  setCurrentPage(1)
-                                  setIsCategoryOpen(false)
-                                }}
-                                className={`w-full text-left px-4 py-2 text-sm transition-colors ${selectedCategory === category
-                                  ? "bg-accent text-accent-foreground font-medium"
-                                  : "text-foreground hover:bg-accent/10"
-                                  }`}
-                              >
-                                {category}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    {/* Sort */}
-                    <div className="sm:col-span-1">
-                      <label className="text-xs font-semibold text-foreground mb-1.5 block">{t("projects.sortBy")}</label>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => setSortBy("recent")}
-                          className={`flex-1 text-center px-3 py-2 rounded-md text-sm transition-colors ${sortBy === "recent"
-                            ? "bg-foreground text-background font-medium"
-                            : "text-muted-foreground bg-background border border-border hover:bg-accent/10 hover:text-foreground"
-                            }`}
-                        >
-                          {t("projects.recent")}
-                        </button>
-                        <button
-                          onClick={() => setSortBy("oldest")}
-                          className={`flex-1 text-center px-3 py-2 rounded-md text-sm transition-colors ${sortBy === "oldest"
-                            ? "bg-foreground text-background font-medium"
-                            : "text-muted-foreground bg-background border border-border hover:bg-accent/10 hover:text-foreground"
-                            }`}
-                        >
-                          {t("projects.oldest")}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+        <div className="flex flex-col lg:flex-row gap-12">
+          <aside className="lg:w-72 shrink-0 scroll-reveal">
+            <div className="sticky top-32 space-y-10">
+              <div>
+                <h3 className="text-xs font-bold  tracking-widest text-foreground/40 mb-4">{t("projects.search")}</h3>
+                <div className="relative group">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30 group-focus-within:text-accent transition-colors" />
+                  <input
+                    type="text"
+                    placeholder={t("projects.searchPlaceholder")}
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value)
+                      setCurrentPage(1)
+                    }}
+                    className="w-full pl-12 pr-4 py-4 bg-muted/30 border border-border/50 rounded-2xl text-sm focus:outline-none focus:border-accent transition-all"
+                  />
                 </div>
+              </div>
 
-                {/* Desktop: vertical sidebar (unchanged) */}
-                <div className="hidden lg:block space-y-6 bg-card border-0 rounded-lg shadow-sm p-6">
-                  {/* Search */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3">{t("projects.search")}</h3>
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <input
-                        type="text"
-                        placeholder={t("projects.searchPlaceholder")}
-                        value={searchQuery}
-                        onChange={(e) => {
-                          setSearchQuery(e.target.value)
-                          setCurrentPage(1)
-                        }}
-                        className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-md text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent transition-all"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Categories */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3">{t("projects.categories")}</h3>
-                    <div className="relative">
-                      <button
-                        onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-                        className="w-full flex items-center justify-between px-4 py-2 bg-background border border-border rounded-md text-sm text-foreground hover:border-accent transition-colors"
-                      >
-                        <span>{selectedCategory}</span>
-                        <ChevronDown
-                          className={`w-4 h-4 transition-transform duration-200 ${isCategoryOpen ? "rotate-180" : ""}`}
-                        />
-                      </button>
-                      {isCategoryOpen && (
-                        <div className="absolute z-10 w-full mt-1 bg-background border border-border rounded-md shadow-lg overflow-hidden">
-                          {categories.map((category) => (
-                            <button
-                              key={category}
-                              onClick={() => {
-                                setSelectedCategory(category)
-                                setCurrentPage(1)
-                                setIsCategoryOpen(false)
-                              }}
-                              className={`w-full text-left px-4 py-2 text-sm transition-colors ${selectedCategory === category
-                                ? "bg-accent text-accent-foreground font-medium"
-                                : "text-foreground hover:bg-accent/10"
-                                }`}
-                            >
-                              {category}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Sort */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3">{t("projects.sortBy")}</h3>
-                    <div className="space-y-2">
-                      <button
-                        onClick={() => setSortBy("recent")}
-                        className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${sortBy === "recent"
-                          ? "bg-foreground text-background font-medium"
-                          : "text-muted-foreground hover:bg-accent/10 hover:text-foreground"
-                          }`}
-                      >
-                        {t("projects.recent")}
-                      </button>
-                      <button
-                        onClick={() => setSortBy("oldest")}
-                        className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${sortBy === "oldest"
-                          ? "bg-foreground text-background font-medium"
-                          : "text-muted-foreground hover:bg-accent/10 hover:text-foreground"
-                          }`}
-                      >
-                        {t("projects.oldest")}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </aside>
-
-              <div className="flex-1">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 lg:gap-6 items-start">
-                  {paginatedProjects.map((project, index) => (
-                    <div key={project._id} className="group flex flex-col scroll-reveal" style={{ transitionDelay: `${index * 100}ms` }}>
-                      <Link href={`/projects/${project.slug.current}`}>
-                        <div className="relative h-48 sm:h-56 lg:h-64 overflow-hidden rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-600 mb-3 sm:mb-4 bg-[#1a1a1a] dark:bg-[#232323] pt-4 px-4 sm:pt-6 sm:px-6 pb-0 flex items-end justify-center">
-                          <div className="relative w-full aspect-[16/9]">
-                            <Image
-                              src={project.image || "/placeholder.svg"}
-                              alt={project.title}
-                              fill
-                              className="object-cover rounded-t-lg group-hover:scale-105 transition-all duration-840"
-                            />
-                          </div>
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-840 flex items-center justify-center gap-3">
-                            <Button
-                              asChild
-                              size="sm"
-                              variant="outline"
-                              className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 transition-all duration-700"
-                            >
-                              <span>
-                                <Eye className="w-4 h-4 mr-2" />
-                                {t("projects.viewDetails")}
-                              </span>
-                            </Button>
-                            {project.demoUrl && (
-                              <Button
-                                asChild
-                                size="sm"
-                                className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-700"
-                                onClick={(e) => {
-                                  e.preventDefault()
-                                  window.open(project.demoUrl, '_blank')
-                                }}
-                              >
-                                <span>
-                                  <ExternalLink className="w-4 h-4 mr-2" />
-                                  {t("projects.visitSite")}
-                                </span>
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </Link>
-
-                      <div className="space-y-2 sm:space-y-3 flex-1 flex flex-col">
-                        <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground group-hover:text-accent transition-colors duration-1000">
-                          {language === "en" && project.titleEn ? project.titleEn : project.title}
-                        </h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed flex-1">
-                          {language === "en" && project.descriptionEn ? project.descriptionEn : project.description}
-                        </p>
-
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                          {project.tags && project.tags.slice(0, 3).map((tag) => (
-                            <span
-                              key={tag}
-                              className="text-[10px] sm:text-xs px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-accent/10 text-accent font-medium"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {filteredProjects.length === 0 && (
-                  <div className="text-center py-12">
-                    <p className="text-muted-foreground">{t("projects.noProjectsFound")}</p>
-                  </div>
-                )}
-
-                <div className="flex items-center justify-center gap-1.5 sm:gap-2 mt-8 sm:mt-12">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-                    disabled={currentPage === 1 || totalPages === 1}
-                    className={`bg-transparent shadow-sm ${totalPages === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+              <div>
+                <h3 className="text-xs font-bold tracking-widest text-foreground/40 mb-4">{t("projects.categories")}</h3>
+                <div className="relative">
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => {
+                      setSelectedCategory(e.target.value)
+                      setCurrentPage(1)
+                    }}
+                    className="w-full pl-4 pr-10 py-4 bg-muted/30 border border-border/50 rounded-2xl text-sm font-medium focus:outline-none focus:border-accent transition-all appearance-none cursor-pointer"
                   >
-                    <ChevronLeft className="w-4 h-4" />
-                  </Button>
+                    {categories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40 pointer-events-none" />
+                </div>
+              </div>
 
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <Button
-                      key={page}
-                      variant={currentPage === page ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setCurrentPage(page)}
-                      disabled={totalPages === 1}
-                      className={
-                        currentPage === page
-                          ? `bg-foreground text-background ${totalPages === 1 ? "opacity-50" : ""}`
-                          : `bg-transparent hover:bg-accent/10 shadow-sm ${totalPages === 1 ? "opacity-50 cursor-not-allowed" : ""}`
-                      }
-                    >
-                      {page}
-                    </Button>
-                  ))}
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-                    disabled={currentPage === totalPages || totalPages === 1}
-                    className={`bg-transparent shadow-sm ${totalPages === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+              <div>
+                <h3 className="text-xs font-bold  tracking-widest text-foreground/40 mb-4">{t("projects.sortBy")}</h3>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setSortBy("recent")}
+                    className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all ${
+                      sortBy === "recent" ? "bg-foreground text-background" : "bg-muted/30 text-foreground/60"
+                    }`}
                   >
-                    <ChevronRight className="w-4 h-4" />
-                  </Button>
+                    {t("projects.recent")}
+                  </button>
+                  <button
+                    onClick={() => setSortBy("oldest")}
+                    className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all ${
+                      sortBy === "oldest" ? "bg-foreground text-background" : "bg-muted/30 text-foreground/60"
+                    }`}
+                  >
+                    {t("projects.oldest")}
+                  </button>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      </main>
+          </aside>
+
+          <div className="flex-1">
+            {/* View toggle + counter */}
+            <div className="flex items-center justify-between mb-8">
+              <p className="text-sm text-foreground/40 font-medium">
+                {loading ? "—" : `${filteredProjects.length} ${language === "es" ? "proyectos" : "projects"}`}
+              </p>
+              <div className="flex items-center gap-1 bg-muted/30 p-1 rounded-xl border border-border/30">
+                <button
+                  id="view-list"
+                  onClick={() => handleViewMode("list")}
+                  title={language === "es" ? "Vista lista" : "List view"}
+                  className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+                    viewMode === "list" ? "bg-foreground text-background shadow" : "text-foreground/50 hover:text-foreground"
+                  }`}
+                >
+                  <List size={14} />
+                  <span className="hidden sm:inline">{language === "es" ? "Lista" : "List"}</span>
+                </button>
+                <button
+                  id="view-grid"
+                  onClick={() => handleViewMode("grid")}
+                  title={language === "es" ? "Vista grilla" : "Grid view"}
+                  className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+                    viewMode === "grid" ? "bg-foreground text-background shadow" : "text-foreground/50 hover:text-foreground"
+                  }`}
+                >
+                  <LayoutGrid size={14} />
+                  <span className="hidden sm:inline">{language === "es" ? "Grilla" : "Grid"}</span>
+                </button>
+              </div>
+            </div>
+
+            <div key={viewMode} className={viewMode === "grid" ? "grid sm:grid-cols-2 gap-6" : "flex flex-col gap-8"}>
+            {loading ? (
+              Array(4).fill(0).map((_, i) => (
+                <div key={i} className="h-64 bg-muted animate-pulse rounded-[3rem]"></div>
+              ))
+            ) : (
+              paginatedProjects.map((project, idx) => (
+                <div 
+                  key={project._id} 
+                  className={`group scroll-reveal ${viewMode === "grid" ? "block" : "flex flex-col md:flex-row gap-8 items-center"}`}
+                  style={{ transitionDelay: `${(idx % 2) * 100}ms` }}
+                >
+                  <div className={`relative ${viewMode === "grid" ? "h-72 w-full mb-4" : "h-56 sm:h-[240px] w-full md:w-1/2 shrink-0"} overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-1000 bg-muted/20`}>
+                    <Link href={`/projects/${project.slug.current}`} className="block w-full h-full">
+                      {project.image ? (
+                        <Image 
+                          src={project.image} 
+                          alt={language === "en" ? (project.titleEn || project.title) : project.title} 
+                          fill 
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover grayscale-[0.4] group-hover:grayscale-0 group-hover:scale-105 transition-transform duration-1000"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">No Image</div>
+                      )}
+                    </Link>
+                    
+                    {/* Hover overlay with action buttons */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center gap-4 pointer-events-none group-hover:pointer-events-auto">
+                      <Link 
+                        href={`/projects/${project.slug.current}`}
+                        className="w-14 h-14 bg-white hover:bg-accent hover:text-white rounded-full flex items-center justify-center text-black transition-all duration-300 shadow-2xl scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100"
+                        title={language === "es" ? "Ver detalles" : "View details"}
+                      >
+                        <Eye size={22} />
+                      </Link>
+                      {project.demoUrl && (
+                        <a 
+                          href={project.demoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-14 h-14 bg-white hover:bg-accent hover:text-white rounded-full flex items-center justify-center text-black transition-all duration-300 shadow-2xl scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100 delay-[50ms]"
+                          title={language === "es" ? "Visitar sitio" : "Visit website"}
+                        >
+                          <ExternalLink size={22} />
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className={`space-y-3 ${viewMode === "grid" ? "" : "w-full md:w-1/2 py-4"}`}>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span className="text-accent">{project.category}</span>
+                      <span>{project.year || "2025"}</span>
+                    </div>
+                    <Link href={`/projects/${project.slug.current}`} className="block group/title">
+                      <h3 className={`font-semibold text-foreground group-hover/title:text-accent transition-colors line-clamp-2 ${viewMode === "grid" ? "text-xl" : "text-2xl md:text-3xl"}`}>
+                        {language === "en" ? (project.titleEn || project.title) : project.title}
+                      </h3>
+                    </Link>
+                    <p className={`text-muted-foreground line-clamp-3 leading-relaxed ${viewMode === "grid" ? "text-sm" : "text-base mt-4"}`}>
+                      {language === "en" ? (project.descriptionEn || project.description) : project.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {project.tags && project.tags.slice(0, 3).map((tag) => (
+                        <span key={tag} className="text-[10px]  tracking-widest text-muted-foreground border border-border/50 px-2 py-1 rounded">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+
+            {!loading && filteredProjects.length === 0 && (
+              <div className="text-center py-20 bg-muted/10 rounded-[2.5rem] border border-dashed border-border/50">
+                <p className="text-foreground/40 font-medium">{t("projects.noProjectsFound")}</p>
+              </div>
+            )}
+            </div>{/* end inner grid/list div */}
+
+            {/* Pagination */}
+            {!loading && totalPages > 1 && (
+              <div className="mt-16 flex items-center justify-center gap-2 flex-wrap scroll-reveal">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="w-12 h-12 rounded-full border border-border/50 flex items-center justify-center hover:bg-accent hover:text-white disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+
+                {getPaginationItems().map((page, i) =>
+                  page === "..." ? (
+                    <span key={`ellipsis-${i}`} className="w-12 h-12 flex items-center justify-center text-foreground/40 font-bold select-none">
+                      …
+                    </span>
+                  ) : (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page as number)}
+                      className={`w-12 h-12 rounded-full text-sm font-bold transition-all ${
+                        currentPage === page ? "bg-accent text-white" : "border border-border/50 hover:bg-muted"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  )
+                )}
+
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="w-12 h-12 rounded-full border border-border/50 flex items-center justify-center hover:bg-accent hover:text-white disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                >
+                  <ChevronRight size={20} />
+                </button>
+              </div>
+            )}
+          </div>{/* end flex-1 */}
+        </div>
+
+      </div>
       <Footer />
-    </>
+    </main>
   )
 }

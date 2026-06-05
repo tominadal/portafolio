@@ -1,18 +1,47 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
+import { use, useEffect, useState } from "react"
+import Footer from "@/components/footer"
 import { useLanguage } from "@/components/language-provider"
-import { ArrowLeft, Calendar, Clock } from "lucide-react"
+import { ArrowLeft, Calendar, Clock, ArrowRight, Link2, Check, Download } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useParams } from "next/navigation"
 import { notFound } from "next/navigation"
-import { useEffect, useState } from "react"
 import { client } from "@/sanity/lib/client"
-import { blogPostBySlugQuery, allBlogPostsQuery } from "@/sanity/lib/queries"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+import { FaWhatsapp, FaLinkedin, FaTwitter, FaEnvelope } from "react-icons/fa"
+
+const blogPostBySlugQuery = `*[_type == "blogPost" && slug.current == $slug][0]{
+  _id,
+  title,
+  titleEn,
+  slug,
+  excerpt,
+  excerptEn,
+  "image": mainImage.asset->url,
+  content,
+  contentEn,
+  category,
+  categoryEn,
+  date,
+  readTime,
+  author
+}`
+
+const allBlogPostsQuery = `*[_type == "blogPost"] | order(date desc) {
+  _id,
+  title,
+  titleEn,
+  slug,
+  excerpt,
+  excerptEn,
+  "image": mainImage.asset->url,
+  category,
+  categoryEn,
+  date,
+  readTime
+}`
 
 interface SanityBlogPost {
   _id: string
@@ -31,53 +60,71 @@ interface SanityBlogPost {
   author: string
 }
 
-export default function BlogArticlePage() {
+export default function BlogArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { t, language } = useLanguage()
-  const params = useParams()
+  const { slug } = use(params)
   const [blogPost, setBlogPost] = useState<SanityBlogPost | null>(null)
   const [relatedPosts, setRelatedPosts] = useState<SanityBlogPost[]>([])
   const [loading, setLoading] = useState(true)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopyLink = () => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(window.location.href)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
+  const handlePrint = () => {
+    if (typeof window !== "undefined") {
+      window.print()
+    }
+  }
 
   useEffect(() => {
     async function fetchData() {
-      const decodedSlug = decodeURIComponent(params.slug as string)
-      const post = await client.fetch(blogPostBySlugQuery, { slug: decodedSlug })
-      if (!post) {
-        setLoading(false)
-        return
-      }
-      setBlogPost(post)
+      try {
+        const decodedSlug = decodeURIComponent(slug)
+        const post = await client.fetch(blogPostBySlugQuery, { slug: decodedSlug })
+        if (!post) {
+          setLoading(false)
+          return
+        }
+        setBlogPost(post)
 
-      // Fetch all posts for related
-      const allPosts: SanityBlogPost[] = await client.fetch(allBlogPostsQuery)
-      const related = allPosts
-        .filter((p) => p.slug.current !== params.slug)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 2)
-      setRelatedPosts(related)
-      setLoading(false)
+        const allData: SanityBlogPost[] = await client.fetch(allBlogPostsQuery)
+        const allPosts = Array.from(new Map(allData.map(p => [p.slug.current, p])).values()) as SanityBlogPost[]
+        
+        const related = allPosts
+          .filter((p) => p.slug.current !== slug)
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 2)
+        setRelatedPosts(related)
+      } catch (error) {
+        console.error("Error fetching blog post:", error)
+      } finally {
+        setLoading(false)
+      }
     }
     fetchData()
-  }, [params.slug])
+  }, [slug])
 
   useEffect(() => {
     if (blogPost) {
-      const title = language === "es" ? blogPost.title : blogPost.titleEn
+      const title = language === "es" ? (blogPost.title || blogPost.titleEn) : (blogPost.titleEn || blogPost.title)
       document.title = `Tomás Nadal - ${title}`
     }
   }, [blogPost, language])
 
   if (loading) {
     return (
-      <>
-        <Navigation />
-        <main className="min-h-screen pt-16 bg-background">
-          <div className="container mx-auto px-4 py-24 text-center">
-            <p className="text-muted-foreground">{language === "es" ? "Cargando artículo..." : "Loading article..."}</p>
-          </div>
-        </main>
-        <Footer />
-      </>
+      <main className="min-h-screen pt-32 bg-background">
+        <div className="max-w-7xl mx-auto px-8 py-24 text-center">
+          <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-8"></div>
+          <p className="text-muted-foreground">{language === "es" ? "Cargando artículo..." : "Loading article..."}</p>
+        </div>
+      </main>
     )
   }
 
@@ -86,136 +133,224 @@ export default function BlogArticlePage() {
   }
 
   return (
-    <>
-      <Navigation />
-      <main className="min-h-screen pt-16 bg-background">
-        <article className="relative py-16 sm:py-24">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-            {/* Back button */}
-            <Button asChild variant="ghost" className="mb-8 -ml-4 hover:bg-accent/10">
-              <Link href="/blog">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                {language === "es" ? "Volver al Blog" : "Back to Blog"}
-              </Link>
-            </Button>
+    <main className="min-h-screen pt-32 bg-background">
+      <article className="max-w-5xl mx-auto px-8 pb-24">
+        {/* Back button */}
+        <Link
+          href="/blog"
+          className="inline-flex items-center gap-2 text-sm font-bold tracking-widest  text-muted-foreground hover:text-accent transition-colors mb-12 scroll-reveal"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          {language === "es" ? "Volver al Blog" : "Back to Blog"}
+        </Link>
 
-            {/* Article Header */}
-            <div className="mb-8">
-              <div className="flex items-center gap-4 mb-4 flex-wrap">
-                <span className="text-xs px-3 py-1 rounded-full bg-accent/10 text-accent font-medium">
-                  {language === "es" ? blogPost.category : blogPost.categoryEn}
-                </span>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Calendar className="w-4 h-4" />
-                  <span>
-                    {new Date(blogPost.date).toLocaleDateString(language === "es" ? "es-ES" : "en-US", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Clock className="w-4 h-4" />
-                  <span>
-                    {blogPost.readTime} {t("blog.minRead")}
-                  </span>
-                </div>
-              </div>
-
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-foreground mb-4 text-balance">
-                {language === "es" ? blogPost.title : blogPost.titleEn}
-              </h1>
-
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                {language === "es" ? blogPost.excerpt : blogPost.excerptEn}
-              </p>
+        {/* Article Header */}
+        <div className="mb-12 scroll-reveal">
+          <div className="flex flex-wrap items-center gap-4 mb-8">
+            <span className="text-[10px] font-bold  tracking-widest text-accent px-4 py-2 bg-accent/10 rounded-full">
+              {language === "es" ? (blogPost.category || blogPost.categoryEn) : (blogPost.categoryEn || blogPost.category)}
+            </span>
+            <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground bg-muted/20 px-4 py-2 rounded-full">
+              <Calendar className="w-4 h-4" />
+              <span>
+                {new Date(blogPost.date).toLocaleDateString(language === "es" ? "es-ES" : "en-US", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </span>
             </div>
-
-            {/* Featured Image */}
-            <Card className="mb-12 overflow-hidden border-0 shadow-sm">
-              <div className="relative h-96">
-                <Image
-                  src={blogPost.image || "/placeholder.svg"}
-                  alt={language === "es" ? blogPost.title : blogPost.titleEn}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </Card>
-
-            <div
-              className="prose prose-lg dark:prose-invert max-w-none mb-12
-                prose-headings:text-foreground prose-headings:font-semibold prose-headings:mb-4 prose-headings:mt-8
-                prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:text-lg prose-p:mb-12
-                prose-a:text-accent prose-a:no-underline hover:prose-a:underline
-                prose-strong:text-foreground prose-strong:font-semibold
-                prose-code:text-accent prose-code:bg-accent/10 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
-                prose-pre:bg-muted prose-pre:border prose-pre:border-border
-                prose-blockquote:border-l-4 prose-blockquote:border-accent prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-foreground prose-blockquote:text-lg prose-blockquote:my-8
-                prose-ul:text-muted-foreground prose-ul:text-lg prose-ul:space-y-2 prose-ul:my-6
-                prose-li:text-muted-foreground prose-li:leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: language === "es" ? blogPost.content : blogPost.contentEn }}
-            />
-
-            <div className="mt-16">
-              <h2 className="text-2xl font-semibold text-foreground mb-6">
-                {language === "es" ? "Artículos Relacionados" : "Related Articles"}
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {relatedPosts.map((post) => (
-                  <Card
-                    key={post._id}
-                    className="bg-card border-0 shadow-sm hover:shadow-md transition-all group overflow-hidden"
-                  >
-                    <Link href={`/blog/${post.slug.current}`} className="block">
-                      <div className="relative h-48 overflow-hidden">
-                        <Image
-                          src={post.image || "/placeholder.svg"}
-                          alt={language === "es" ? post.title : post.titleEn}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div className="absolute top-4 left-4">
-                          <span className="text-xs px-3 py-1 rounded-full bg-accent/90 text-accent-foreground font-medium backdrop-blur-sm">
-                            {language === "es" ? post.category : post.categoryEn}
-                          </span>
-                        </div>
-                        <div className="absolute top-4 right-4">
-                          <span className="text-xs text-white/90 backdrop-blur-sm bg-black/30 px-2 py-1 rounded">
-                            {new Date(post.date).toLocaleDateString(language === "es" ? "es-ES" : "en-US", {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric",
-                            })}
-                          </span>
-                        </div>
-                      </div>
-                      <CardContent className="p-6 space-y-3">
-                        <h3 className="text-lg font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2">
-                          {language === "es" ? post.title : post.titleEn}
-                        </h3>
-                        <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
-                          {language === "es" ? post.excerpt : post.excerptEn}
-                        </p>
-                        <div className="flex items-center gap-4 text-xs text-muted-foreground pt-2">
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            <span>
-                              {post.readTime} {t("blog.minRead")}
-                            </span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
-                ))}
-              </div>
+            <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground bg-muted/20 px-4 py-2 rounded-full">
+              <Clock className="w-4 h-4" />
+              <span>
+                {blogPost.readTime} min
+              </span>
             </div>
           </div>
-        </article>
-      </main>
+
+          <h1 className="text-[clamp(2.5rem,6vw,4.5rem)] font-medium leading-[1.1] tracking-tight text-foreground mb-8">
+            {language === "es" ? (blogPost.title || blogPost.titleEn) : (blogPost.titleEn || blogPost.title)}
+          </h1>
+
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-4xl mt-4 font-medium tracking-tight">
+            {language === "es" ? (blogPost.excerpt || blogPost.excerptEn) : (blogPost.excerptEn || blogPost.excerpt)}
+          </p>
+        </div>
+
+        {/* Featured Image */}
+        <div className="relative h-[320px] md:h-[400px] rounded-[3rem] overflow-hidden mb-16 bg-muted/20 scroll-reveal">
+          {blogPost.image ? (
+            <Image
+              src={blogPost.image}
+              alt={language === "es" ? (blogPost.title || blogPost.titleEn) : (blogPost.titleEn || blogPost.title)}
+              fill
+              className="object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-700"
+            />
+          ) : (
+            <div className="w-full h-full bg-muted flex items-center justify-center">No Image</div>
+          )}
+        </div>
+
+        <div className="mb-12 scroll-reveal text-foreground">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              h1: ({ children }) => <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mt-12 mb-6">{children}</h1>,
+              h2: ({ children }) => <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground mt-12 mb-6">{children}</h2>,
+              h3: ({ children }) => <h3 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight text-foreground mt-10 mb-4">{children}</h3>,
+              h4: ({ children }) => <h4 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-foreground mt-8 mb-3">{children}</h4>,
+              p: ({ children }) => <p className="text-muted-foreground leading-relaxed text-lg mb-6">{children}</p>,
+              a: ({ href, children }) => <a href={href} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline font-medium">{children}</a>,
+              strong: ({ children }) => <strong className="text-foreground font-semibold">{children}</strong>,
+              em: ({ children }) => <em className="italic">{children}</em>,
+              blockquote: ({ children }) => (
+                <blockquote className="border-l-4 border-accent pl-6 italic text-foreground text-lg my-8 bg-muted/10 py-4 pr-4 rounded-r-lg">
+                  {children}
+                </blockquote>
+              ),
+              ul: ({ children }) => <ul className="list-disc pl-6 text-muted-foreground text-lg space-y-2 my-6">{children}</ul>,
+              ol: ({ children }) => <ol className="list-decimal pl-6 text-muted-foreground text-lg space-y-2 my-6">{children}</ol>,
+              li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+              code: ({ children }) => <code className="text-accent bg-accent/10 px-1.5 py-0.5 rounded text-sm font-mono">{children}</code>,
+              pre: ({ children }) => <pre className="bg-muted border border-border/50 p-4 rounded-xl overflow-x-auto my-6 font-mono text-sm">{children}</pre>,
+              hr: () => <hr className="border-border/30 my-10" />
+            }}
+          >
+            {language === "es" ? (blogPost.content || blogPost.contentEn) : (blogPost.contentEn || blogPost.content)}
+          </ReactMarkdown>
+        </div>
+
+        {/* Share and Download Panel */}
+        <div className="py-8 my-8 border-t border-b border-border/10 flex flex-wrap items-center justify-between gap-4 scroll-reveal share-panel">
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-semibold tracking-wider text-muted-foreground uppercase">
+              {language === "es" ? "Compartir:" : "Share:"}
+            </span>
+            <div className="flex items-center gap-2">
+              {/* LinkedIn */}
+              <a 
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-muted/30 hover:bg-accent hover:text-white flex items-center justify-center transition-colors text-foreground"
+                title={language === "es" ? "Compartir en LinkedIn" : "Share on LinkedIn"}
+              >
+                <FaLinkedin size={16} />
+              </a>
+              {/* Twitter / X */}
+              <a 
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}&text=${encodeURIComponent(blogPost.title || "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-muted/30 hover:bg-accent hover:text-white flex items-center justify-center transition-colors text-foreground"
+                title={language === "es" ? "Compartir en X" : "Share on X"}
+              >
+                <FaTwitter size={16} />
+              </a>
+              {/* WhatsApp */}
+              <a 
+                href={`https://wa.me/?text=${encodeURIComponent((blogPost.title || "") + " - " + (typeof window !== "undefined" ? window.location.href : ""))}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-muted/30 hover:bg-[#25D366] hover:text-white flex items-center justify-center transition-colors text-foreground"
+                title={language === "es" ? "Compartir por WhatsApp" : "Share on WhatsApp"}
+              >
+                <FaWhatsapp size={16} />
+              </a>
+              {/* Email */}
+              <a 
+                href={`mailto:?subject=${encodeURIComponent(blogPost.title || "")}&body=${encodeURIComponent("Mira este artículo: " + (typeof window !== "undefined" ? window.location.href : ""))}`}
+                className="w-10 h-10 rounded-full bg-muted/30 hover:bg-accent hover:text-white flex items-center justify-center transition-colors text-foreground"
+                title={language === "es" ? "Enviar por Email" : "Share via Email"}
+              >
+                <FaEnvelope size={16} />
+              </a>
+              {/* Copy Link */}
+              <button 
+                onClick={handleCopyLink}
+                className="w-10 h-10 rounded-full bg-muted/30 hover:bg-accent hover:text-white flex items-center justify-center transition-colors text-foreground cursor-pointer"
+                title={language === "es" ? "Copiar enlace" : "Copy link"}
+              >
+                {copied ? <Check size={16} className="text-green-500" /> : <Link2 size={16} />}
+              </button>
+            </div>
+          </div>
+          
+          {/* PDF Download Button */}
+          <button 
+            onClick={handlePrint}
+            className="inline-flex items-center gap-2 text-xs font-bold tracking-widest bg-muted/30 hover:bg-accent hover:text-white text-foreground px-6 py-3 rounded-full border border-border/10 transition-colors cursor-pointer"
+            title={language === "es" ? "Descargar como PDF" : "Download as PDF"}
+          >
+            <Download size={14} />
+            {language === "es" ? "DESCARGAR PDF" : "DOWNLOAD PDF"}
+          </button>
+        </div>
+
+        {/* Related Posts */}
+        {relatedPosts.length > 0 && (
+          <div className="pt-20 scroll-reveal related-posts">
+            <h2 className="text-3xl font-medium tracking-tight mb-12">
+              {language === "es" ? "Artículos Relacionados" : "Related Articles"}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {relatedPosts.map((post, idx) => (
+                <Link
+                  key={post._id}
+                  href={`/blog/${post.slug.current}`}
+                  className="group flex flex-col h-full scroll-reveal"
+                  style={{ transitionDelay: `${idx * 100}ms` }}
+                >
+                  <div className="relative h-44 overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-1000 mb-4 shrink-0 bg-muted/20">
+                    {post.image ? (
+                      <Image
+                        src={post.image}
+                        alt={language === "es" ? (post.title || post.titleEn) : (post.titleEn || post.title)}
+                        fill
+                        className="object-cover grayscale-[0.4] group-hover:grayscale-0 group-hover:scale-105 transition-transform duration-1000"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-muted flex items-center justify-center text-xs text-muted-foreground">No Image</div>
+                    )}
+                  </div>
+                  
+                  <div className="flex flex-col flex-1 space-y-3">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>
+                        {new Date(post.date).toLocaleDateString(language === "es" ? "es-ES" : "en-US", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </span>
+                      <span className="text-accent">{language === "es" ? (post.category || post.categoryEn) : (post.categoryEn || post.category)}</span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2">
+                      {language === "es" ? (post.title || post.titleEn) : (post.titleEn || post.title)}
+                    </h3>
+                    <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed mb-4">
+                      {language === "es" ? (post.excerpt || post.excerptEn) : (post.excerptEn || post.excerpt)}
+                    </p>
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground mt-auto pt-2">
+                      <Clock className="w-3 h-3" />
+                      <span>
+                        {post.readTime} min
+                      </span>
+                      {post.author && (
+                        <>
+                          <span className="mx-2">·</span>
+                          <span>{post.author}</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+      </article>
       <Footer />
-    </>
+    </main>
   )
 }

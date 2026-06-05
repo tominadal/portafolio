@@ -1,12 +1,13 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Manrope } from "next/font/google"
-import { Geist_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
+import { Manrope, Geist_Mono } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { LanguageProvider } from "@/components/language-provider"
+import Navbar from "@/components/navbar"
+import ScrollReveal from "@/components/scroll-reveal"
 import { WhatsAppFloat } from "@/components/whatsapp-float"
-import { ScrollReveal } from "@/components/scroll-reveal"
+import { CustomCursor } from "@/components/custom-cursor"
+import { Toaster } from "sonner"
 import "./globals.css"
 
 const manrope = Manrope({
@@ -45,10 +46,10 @@ export const metadata: Metadata = {
     "Data Science",
     "Web Development",
   ],
-  authors: [{ name: "Tomás Nadal", url: "https://tomasnadal.com" }],
+  authors: [{ name: "Tomás Nadal", url: "https://tomasnadal.qzz.io" }],
   creator: "Tomás Nadal",
   publisher: "Tomás Nadal",
-  metadataBase: new URL("https://tomasnadal.com"),
+  metadataBase: new URL("https://tomasnadal.qzz.io"),
   alternates: {
     canonical: "/",
     languages: {
@@ -60,14 +61,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_AR",
     alternateLocale: ["en_US"],
-    url: "https://tomasnadal.com",
+    url: "https://tomasnadal.qzz.io",
     title: "Tomás Nadal - Full Stack Developer",
     description:
       "Portfolio profesional de Tomás Nadal - Full Stack Developer especializado en React, Next.js y soluciones digitales innovadoras.",
     siteName: "Tomás Nadal Portfolio",
     images: [
       {
-        url: "/andrew-kliatskyi-B_Z9jqassqE-unsplash.jpg",
+        url: "/logo.png",
         width: 1200,
         height: 630,
         alt: "Tomás Nadal - Full Stack Developer",
@@ -79,7 +80,7 @@ export const metadata: Metadata = {
     title: "Tomás Nadal - Full Stack Developer",
     description:
       "Portfolio profesional de Tomás Nadal - Full Stack Developer especializado en React, Next.js y soluciones digitales innovadoras.",
-    images: ["/andrew-kliatskyi-B_Z9jqassqE-unsplash.jpg"],
+    images: ["/logo.png"],
     creator: "@tomasnadal",
   },
   robots: {
@@ -95,16 +96,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.PNG", sizes: "any", type: "image/png" },
+      { url: "/favicon.png", sizes: "any", type: "image/png" },
     ],
-    apple: [{ url: "/favicon.PNG", sizes: "180x180", type: "image/png" }],
-    shortcut: "/favicon.PNG",
+    apple: [{ url: "/favicon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: "/favicon.png",
   },
-  manifest: "/site.webmanifest",
-  verification: {
-    google: "google-site-verification-code",
-  },
-  category: "technology",
 }
 
 export default function RootLayout({
@@ -114,7 +110,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${manrope.variable} ${geistMono.variable} font-sans antialiased`}>
+      <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -122,7 +118,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Person",
               name: "Tomás Nadal",
-              url: "https://tomasnadal.com",
+              url: "https://tomasnadal.qzz.io",
               jobTitle: "Full Stack Developer",
               sameAs: [
                 "https://github.com/eltanook",
@@ -133,14 +129,23 @@ export default function RootLayout({
             }),
           }}
         />
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange={false}>
+      </head>
+      <body suppressHydrationWarning className={`${manrope.variable} ${geistMono.variable} font-sans antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
           <LanguageProvider>
+            <CustomCursor />
+            <Navbar />
             <ScrollReveal />
             {children}
             <WhatsAppFloat />
           </LanguageProvider>
         </ThemeProvider>
-        <Analytics />
+        <Toaster position="bottom-left" theme="system" richColors />
       </body>
     </html>
   )
