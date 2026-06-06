@@ -48,7 +48,17 @@ function CountUp({ end, duration = 3500 }: { end: number; duration?: number }) {
     return () => observer.disconnect()
   }, [end, duration, hasAnimated])
  
-  return <span ref={ref}>{count}</span>
+  const digitCount = String(end).length
+  
+  return (
+    <span 
+      ref={ref} 
+      className="inline-block tabular-nums text-right" 
+      style={{ minWidth: `${digitCount}ch` }}
+    >
+      {count}
+    </span>
+  )
 }
  
 function calculateAge(birthDate: Date): number {

@@ -77,7 +77,7 @@ export default function CTATestimonials() {
               alt="Person reading magazine" 
               fill 
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover grayscale group-hover:scale-105 transition-all duration-1000"
+              className="object-cover group-hover:scale-105 transition-all duration-1000"
             />
             
             {/* Resting Label */}

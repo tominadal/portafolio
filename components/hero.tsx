@@ -17,13 +17,16 @@ export default function Hero() {
   useEffect(() => {
     if (!faceComplete) {
       document.body.style.overflow = 'hidden'
+      document.documentElement.style.overflow = 'hidden'
       // Scroll to top to ensure they don't get stuck midway if reloading
       window.scrollTo(0, 0)
     } else {
-      document.body.style.overflow = 'auto'
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
     }
     return () => {
-      document.body.style.overflow = 'auto'
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
     }
   }, [faceComplete])
 
@@ -62,9 +65,8 @@ export default function Hero() {
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="relative w-full h-full">
           <motion.div 
-            className="absolute -inset-[50px] bg-cover bg-center !transition-none"
+            className="absolute -inset-[50px] !transition-none"
             style={{ 
-              backgroundImage: `url('/images/setup/IMG_8311.jpg')`,
               x: bgX,
               y: bgY
             }}
@@ -72,6 +74,15 @@ export default function Hero() {
             animate={{ opacity: loadingComplete ? 1 : 0 }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
           >
+            <Image
+              src="/images/setup/IMG_8311.jpg"
+              alt="Background setup workspace"
+              fill
+              priority
+              quality={85}
+              className="object-cover object-center pointer-events-none"
+              sizes="100vw"
+            />
             {/* Subtle Overlay - Darker for white text contrast */}
             <div className="absolute inset-0 bg-black/50 z-10 !transition-none"></div>
           </motion.div>
@@ -106,12 +117,12 @@ export default function Hero() {
               className="inline-flex text-white font-bold origin-center"
               initial={{ rotate: 0, y: 0 }}
               animate={{ rotate: loadingComplete ? 90 : 0, y: loadingComplete ? 8 : 0 }}
-              transition={{ delay: 2.8, duration: 0.6, type: "spring", bounce: 0.4 }}
+              transition={{ delay: 3.2, duration: 0.6, type: "spring", bounce: 0.4 }}
               onAnimationComplete={() => setFaceComplete(true)}
             >
-              <motion.span initial={{ opacity: 0 }} animate={{ opacity: loadingComplete ? 1 : 0 }} transition={{ delay: 2.1 }}>:</motion.span>
-              <motion.span initial={{ opacity: 0 }} animate={{ opacity: loadingComplete ? 1 : 0 }} transition={{ delay: 2.2 }}>&nbsp;</motion.span>
-              <motion.span initial={{ opacity: 0 }} animate={{ opacity: loadingComplete ? 1 : 0 }} transition={{ delay: 2.3 }}>)</motion.span>
+              <motion.span initial={{ opacity: 0 }} animate={{ opacity: loadingComplete ? 1 : 0 }} transition={{ delay: 2.7 }}>:</motion.span>
+              <motion.span initial={{ opacity: 0 }} animate={{ opacity: loadingComplete ? 1 : 0 }} transition={{ delay: 2.8 }}>&nbsp;</motion.span>
+              <motion.span initial={{ opacity: 0 }} animate={{ opacity: loadingComplete ? 1 : 0 }} transition={{ delay: 2.9 }}>)</motion.span>
             </motion.span>
           </h1>
           <a href="mailto:tomasnadal04@gmail.com" className="inline-flex items-center group shadow-lg shadow-black/10 dark:shadow-black/20 rounded-full transition-all hover:scale-[1.02]">
@@ -130,12 +141,12 @@ export default function Hero() {
       <div className="absolute bottom-12 left-0 w-full flex items-end justify-start px-8 pointer-events-none z-20">
         <div className="relative">
           {/* Base text (low opacity) */}
-          <h3 className="text-[clamp(4.6rem,20.7vw,16.1rem)] leading-none font-bold text-white/20 tracking-tighter select-none whitespace-nowrap">
+          <h2 className="text-[clamp(4.6rem,20.7vw,16.1rem)] leading-none font-bold text-white/20 tracking-tighter select-none whitespace-nowrap">
             Tomás Nadal<span className="text-white/20 align-top ml-2">&reg;</span>
-          </h3>
+          </h2>
           
           {/* Animated fill text */}
-          <motion.h3 
+          <motion.h2 
             className="absolute top-0 left-0 text-[clamp(4.6rem,20.7vw,16.1rem)] leading-none font-bold text-white tracking-tighter select-none whitespace-nowrap"
             initial={{ clipPath: "inset(0 100% 0 0)" }}
             animate={{ clipPath: "inset(0 0% 0 0)" }}
@@ -143,7 +154,7 @@ export default function Hero() {
             onAnimationComplete={() => setLoadingComplete(true)}
           >
             Tomás Nadal<span className="text-accent align-top ml-2">&reg;</span>
-          </motion.h3>
+          </motion.h2>
         </div>
       </div>
 

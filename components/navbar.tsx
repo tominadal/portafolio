@@ -114,6 +114,7 @@ export default function Navbar() {
           <button 
             className={`md:hidden ml-2 ${!isLightNav ? "text-foreground" : "text-white"}`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>

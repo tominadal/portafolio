@@ -184,7 +184,7 @@ export default function BlogArticlePage({ params }: { params: Promise<{ slug: st
               src={blogPost.image}
               alt={language === "es" ? (blogPost.title || blogPost.titleEn) : (blogPost.titleEn || blogPost.title)}
               fill
-              className="object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-700"
+              className="object-cover transition-all duration-700"
             />
           ) : (
             <div className="w-full h-full bg-muted flex items-center justify-center">No Image</div>
@@ -307,7 +307,7 @@ export default function BlogArticlePage({ params }: { params: Promise<{ slug: st
                         src={post.image}
                         alt={language === "es" ? (post.title || post.titleEn) : (post.titleEn || post.title)}
                         fill
-                        className="object-cover grayscale-[0.4] group-hover:grayscale-0 group-hover:scale-105 transition-transform duration-1000"
+                        className="object-cover group-hover:scale-105 transition-transform duration-1000"
                       />
                     ) : (
                       <div className="w-full h-full bg-muted flex items-center justify-center text-xs text-muted-foreground">No Image</div>
@@ -325,7 +325,7 @@ export default function BlogArticlePage({ params }: { params: Promise<{ slug: st
                       </span>
                       <span className="text-accent">{language === "es" ? (post.category || post.categoryEn) : (post.categoryEn || post.category)}</span>
                     </div>
-                    <h3 className="text-xl font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2">
+                    <h3 className="text-xl font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2 pb-1 leading-snug">
                       {language === "es" ? (post.title || post.titleEn) : (post.titleEn || post.title)}
                     </h3>
                     <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed mb-4">

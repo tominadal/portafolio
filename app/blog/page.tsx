@@ -133,7 +133,7 @@ export default function BlogPage() {
                         </span>
                         <span className="text-accent font-medium">{language === "en" ? (post.categoryEn || post.category) : post.category}</span>
                       </div>
-                      <h3 className="text-3xl lg:text-4xl font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-3">
+                      <h3 className="text-3xl lg:text-4xl font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-3 pb-1 leading-snug">
                         {language === "en" ? (post.titleEn || post.title) : post.title}
                       </h3>
                       <p className="text-lg text-muted-foreground line-clamp-3 leading-relaxed mt-4">
@@ -216,7 +216,7 @@ export default function BlogPage() {
                         </span>
                         <span className="text-accent">{language === "en" ? (post.categoryEn || post.category) : post.category}</span>
                       </div>
-                      <h3 className="text-xl font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2">
+                      <h3 className="text-xl font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2 pb-1 leading-snug">
                         {language === "en" ? (post.titleEn || post.title) : post.title}
                       </h3>
                       <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed mb-4">

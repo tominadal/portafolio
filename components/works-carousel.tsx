@@ -185,6 +185,7 @@ export default function WorksCarousel() {
                         href={`/projects/${project.slug.current}`}
                         className="w-14 h-14 bg-white hover:bg-accent hover:text-white rounded-full flex items-center justify-center text-black transition-all duration-300 shadow-2xl scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100"
                         title={language === "es" ? "Ver detalles" : "View details"}
+                        aria-label={language === "es" ? `Ver detalles del proyecto ${project.title}` : `View details of project ${project.title}`}
                       >
                         <ArrowUpRight size={22} />
                       </Link>
@@ -196,6 +197,7 @@ export default function WorksCarousel() {
                           onClick={(e) => e.stopPropagation()}
                           className="w-14 h-14 bg-white hover:bg-accent hover:text-white rounded-full flex items-center justify-center text-black transition-all duration-300 shadow-2xl scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100 delay-[50ms]"
                           title={language === "es" ? "Visitar sitio" : "Visit website"}
+                          aria-label={language === "es" ? `Visitar sitio web del proyecto ${project.title}` : `Visit website of project ${project.title}`}
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-external-link"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
                         </a>

@@ -254,7 +254,7 @@ export default function ProjectsPage() {
                           alt={language === "en" ? (project.titleEn || project.title) : project.title} 
                           fill 
                           sizes="(max-width: 768px) 100vw, 50vw"
-                          className="object-cover grayscale-[0.4] group-hover:grayscale-0 group-hover:scale-105 transition-transform duration-1000"
+                          className="object-cover group-hover:scale-105 transition-transform duration-1000"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">No Image</div>
@@ -290,7 +290,7 @@ export default function ProjectsPage() {
                       <span>{project.year || "2025"}</span>
                     </div>
                     <Link href={`/projects/${project.slug.current}`} className="block group/title">
-                      <h3 className={`font-semibold text-foreground group-hover/title:text-accent transition-colors line-clamp-2 ${viewMode === "grid" ? "text-xl" : "text-2xl md:text-3xl"}`}>
+                      <h3 className={`font-semibold text-foreground group-hover/title:text-accent transition-colors line-clamp-2 pb-1 leading-snug ${viewMode === "grid" ? "text-xl" : "text-2xl md:text-3xl"}`}>
                         {language === "en" ? (project.titleEn || project.title) : project.title}
                       </h3>
                     </Link>

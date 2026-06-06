@@ -84,7 +84,7 @@ export default function LatestArticles() {
                     alt={language === "en" ? (post.titleEn || post.title) : post.title} 
                     fill 
                     sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-transform duration-1000"
+                    className="object-cover group-hover:scale-105 transition-transform duration-1000"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">{t("general.noImage")}</div>
@@ -102,7 +102,7 @@ export default function LatestArticles() {
                   </span>
                   <span className="text-accent font-medium">{language === "en" ? (post.categoryEn || post.category) : post.category}</span>
                 </div>
-                <h3 className="text-3xl font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2">
+                <h3 className="text-3xl font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2 pb-1 leading-snug">
                   {language === "en" ? (post.titleEn || post.title) : post.title}
                 </h3>
                 <p className="text-lg text-muted-foreground line-clamp-3 leading-relaxed">
