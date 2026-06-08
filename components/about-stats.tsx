@@ -73,7 +73,7 @@ function calculateAge(birthDate: Date): number {
  
 export default function AboutStats() {
   const { t, language } = useLanguage()
-  const [projectCount, setProjectCount] = useState(30) // Fallback
+  const [projectCount, setProjectCount] = useState(75) // Min 75 projects
   const age = calculateAge(new Date(2004, 10, 17))
  
   useEffect(() => {
@@ -82,7 +82,7 @@ export default function AboutStats() {
         const slugs = await client.fetch(`*[_type == "project" && !(_id in path("drafts.**"))].slug.current`)
         if (slugs) {
           const uniqueCount = new Set(slugs.filter(Boolean)).size
-          setProjectCount(uniqueCount > 0 ? uniqueCount : 30)
+          setProjectCount(Math.max(75, uniqueCount))
         }
       } catch (error) {
         console.error("Error fetching project count:", error)
@@ -101,7 +101,7 @@ export default function AboutStats() {
             
             <div className="grid grid-cols-3 gap-8 scroll-reveal">
               <div className="mb-6">
-                <h2 className="text-6xl font-bold tracking-tighter">
+                <h2 className="text-6xl font-bold tracking-tighter whitespace-nowrap">
                   <CountUp end={5} />
                   <span className="text-accent">+</span>
                 </h2>
@@ -111,7 +111,7 @@ export default function AboutStats() {
               </div>
  
               <div className="mb-6">
-                <h2 className="text-6xl font-bold tracking-tighter">
+                <h2 className="text-6xl font-bold tracking-tighter whitespace-nowrap">
                   <CountUp end={projectCount} />
                   <span className="text-accent">+</span>
                 </h2>
@@ -121,7 +121,7 @@ export default function AboutStats() {
               </div>
 
               <div className="mb-6">
-                <h2 className="text-6xl font-bold tracking-tighter">
+                <h2 className="text-6xl font-bold tracking-tighter whitespace-nowrap">
                   <CountUp end={age} />
                 </h2>
                 <p className="text-muted-foreground text-sm font-medium mt-2">

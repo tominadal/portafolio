@@ -2,6 +2,7 @@
 
 import { FaInstagram, FaLinkedinIn, FaGithub } from "react-icons/fa"
 import { useLanguage } from "./language-provider"
+import { motion } from "framer-motion"
 
 // Assuming a custom X icon or similar if needed. For now we use text "X" inside a circle
 export default function Footer() {
@@ -68,10 +69,22 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto border-t border-white/10 pt-6 pb-12 scroll-reveal"></div>
 
       {/* Massive Text */}
-      <div className="w-full overflow-hidden flex justify-center items-end scroll-reveal">
-        <h1 className="text-[clamp(3rem,14vw,11rem)] leading-[0.8] font-bold tracking-tighter text-center opacity-80 whitespace-nowrap">
-          <span className="text-accent align-top mr-4">&copy;</span>Tomás Nadal
+      <div className="w-full relative overflow-hidden flex justify-center items-end pb-[5px]">
+        {/* Base text (low opacity) */}
+        <h1 className="text-[clamp(3rem,14vw,11rem)] leading-[0.75] font-bold tracking-tighter text-center text-white/20 whitespace-nowrap pointer-events-none">
+          <span className="text-white/20 align-top mr-4">&copy;</span>Tomás Nadal
         </h1>
+        
+        {/* Animated fill text */}
+        <motion.h1 
+          className="absolute bottom-[5px] left-1/2 -translate-x-1/2 text-[clamp(3rem,14vw,11rem)] leading-[0.75] font-bold tracking-tighter text-center text-white whitespace-nowrap pointer-events-none"
+          initial={{ clipPath: "inset(-20% 100% -20% 0)" }}
+          whileInView={{ clipPath: "inset(-20% 0% -20% 0)" }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+        >
+          <span className="text-accent align-top mr-4">&copy;</span>Tomás Nadal
+        </motion.h1>
       </div>
     </footer>
   )

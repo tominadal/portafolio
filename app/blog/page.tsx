@@ -64,6 +64,7 @@ export default function BlogPage() {
   }, [])
 
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
+  const [currentPage, setCurrentPage] = useState<number>(1)
 
   // Treat the first post as the featured post (always static, unaffected by filter)
   const featuredPosts = posts.slice(0, 1)
@@ -77,6 +78,14 @@ export default function BlogPage() {
     const postCat = language === "en" ? (p.categoryEn || p.category) : p.category
     return postCat === selectedCategory
   })
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [selectedCategory])
+
+  const postsPerPage = 9
+  const totalPages = Math.ceil(regularPosts.length / postsPerPage)
+  const paginatedPosts = regularPosts.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage)
 
   return (
     <main className="min-h-screen bg-background pt-32">
@@ -184,7 +193,7 @@ export default function BlogPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {regularPosts.map((post, idx) => (
+              {paginatedPosts.map((post, idx) => (
                   <Link 
                     key={post._id} 
                     href={`/blog/${post.slug.current}`}
@@ -238,6 +247,27 @@ export default function BlogPage() {
                   </Link>
               ))}
             </div>
+
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-2 mt-16 scroll-reveal">
+                {Array.from({ length: totalPages }).map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      setCurrentPage(i + 1)
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all ${
+                      currentPage === i + 1 
+                        ? "bg-accent text-accent-foreground" 
+                        : "bg-muted hover:bg-accent/20 text-foreground"
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

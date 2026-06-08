@@ -199,7 +199,7 @@ export default function BlogArticlePage({ params }: { params: Promise<{ slug: st
               h2: ({ children }) => <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-foreground mt-12 mb-6">{children}</h2>,
               h3: ({ children }) => <h3 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight text-foreground mt-10 mb-4">{children}</h3>,
               h4: ({ children }) => <h4 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-foreground mt-8 mb-3">{children}</h4>,
-              p: ({ children }) => <p className="text-muted-foreground leading-relaxed text-lg mb-6">{children}</p>,
+              p: ({ children }) => <p className="text-foreground/90 leading-relaxed text-lg mb-6">{children}</p>,
               a: ({ href, children }) => <a href={href} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline font-medium">{children}</a>,
               strong: ({ children }) => <strong className="text-foreground font-semibold">{children}</strong>,
               em: ({ children }) => <em className="italic">{children}</em>,
@@ -208,8 +208,8 @@ export default function BlogArticlePage({ params }: { params: Promise<{ slug: st
                   {children}
                 </blockquote>
               ),
-              ul: ({ children }) => <ul className="list-disc pl-6 text-muted-foreground text-lg space-y-2 my-6">{children}</ul>,
-              ol: ({ children }) => <ol className="list-decimal pl-6 text-muted-foreground text-lg space-y-2 my-6">{children}</ol>,
+              ul: ({ children }) => <ul className="list-disc pl-6 text-foreground/90 text-lg space-y-2 my-6">{children}</ul>,
+              ol: ({ children }) => <ol className="list-decimal pl-6 text-foreground/90 text-lg space-y-2 my-6">{children}</ol>,
               li: ({ children }) => <li className="leading-relaxed">{children}</li>,
               code: ({ children }) => <code className="text-accent bg-accent/10 px-1.5 py-0.5 rounded text-sm font-mono">{children}</code>,
               pre: ({ children }) => <pre className="bg-muted border border-border/50 p-4 rounded-xl overflow-x-auto my-6 font-mono text-sm">{children}</pre>,

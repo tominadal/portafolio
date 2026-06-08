@@ -3,7 +3,8 @@
 import Image from "next/image"
 import { ArrowRight, ExternalLink, X } from "lucide-react"
 import { useLanguage } from "./language-provider"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
+import { motion, useScroll, useTransform } from "framer-motion"
 
 const oldProjects = [
   { 
@@ -59,6 +60,33 @@ const oldProjects = [
 export default function CTATestimonials() {
   const { t, language } = useLanguage()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const inicoImagesRow1 = [
+    "/inicios-1.png",
+    "/inicios-2.png",
+    "/inicios-6.png",
+    "/inicios-7.png"
+  ]
+
+  const inicoImagesRow2 = [
+    "/inicios-5.png",
+    "/inicios-3.png",
+    "/inicios-4.png"
+  ]
+  // Duplicate arrays to allow for continuous scrolling effect
+  const duplicatedImagesRow1 = [...inicoImagesRow1, ...inicoImagesRow1, ...inicoImagesRow1, ...inicoImagesRow1]
+  const duplicatedImagesRow2 = [...inicoImagesRow2, ...inicoImagesRow2, ...inicoImagesRow2, ...inicoImagesRow2]
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  })
+
+  // Top row moves left
+  const x1 = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"])
+  // Bottom row moves right
+  const x2 = useTransform(scrollYProgress, [0, 1], ["-50%", "0%"])
 
   // Prevent scroll when modal is open
   useEffect(() => {
@@ -71,14 +99,25 @@ export default function CTATestimonials() {
     <section className="w-full bg-secondary/30 dark:bg-muted/10 px-8 pt-24 pb-0 overflow-hidden relative border-t border-border/10">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 lg:gap-24 mb-24">
         {/* Left Side: Image */}
-        <div className="w-full md:w-1/2 rounded-[2.5rem] overflow-hidden relative aspect-[4/3] scroll-reveal group">
-           <Image 
-              src="/images/cta_reading_person.png" 
-              alt="Person reading magazine" 
-              fill 
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover group-hover:scale-105 transition-all duration-1000"
-            />
+        <div ref={containerRef} className="w-full md:w-1/2 rounded-[2.5rem] overflow-hidden relative aspect-[4/3] scroll-reveal group bg-black/5 dark:bg-white/5 border border-border/20">
+           
+           <div className="absolute inset-0 flex flex-col justify-center gap-6 -rotate-[12deg] scale-[1.15] pointer-events-none z-0">
+             <motion.div className="flex gap-6" style={{ x: x1 }}>
+               {duplicatedImagesRow1.map((src, index) => (
+                 <div key={`row1-${index}`} className="relative w-64 md:w-80 h-44 md:h-56 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10">
+                   <Image src={src} alt={`Mis inicios ${index + 1}`} fill sizes="(max-width: 768px) 256px, 320px" quality={100} className="object-cover" />
+                 </div>
+               ))}
+             </motion.div>
+
+             <motion.div className="flex gap-6" style={{ x: x2 }}>
+               {duplicatedImagesRow2.map((src, index) => (
+                 <div key={`row2-${index}`} className="relative w-64 md:w-80 h-44 md:h-56 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10">
+                   <Image src={src} alt={`Mis inicios ${index + 1}`} fill sizes="(max-width: 768px) 256px, 320px" quality={100} className="object-cover" />
+                 </div>
+               ))}
+             </motion.div>
+           </div>
             
             {/* Resting Label */}
             <div className="absolute top-6 left-6 text-accent font-bold text-lg tracking-wider z-10 group-hover:opacity-0 transition-opacity duration-300">

@@ -76,7 +76,7 @@ export default function ContactPage() {
         <div className="grid lg:grid-cols-[2fr_1fr] gap-12 mb-20 items-start">
           {/* Left: Form */}
           <div className="scroll-reveal">
-            <form onSubmit={handleSubmit} className="bg-muted/10 p-8 md:p-12 rounded-[3rem] border border-border/10">
+            <form onSubmit={handleSubmit} className="bg-card p-8 md:p-12 rounded-[3rem] border border-border/10">
               <div className="space-y-8">
                 <div className="relative">
                   <input

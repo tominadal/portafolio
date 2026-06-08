@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useLanguage } from "./language-provider"
 import { client } from "@/sanity/lib/client"
-import { ArrowUpRight, ArrowRight } from "lucide-react"
+import { ArrowUpRight, ArrowRight, Eye } from "lucide-react"
 import { motion, useScroll, useTransform, useSpring } from "framer-motion"
 
 interface Project {
@@ -187,7 +187,7 @@ export default function WorksCarousel() {
                         title={language === "es" ? "Ver detalles" : "View details"}
                         aria-label={language === "es" ? `Ver detalles del proyecto ${project.title}` : `View details of project ${project.title}`}
                       >
-                        <ArrowUpRight size={22} />
+                        <Eye size={22} />
                       </Link>
                       {project.demoUrl && (
                         <a 

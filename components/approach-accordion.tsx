@@ -99,7 +99,7 @@ export default function ApproachAccordion() {
             </p>
           </div>
           
-          <div 
+           <div 
             className="sticky top-24 w-full aspect-[4/3] rounded-3xl overflow-hidden bg-neutral-100 group cursor-pointer"
             onClick={() => setIsCvOpen(true)}
           >

@@ -84,7 +84,7 @@ export default function LatestArticles() {
                     alt={language === "en" ? (post.titleEn || post.title) : post.title} 
                     fill 
                     sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover group-hover:scale-105 transition-transform duration-1000"
+                    className="object-cover object-[center_25%] group-hover:scale-105 transition-transform duration-1000"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">{t("general.noImage")}</div>
