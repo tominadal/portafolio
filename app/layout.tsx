@@ -8,6 +8,7 @@ import ScrollReveal from "@/components/scroll-reveal"
 import { WhatsAppFloat } from "@/components/whatsapp-float"
 import { CustomCursor } from "@/components/custom-cursor"
 import { Toaster } from "sonner"
+import Script from "next/script"
 import "./globals.css"
 
 const manrope = Manrope({
@@ -104,7 +105,8 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
-        <script
+        <Script
+          id="schema-org"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

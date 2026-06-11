@@ -22,6 +22,18 @@ def generate_pdf():
             "dst": ["cv-en.pdf"],
             "title": "Tomás Ignacio Nadal - Resume",
             "lang": "en"
+        },
+        {
+            "src": "cv-data.md",
+            "dst": ["cv-data.pdf"],
+            "title": "Tomás Ignacio Nadal - CV Data Science",
+            "lang": "es"
+        },
+        {
+            "src": "cv-data-en.md",
+            "dst": ["cv-data-en.pdf"],
+            "title": "Tomás Ignacio Nadal - Data Science Resume",
+            "lang": "en"
         }
     ]
 

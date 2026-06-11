@@ -9,14 +9,14 @@ export default function Footer() {
   const { t } = useLanguage()
   return (
     <footer className="w-full bg-[#111111] text-white pt-24 pb-0 px-8 rounded-t-[2.5rem] relative z-20">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
+      <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-12 md:gap-12 mb-24 max-md:mb-8">
         
         {/* Col 1 */}
         <div className="space-y-8">
           <div>
             <p className="text-white/50 text-sm mb-4">{t("footer.office")}</p>
             <p className="text-sm leading-relaxed">
-              Buenos Aires,<br />
+              CABA,<br />
               Argentina
             </p>
           </div>
@@ -39,7 +39,7 @@ export default function Footer() {
         </div>
 
         {/* Col 3 & 4 (Email and Socials) */}
-        <div className="md:col-span-2 flex flex-col justify-between">
+        <div className="col-span-2 flex flex-col justify-between">
           <div>
             <p className="text-white/50 italic text-sm mb-6">{t("footer.touch")}</p>
             <a href="mailto:tomasnadal04@gmail.com" className="text-2xl md:text-4xl lg:text-5xl font-medium hover:text-accent transition-colors break-all">
@@ -66,18 +66,18 @@ export default function Footer() {
       </div>
 
       {/* Horizontal Line Divider */}
-      <div className="max-w-7xl mx-auto border-t border-white/10 pt-6 pb-12 scroll-reveal"></div>
+      <div className="max-w-7xl mx-auto border-t border-white/10 pt-6 pb-12 scroll-reveal max-md:hidden"></div>
 
       {/* Massive Text */}
       <div className="w-full relative overflow-hidden flex justify-center items-end pb-[5px]">
-        {/* Base text (low opacity) */}
-        <h1 className="text-[clamp(3rem,14vw,11rem)] leading-[0.75] font-bold tracking-tighter text-center text-white/20 whitespace-nowrap pointer-events-none">
-          <span className="text-white/20 align-top mr-4">&copy;</span>Tomás Nadal
+        {/* Base text */}
+        <h1 className="max-md:text-[clamp(2.8rem,13vw,11rem)] md:text-[clamp(3rem,14vw,11rem)] leading-[0.75] font-bold tracking-tighter text-center max-md:text-white md:text-white/20 whitespace-nowrap pointer-events-none">
+          <span className="max-md:text-accent md:text-white/20 align-top mr-2 md:mr-4">&copy;</span>Tomás Nadal
         </h1>
         
         {/* Animated fill text */}
         <motion.h1 
-          className="absolute bottom-[5px] left-1/2 -translate-x-1/2 text-[clamp(3rem,14vw,11rem)] leading-[0.75] font-bold tracking-tighter text-center text-white whitespace-nowrap pointer-events-none"
+          className="max-md:hidden absolute bottom-[5px] left-1/2 -translate-x-1/2 text-[clamp(3rem,14vw,11rem)] leading-[0.75] font-bold tracking-tighter text-center text-white whitespace-nowrap pointer-events-none"
           initial={{ clipPath: "inset(-20% 100% -20% 0)" }}
           whileInView={{ clipPath: "inset(-20% 0% -20% 0)" }}
           viewport={{ once: true, margin: "-50px" }}

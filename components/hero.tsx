@@ -115,8 +115,8 @@ export default function Hero() {
         animate={{ opacity: loadingComplete ? 1 : 0, y: loadingComplete ? 0 : 20 }}
         transition={{ duration: 1, ease: "easeOut" }}
       >
-        <div className="max-w-2xl scroll-reveal">
-          <h1 className="text-[clamp(1.725rem,5.175vw,3.45rem)] font-medium leading-tight text-white mb-10 tracking-tight">
+        <div className="max-w-2xl scroll-reveal max-md:w-[65%]">
+          <h1 className="text-[clamp(2.1rem,6vw,3.45rem)] font-medium leading-tight text-white mb-10 tracking-tight">
             {t("hero.description.start")}
             <motion.span 
               className="bg-no-repeat"
@@ -131,9 +131,9 @@ export default function Hero() {
               {t("hero.description.highlight")}
             </motion.span>
             <span>. </span>
-            <span className="inline-block w-2"></span>
+            <span className="inline-block w-2 max-md:hidden"></span>
             <motion.span
-              className="inline-flex text-white font-bold origin-center"
+              className="inline-flex text-white font-bold origin-center max-md:hidden"
               initial={hasAnimated ? false : { rotate: 0, y: 0 }}
               animate={{ rotate: loadingComplete ? 90 : 0, y: loadingComplete ? 8 : 0 }}
               transition={{ delay: 3.2, duration: 0.6, type: "spring", bounce: 0.4 }}
@@ -148,11 +148,11 @@ export default function Hero() {
               <motion.span initial={hasAnimated ? false : { opacity: 0 }} animate={{ opacity: loadingComplete ? 1 : 0 }} transition={{ delay: 2.9 }}>)</motion.span>
             </motion.span>
           </h1>
-          <a href="mailto:tomasnadal04@gmail.com" className="inline-flex items-center group shadow-lg shadow-black/10 dark:shadow-black/20 rounded-full transition-all hover:scale-[1.02]">
-            <div className="bg-[#484848] text-white px-8 h-14 flex items-center justify-center rounded-l-full font-bold text-base whitespace-nowrap">
+          <a href="mailto:tomasnadal04@gmail.com" className="inline-flex w-fit items-center group shadow-lg shadow-black/10 dark:shadow-black/20 rounded-full transition-all hover:scale-[1.02] bg-[#484848] text-white">
+            <div className="px-8 h-14 flex items-center justify-center font-bold text-base whitespace-nowrap">
               {t("hero.btn")}
             </div>
-            <div className="bg-[#484848] pr-2 pl-1 h-14 rounded-r-full flex items-center justify-center">
+            <div className="pr-2 pl-1 h-14 flex items-center justify-center">
               <div className="bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
                 <ArrowRight size={20} />
               </div>
@@ -161,18 +161,18 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      <div className="absolute bottom-12 left-0 w-full flex items-end justify-start px-8 pointer-events-none z-20">
-        <div className="relative">
+      <div className="absolute max-md:bottom-[8%] max-md:right-0 max-md:[writing-mode:vertical-rl] max-md:[text-orientation:sideways] max-md:rotate-180 md:bottom-12 md:left-0 md:w-full md:flex md:items-end md:justify-start md:px-8 pointer-events-none z-20">
+        <div className="relative max-md:whitespace-nowrap">
           {/* Base text (low opacity) */}
-          <h2 className="text-[clamp(4.6rem,20.7vw,16.1rem)] leading-none font-bold text-white/20 tracking-tighter select-none whitespace-nowrap">
+          <h2 className="max-md:text-[clamp(5rem,22vw,16.1rem)] md:text-[clamp(5.5rem,24vw,16.1rem)] leading-none font-bold text-white/20 tracking-tighter select-none whitespace-nowrap">
             Tomás Nadal<span className="text-white/20 align-top ml-2">&reg;</span>
           </h2>
           
           {/* Animated fill text */}
           <motion.h2 
-            className="absolute top-0 left-0 text-[clamp(4.6rem,20.7vw,16.1rem)] leading-none font-bold text-white tracking-tighter select-none whitespace-nowrap"
-            initial={hasAnimated ? false : { clipPath: "inset(0 100% 0 0)" }}
-            animate={{ clipPath: "inset(0 0% 0 0)" }}
+            className="absolute top-0 left-0 max-md:text-[clamp(5rem,22vw,16.1rem)] md:text-[clamp(5.5rem,24vw,16.1rem)] leading-none font-bold text-white tracking-tighter select-none whitespace-nowrap max-md:!clip-path-none"
+            initial={hasAnimated ? false : { clipPath: "inset(0 100% 0 0)", opacity: 0 }}
+            animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
             transition={{ duration: 1.5, ease: "easeInOut", delay: 0.5 }}
             onAnimationComplete={() => setLoadingComplete(true)}
           >
@@ -188,7 +188,7 @@ export default function Hero() {
         animate={{ opacity: loadingComplete ? 1 : 0 }}
         transition={{ duration: 1, delay: 0.2 }}
       >
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 max-md:hidden">
           <div className="w-2 h-2 rounded-full bg-[#ff620a] animate-pulse"></div>
           <span>{language === "es" ? "Disponible para proyectos" : "Available for projects"}</span>
         </div>
@@ -196,7 +196,7 @@ export default function Hero() {
       </motion.div>
       
       <motion.div 
-        className="absolute bottom-8 right-8 text-white/70 text-xs z-30 animate-bounce"
+        className="absolute bottom-8 right-8 text-white/70 text-xs z-30 animate-bounce max-md:hidden"
         initial={hasAnimated ? false : { opacity: 0 }}
         animate={{ opacity: backgroundComplete ? 1 : 0 }}
         transition={{ duration: 1, delay: 0.2 }}

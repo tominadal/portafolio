@@ -60,7 +60,15 @@ const oldProjects = [
 export default function CTATestimonials() {
   const { t, language } = useLanguage()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   const inicoImagesRow1 = [
     "/inicios-1.png",
@@ -84,9 +92,9 @@ export default function CTATestimonials() {
   })
 
   // Top row moves left
-  const x1 = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"])
+  const x1 = useTransform(scrollYProgress, [0, 1], ["0%", "-12%"])
   // Bottom row moves right
-  const x2 = useTransform(scrollYProgress, [0, 1], ["-50%", "0%"])
+  const x2 = useTransform(scrollYProgress, [0, 1], ["-12%", "0%"])
 
   // Prevent scroll when modal is open
   useEffect(() => {
@@ -102,7 +110,12 @@ export default function CTATestimonials() {
         <div ref={containerRef} className="w-full md:w-1/2 rounded-[2.5rem] overflow-hidden relative aspect-[4/3] scroll-reveal group bg-black/5 dark:bg-white/5 border border-border/20">
            
            <div className="absolute inset-0 flex flex-col justify-center gap-6 -rotate-[12deg] scale-[1.15] pointer-events-none z-0">
-             <motion.div className="flex gap-6" style={{ x: x1 }}>
+             <motion.div 
+               className="flex gap-6 w-max" 
+               style={isMobile ? undefined : { x: x1 }}
+               animate={isMobile ? { x: ["0%", "-50%"] } : undefined}
+               transition={isMobile ? { repeat: Infinity, ease: "linear", duration: 40 } : undefined}
+             >
                {duplicatedImagesRow1.map((src, index) => (
                  <div key={`row1-${index}`} className="relative w-64 md:w-80 h-44 md:h-56 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10">
                    <Image src={src} alt={`Mis inicios ${index + 1}`} fill sizes="(max-width: 768px) 256px, 320px" quality={100} className="object-cover" />
@@ -110,7 +123,12 @@ export default function CTATestimonials() {
                ))}
              </motion.div>
 
-             <motion.div className="flex gap-6" style={{ x: x2 }}>
+             <motion.div 
+               className="flex gap-6 w-max" 
+               style={isMobile ? undefined : { x: x2 }}
+               animate={isMobile ? { x: ["-50%", "0%"] } : undefined}
+               transition={isMobile ? { repeat: Infinity, ease: "linear", duration: 40 } : undefined}
+             >
                {duplicatedImagesRow2.map((src, index) => (
                  <div key={`row2-${index}`} className="relative w-64 md:w-80 h-44 md:h-56 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10">
                    <Image src={src} alt={`Mis inicios ${index + 1}`} fill sizes="(max-width: 768px) 256px, 320px" quality={100} className="object-cover" />
@@ -120,17 +138,34 @@ export default function CTATestimonials() {
            </div>
             
             {/* Resting Label */}
-            <div className="absolute top-6 left-6 text-accent font-bold text-lg tracking-wider z-10 group-hover:opacity-0 transition-opacity duration-300">
+            <div className="absolute top-6 left-6 text-accent font-bold text-4xl tracking-wider z-10 group-hover:opacity-0 transition-opacity duration-300">
               *mis inicios
             </div>
             
             {/* Hover Overlay with Button */}
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center z-20">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center z-20 max-md:hidden">
               <button 
                 onClick={() => setIsModalOpen(true)}
                 className="bg-white text-black px-6 py-3 rounded-full font-bold shadow-xl hover:scale-105 transition-transform"
               >
                 {language === "es" ? "Ver Mis Inicios" : "View My Beginnings"}
+              </button>
+            </div>
+
+            {/* Mobile Pill CTA at bottom right */}
+            <div className="absolute bottom-4 right-4 z-30 md:hidden">
+              <button 
+                onClick={(e) => { e.stopPropagation(); setIsModalOpen(true); }}
+                className="inline-flex w-fit items-center group transition-all hover:scale-[1.02] bg-foreground text-background rounded-full shadow-xl"
+              >
+                <div className="px-4 h-10 flex items-center justify-center font-bold text-xs whitespace-nowrap">
+                  {language === "es" ? "Mis Inicios" : "My Beginnings"}
+                </div>
+                <div className="pr-1.5 pl-1 h-10 flex items-center justify-center">
+                  <div className="bg-accent text-white w-7 h-7 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                    <ArrowRight size={14} />
+                  </div>
+                </div>
               </button>
             </div>
 
@@ -150,11 +185,11 @@ export default function CTATestimonials() {
           </p>
           
           <div>
-            <a href="mailto:tomasnadal04@gmail.com" className="inline-flex items-center group transition-all hover:scale-[1.02]">
-              <div className="bg-foreground text-background px-10 h-16 flex items-center justify-center rounded-l-full font-bold text-lg whitespace-nowrap">
+            <a href="mailto:tomasnadal04@gmail.com" className="inline-flex w-fit items-center group transition-all hover:scale-[1.02] bg-foreground text-background rounded-full">
+              <div className="px-10 h-16 flex items-center justify-center font-bold text-lg whitespace-nowrap">
                 {t("cta.btn")}
               </div>
-              <div className="bg-foreground pr-3 pl-1 h-16 rounded-r-full flex items-center justify-center">
+              <div className="pr-3 pl-1 h-16 flex items-center justify-center">
                 <div className="bg-accent text-white w-12 h-12 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
                   <ArrowRight size={20} />
                 </div>

@@ -293,7 +293,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ slug: 
         </div>
 
         {/* Related Projects */}
-        <div className="pt-20 border-t border-border/10 scroll-reveal">
+        <div className="pt-20 scroll-reveal">
           <h2 className="text-4xl font-medium tracking-tight mb-12">
             {language === "es" ? "Proyectos Relacionados" : "Related Projects"}
           </h2>

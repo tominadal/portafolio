@@ -1,14 +1,15 @@
 "use client"
 import { useState } from "react"
 import Image from "next/image"
-import { ChevronDown, ChevronUp } from "lucide-react"
+import { ChevronDown, ChevronUp, ArrowRight } from "lucide-react"
 import { useLanguage } from "./language-provider"
 import CvModal from "./cv-modal"
 
 export default function ApproachAccordion() {
   const { t, language } = useLanguage()
-  const [activeIndex, setActiveIndex] = useState(1)
+  const [activeIndex, setActiveIndex] = useState(0)
   const [isCvOpen, setIsCvOpen] = useState(false)
+  const [activeCvType, setActiveCvType] = useState<"web" | "data">("web")
 
   const accordionData = [
     {
@@ -40,16 +41,11 @@ export default function ApproachAccordion() {
       num: "(06)",
       title: t("app.6.title"),
       content: t("app.6.desc"),
-    },
-    {
-      num: "(07)",
-      title: t("app.7.title"),
-      content: t("app.7.desc"),
     }
   ]
 
   return (
-    <section id="approach" className="w-full bg-background border-t border-border/10 px-8 py-24">
+    <section id="approach" className="relative z-20 w-full bg-background border-t border-border/10 px-8 py-24 max-md:pb-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[1fr_300px] lg:grid-cols-[1fr_400px] gap-12 lg:gap-24">
         {/* Left Side: Text and Accordion */}
         <div>
@@ -100,8 +96,7 @@ export default function ApproachAccordion() {
           </div>
           
            <div 
-            className="sticky top-24 w-full aspect-[4/3] rounded-3xl overflow-hidden bg-neutral-100 group cursor-pointer"
-            onClick={() => setIsCvOpen(true)}
+            className="sticky top-24 w-full aspect-[4/3] rounded-3xl overflow-hidden bg-neutral-100 group"
           >
              <Image 
                 src="/images/setup/IMG_8350.jpg" 
@@ -111,13 +106,51 @@ export default function ApproachAccordion() {
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                 style={{ objectPosition: "60% bottom" }}
               />
-              <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-                <div className="bg-accent text-white px-6 py-3 rounded-full font-bold shadow-xl translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                  {t("approach.cv") || "Ver mi CV"}
-                </div>
+              <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center gap-4 max-md:hidden">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setActiveCvType("web"); setIsCvOpen(true); }}
+                  className="bg-white text-black hover:bg-accent hover:text-white px-6 py-3 rounded-full font-bold shadow-xl translate-y-4 group-hover:translate-y-0 transition-all duration-300 w-56 text-center text-sm"
+                >
+                  {t("approach.cvWeb") || "CV Software Eng."}
+                </button>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setActiveCvType("data"); setIsCvOpen(true); }}
+                  className="bg-white text-black hover:bg-accent hover:text-white px-6 py-3 rounded-full font-bold shadow-xl translate-y-4 group-hover:translate-y-0 transition-all duration-300 w-56 text-center text-sm"
+                >
+                  {t("approach.cvData") || "CV Data Science"}
+                </button>
               </div>
-              <div className="absolute top-4 left-4 text-accent text-4xl group-hover:opacity-0 transition-opacity">
+              <div className="absolute top-0 left-4 text-accent text-8xl md:group-hover:opacity-0 transition-opacity max-md:hidden">
                 *
+              </div>
+              {/* Mobile only CV Button inside image */}
+              <div className="absolute bottom-4 right-4 z-10 md:hidden flex flex-col gap-2 items-end">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setActiveCvType("web"); setIsCvOpen(true); }}
+                  className="inline-flex w-fit items-center group transition-all hover:scale-[1.02] bg-accent text-white rounded-full shadow-xl"
+                >
+                  <div className="px-4 h-10 flex items-center justify-center font-bold text-xs whitespace-nowrap">
+                    {t("approach.cvWeb") || "CV Software Eng."}
+                  </div>
+                  <div className="pr-1.5 pl-1 h-10 flex items-center justify-center">
+                    <div className="bg-white text-black w-7 h-7 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                      <ArrowRight size={14} />
+                    </div>
+                  </div>
+                </button>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setActiveCvType("data"); setIsCvOpen(true); }}
+                  className="inline-flex w-fit items-center group transition-all hover:scale-[1.02] bg-accent text-white rounded-full shadow-xl"
+                >
+                  <div className="px-4 h-10 flex items-center justify-center font-bold text-xs whitespace-nowrap">
+                    {t("approach.cvData") || "CV Data Science"}
+                  </div>
+                  <div className="pr-1.5 pl-1 h-10 flex items-center justify-center">
+                    <div className="bg-white text-black w-7 h-7 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                      <ArrowRight size={14} />
+                    </div>
+                  </div>
+                </button>
               </div>
           </div>
         </div>
@@ -125,7 +158,12 @@ export default function ApproachAccordion() {
       <CvModal 
         isOpen={isCvOpen} 
         onClose={() => setIsCvOpen(false)} 
-        cvUrl={language === "es" ? "/cv.pdf" : "/cv-en.pdf"} 
+        cvUrl={
+          activeCvType === "web" 
+            ? (language === "es" ? "/cv.pdf" : "/cv-en.pdf") 
+            : (language === "es" ? "/cv-data.pdf" : "/cv-data-en.pdf")
+        } 
+        title={activeCvType === "web" ? t("approach.cvWeb") : t("approach.cvData")}
       />
     </section>
   )

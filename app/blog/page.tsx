@@ -83,7 +83,7 @@ export default function BlogPage() {
     setCurrentPage(1)
   }, [selectedCategory])
 
-  const postsPerPage = 9
+  const postsPerPage = 6
   const totalPages = Math.ceil(regularPosts.length / postsPerPage)
   const paginatedPosts = regularPosts.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage)
 

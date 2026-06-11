@@ -26,8 +26,8 @@ const translations = {
 
     // Hero
     "hero.title": "Tomás Nadal",
-    "hero.subtitle": "Desarrollador web|",
-    "hero.description.start": "Me gusta crear soluciones, convirtiendo la tecnología en una ",
+    "hero.subtitle": "Desarrollador Web & Científico de Datos|",
+    "hero.description.start": "Fusiono código y datos para hacer de la tecnología una ",
     "hero.description.highlight": "herramienta al servicio del prójimo",
     "hero.btn": "Contactarse",
     "hero.scroll": "(Desplazar abajo)",
@@ -36,7 +36,7 @@ const translations = {
     // About Stats
     "about.tag": "Sobre Tomás",
     "about.years": "— años de experiencia construyendo aplicaciones web modernas.",
-    "about.statement": "Soy Tomás Nadal, desarrollador web de Buenos Aires, Argentina. Mi pasión es crear soluciones digitales innovadoras que aporten valor real. Cada proyecto es una oportunidad para transformar ideas en herramientas al servicio de las personas.",
+    "about.statement": "Soy Tomás Nadal, desarrollador web y científico de datos de Buenos Aires, Argentina. Mi pasión es construir plataformas robustas y modelos analíticos que aporten valor real. Cada proyecto es una oportunidad para transformar datos e ideas en herramientas al servicio de las personas.",
     "about.ageLabel": "Edad",
     "about.yearsShort": "Años",
     "about.projectsLabel": "Proyectos",
@@ -53,8 +53,8 @@ const translations = {
 
     // Works
     "works.subtitle": "— desde mis trabajos más recientes hasta los más básicos.",
-    "works.title1": "Desarrollo soluciones escalables ",
-    "works.title2": "enfocadas en resolver problemas reales.",
+    "works.title1": "Desarrollo sistemas web y modelos analíticos ",
+    "works.title2": "enfocados en resolver problemas reales.",
 
     // Approach
     "approach.title1": "Cómo abordo ",
@@ -62,6 +62,8 @@ const translations = {
     "approach.whatWeDo": "Metodología",
     "approach.cuz": "— un resumen de mi trayectoria y habilidades.",
     "approach.cv": "Mi CV",
+    "approach.cvWeb": "CV Ing. Software",
+    "approach.cvData": "CV Ciencia de Datos",
     "approach.downloadCv": "Descargar",
     "approach.shareWhatsapp": "Compartir por WhatsApp",
     "approach.copyLink": "Copiar enlace",
@@ -70,27 +72,25 @@ const translations = {
     "general.placeholder": "Marcador",
     "general.category": "Categoría",
     
-    "app.1.title": "Desarrollo Full Stack",
+    "app.1.title": "Ingeniería de Software",
     "app.1.desc": "Diseño y construyo sistemas robustos con Next.js, React y Node.js. Cofundé Nexium, donde entregamos más de 100 proyectos que me enseñaron a escalar aplicaciones reales.",
-    "app.2.title": "Ciencia de Datos & IA",
-    "app.2.desc": "Combino mi rol técnico con mi Licenciatura en Ciencia de Datos en la UNSAM. Integro Python y agentes de IA para que las aplicaciones no solo funcionen, sino que sean inteligentes.",
+    "app.2.title": "Ciencia de Datos & IA (UNSAM)",
+    "app.2.desc": "Aplico los rigurosos fundamentos estadísticos y matemáticos de mi Licenciatura en la UNSAM para integrar modelos analíticos, Python y Machine Learning, logrando que las aplicaciones sean verdaderamente inteligentes y predictivas.",
     "app.3.title": "Liderazgo en Zevetix",
-    "app.3.desc": "Actualmente dirijo Zevetix, liderando equipos de desarrollo y coordinando la arquitectura técnica para asegurar que cada solución tecnológica cumpla los objetivos del negocio.",
+    "app.3.desc": "Como cofundador de Nexium y actual director de Zevetix, adquirí habilidades blandas clave: gestión de equipos ágiles, comunicación asertiva con stakeholders y una visión integral de negocio para garantizar que cada solución tecnológica cumpla objetivos reales.",
     "app.4.title": "Aprendizaje Autodidacta",
     "app.4.desc": "Empecé en 2020 con mi primera computadora. Desde clones de juegos retro hasta sistemas complejos, nunca dejo de aprender y adaptar nuevas tecnologías a mis proyectos.",
     "app.5.title": "Valor Real",
     "app.5.desc": "La tecnología es solo una herramienta. Mi objetivo final siempre es resolver problemas genuinos y crear un impacto positivo y medible para las personas que usan el software.",
-    "app.6.title": "Arquitectura Escalable",
-    "app.6.desc": "Diseño sistemas con el futuro en mente. Preveo el crecimiento desde el principio, garantizando que el rendimiento se mantenga óptimo incluso cuando la cantidad de usuarios aumente.",
-    "app.7.title": "Optimización Continua",
-    "app.7.desc": "Mi trabajo no termina al publicar. Analizo métricas, optimizo tiempos de carga y mejoro constantemente la experiencia de usuario para maximizar el retorno de inversión de cada solución.",
+    "app.6.title": "Arquitectura & Optimización",
+    "app.6.desc": "Diseño sistemas escalables desde el principio y optimizo constantemente su rendimiento para maximizar el impacto y la experiencia del usuario.",
 
     // CTA
     "cta.chaos": "Mi historia",
     "cta.subtitle": "— desde 2020 creando soluciones.",
     "cta.title1": "Mi ",
     "cta.title2": "Trayectoria.",
-    "cta.story": "Empecé en 2020 cuando compré mi primera computadora. Aprendí de manera autodidacta, participé en bootcamps y construí proyectos personales. Hoy combino mi Licenciatura en Ciencia de Datos en la UNSAM con mi rol técnico. Cofundé Nexium (ahora descontinuada) entregando +100 proyectos, y actualmente dirijo Zevetix creando soluciones de alto impacto.",
+    "cta.story": "Mi camino comenzó en 2020. Me formé inicialmente como desarrollador autodidacta, construyendo desde cero. Hoy, gracias a mi Licenciatura en Ciencia de Datos en la UNSAM, fusiono la ingeniería de software con el análisis de datos y la IA. Cofundé Nexium (+100 proyectos) y actualmente dirijo Zevetix, donde construimos soluciones inteligentes y de alto impacto.",
     "cta.btn": "Trabajemos juntos",
     
     // Testimonials
@@ -111,7 +111,7 @@ const translations = {
     "footer.privacy": "Política de Privacidad",
     "footer.terms": "Términos y Condiciones",
     "footer.home": "Inicio",
-    "footer.description": "Me gusta crear soluciones, convirtiendo la tecnología en una herramienta al servicio del prójimo.",
+    "footer.description": "Creo soluciones inteligentes, combinando código y datos para convertir la tecnología en una herramienta al servicio de las personas.",
     "footer.rights": "Todos los derechos reservados.",
 
     // Projects
@@ -155,8 +155,8 @@ const translations = {
 
     // Hero
     "hero.title": "Tomás Nadal",
-    "hero.subtitle": "Web Developer|",
-    "hero.description.start": "I like to create solutions, turning technology into ",
+    "hero.subtitle": "Web Developer & Data Scientist|",
+    "hero.description.start": "I merge code and data to make technology a ",
     "hero.description.highlight": "a tool at the service of others",
     "hero.btn": "Contact",
     "hero.scroll": "(Scroll down)",
@@ -165,7 +165,7 @@ const translations = {
     // About Stats
     "about.tag": "About Tomás",
     "about.years": "— years of experience building modern web applications.",
-    "about.statement": "I'm Tomás Nadal, a web developer from Buenos Aires, Argentina. My passion is creating innovative digital solutions that provide real value. Each project is an opportunity to transform ideas into tools that serve people.",
+    "about.statement": "I'm Tomás Nadal, a web developer and data scientist from Buenos Aires, Argentina. My passion is building robust platforms and analytical models that provide real value. Each project is an opportunity to transform data and ideas into tools that serve people.",
     "about.ageLabel": "Age",
     "about.yearsShort": "Years",
     "about.projectsLabel": "Projects",
@@ -182,7 +182,7 @@ const translations = {
 
     // Works
     "works.subtitle": "— from my most recent works to the most basic ones.",
-    "works.title1": "I develop scalable solutions ",
+    "works.title1": "I develop scalable systems and analytical models ",
     "works.title2": "focused on solving real-world problems.",
 
     // Approach
@@ -191,6 +191,8 @@ const translations = {
     "approach.whatWeDo": "Methodology",
     "approach.cuz": "— a summary of my background and skills.",
     "approach.cv": "My CV",
+    "approach.cvWeb": "CV Software Eng.",
+    "approach.cvData": "CV Data Science",
     "approach.downloadCv": "Download",
     "approach.shareWhatsapp": "Share via WhatsApp",
     "approach.copyLink": "Copy link",
@@ -199,27 +201,25 @@ const translations = {
     "general.placeholder": "Placeholder",
     "general.category": "Category",
     
-    "app.1.title": "Full Stack Development",
+    "app.1.title": "Software Engineering",
     "app.1.desc": "I design and build robust systems using Next.js, React, and Node.js. I co-founded Nexium, delivering over 100 projects that taught me how to scale real-world applications.",
-    "app.2.title": "Data Science & AI",
-    "app.2.desc": "I combine my technical role with my Data Science degree at UNSAM. I integrate Python and AI agents so applications aren't just functional, but genuinely intelligent.",
+    "app.2.title": "Data Science & AI (UNSAM)",
+    "app.2.desc": "I apply the rigorous statistical and mathematical foundations from my Data Science degree at UNSAM to integrate analytical models, Python, and Machine Learning, making applications truly intelligent and predictive.",
     "app.3.title": "Leadership at Zevetix",
-    "app.3.desc": "I currently lead Zevetix, managing development teams and coordinating technical architectures to ensure each solution meets business objectives.",
+    "app.3.desc": "As co-founder of Nexium and current director of Zevetix, I gained key soft skills: agile team management, assertive communication with stakeholders, and a comprehensive business vision to ensure each technical solution meets real objectives.",
     "app.4.title": "Self-taught Learner",
     "app.4.desc": "I started in 2020 with my first computer. From retro game clones to complex systems, I never stop learning and adapting new technologies to my projects.",
     "app.5.title": "Real Value",
     "app.5.desc": "Technology is just a tool. My ultimate goal is always to solve genuine problems and create a positive, measurable impact for the people using the software.",
-    "app.6.title": "Scalable Architecture",
-    "app.6.desc": "I design systems with the future in mind. I anticipate growth from the start, ensuring that performance remains optimal even as the user base expands.",
-    "app.7.title": "Continuous Optimization",
-    "app.7.desc": "My work doesn't end at deployment. I analyze metrics, optimize load times, and constantly improve the user experience to maximize the return on investment of each solution.",
+    "app.6.title": "Architecture & Optimization",
+    "app.6.desc": "I design scalable systems from the start and constantly optimize their performance to maximize impact and user experience.",
 
     // CTA
     "cta.chaos": "My story",
     "cta.subtitle": "— building solutions since 2020.",
     "cta.title1": "My ",
     "cta.title2": "Journey.",
-    "cta.story": "I started in 2020 when I bought my first computer. I learned on my own, participated in bootcamps, and built personal projects. Today I combine my Data Science degree at UNSAM with my technical role. I co-founded Nexium (now discontinued) delivering 100+ projects, and currently I lead Zevetix creating high-impact solutions.",
+    "cta.story": "My journey started in 2020. I initially trained as a self-taught developer, building from scratch. Today, through my Data Science degree at UNSAM, I merge software engineering with data analysis and AI. I co-founded Nexium (100+ projects) and currently lead Zevetix, building intelligent, high-impact solutions.",
     "cta.btn": "Work with me",
     
     // Testimonials
@@ -240,7 +240,7 @@ const translations = {
     "footer.privacy": "Privacy Policy",
     "footer.terms": "Terms and Conditions",
     "footer.home": "Home",
-    "footer.description": "I like to create solutions, turning technology into a tool to serve others.",
+    "footer.description": "I build intelligent solutions, combining code and data to turn technology into a tool to serve others.",
     "footer.rights": "All rights reserved.",
 
     // Projects

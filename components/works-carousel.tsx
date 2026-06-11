@@ -107,15 +107,32 @@ export default function WorksCarousel() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-secondary/30 dark:bg-muted/10 rounded-t-[3rem] z-10 border-t border-border/10"
+      className="relative bg-secondary/30 dark:bg-muted/10 z-10 border-t border-border/10 max-md:!h-auto max-md:overflow-clip"
       // Provide a default 300vh height just in case, but use precise scrollRange when available
       style={{ height: scrollRange > 0 ? `calc(${scrollRange}px + 100vh)` : "300vh" }}
     >
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden z-10">
-
-        {/* Grid Background */}
+      {/* Mobile-only Sticky Grid Background */}
+      <div 
+        className="hidden max-md:block sticky top-0 h-screen w-full pointer-events-none z-0" 
+        style={{ marginBottom: "-100vh" }}
+      >
         <div
-          className="absolute inset-0 z-0 pointer-events-none opacity-20"
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, #ff620a 1px, transparent 1px),
+              linear-gradient(to bottom, #ff620a 1px, transparent 1px)
+            `,
+            backgroundSize: "80px 80px",
+          }}
+        />
+      </div>
+
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden z-10 max-md:relative max-md:h-auto max-md:overflow-visible max-md:pt-24 max-md:pb-24">
+
+        {/* Desktop Grid Background */}
+        <div
+          className="absolute inset-0 z-0 pointer-events-none opacity-20 max-md:hidden"
           style={{
             backgroundImage: `
               linear-gradient(to right, #ff620a 1px, transparent 1px),
@@ -129,21 +146,22 @@ export default function WorksCarousel() {
         {/* Added !transition-none to fix global CSS transition interference with framer-motion transform */}
         <motion.div
           ref={carouselRef}
-          className="flex items-center gap-12 md:gap-24 px-8 md:px-24 w-max relative z-10 !transition-none"
+          className="flex items-center gap-12 md:gap-24 px-8 md:px-24 w-max relative z-10 !transition-none max-md:!transform-none max-md:flex-col max-md:w-full max-md:gap-0 max-md:pb-4 max-md:px-6"
           style={{ x }}
         >
           {/* First Slide: Header Text */}
-          <div className="flex-shrink-0 w-[300px] md:w-[600px] flex flex-col justify-center gap-10">
+          <div className="flex-shrink-0 w-[300px] md:w-[600px] flex flex-col justify-center gap-10 max-md:w-full max-md:mb-20">
             <div className="space-y-6">
-              <h3 className="text-foreground text-[1.1rem] font-medium tracking-tight scroll-reveal">
+              <h3 className="text-foreground text-[1.1rem] font-medium tracking-tight scroll-reveal max-md:hidden">
                 {t("works.subtitle")}
               </h3>
               <h2 className="text-[2.2rem] leading-[1.2] font-medium tracking-tight max-w-3xl scroll-reveal text-foreground">
-                {t("works.title1")}{t("works.title2")}
+                <span className="md:hidden">{t("works.title1")}{t("works.title2")}</span>
+                <span className="max-md:hidden">{t("works.title1")}{t("works.title2")}</span>
               </h2>
             </div>
 
-            <div className="flex items-center gap-4 text-foreground scroll-reveal">
+            <div className="flex items-center gap-4 text-foreground scroll-reveal max-md:hidden">
               <span className="text-sm font-bold tracking-widest uppercase">{t("general.scroll")}</span>
               <motion.div
                 animate={{ x: [0, 15, 0] }}
@@ -162,9 +180,10 @@ export default function WorksCarousel() {
             projects.map((project, idx) => (
               <div
                 key={`${project._id}-${idx}`}
-                className="group flex-shrink-0 w-[350px] md:w-[650px] relative scroll-reveal"
+                className="group flex-shrink-0 w-[350px] md:w-[650px] relative scroll-reveal max-md:w-full max-md:mb-16 max-md:sticky max-md:[top:var(--stack-top)] max-md:bg-[#fafafa] dark:max-md:bg-[#0a0a0a] max-md:rounded-[3rem] max-md:shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:max-md:shadow-[0_8px_30px_rgba(255,255,255,0.02)] max-md:p-6 max-md:border max-md:border-border/10 max-md:flex max-md:flex-col"
+                style={{ "--stack-top": `calc(6rem + ${idx * 1.5}rem)` } as React.CSSProperties}
               >
-                <div className="relative aspect-[16/10] rounded-[3rem] overflow-hidden mb-10 bg-muted/20 shadow-xl group-hover:shadow-[0_20px_50px_rgba(255,98,10,0.2)] transition-all duration-700">
+                <div className="relative aspect-[16/10] md:rounded-[3rem] max-md:rounded-[1.5rem] overflow-hidden mb-10 max-md:mb-6 bg-muted/20 transition-all duration-700">
                   <Link href={`/projects/${project.slug.current}`} className="block w-full h-full">
                   {project.image ? (
                     <Image
@@ -209,9 +228,9 @@ export default function WorksCarousel() {
                   </div>
                 </div>
 
-                <div className="px-4">
+                <div className="px-4 max-md:px-2 max-md:pb-4">
                   <Link href={`/projects/${project.slug.current}`} className="inline-block">
-                    <h3 className="text-3xl md:text-4xl font-bold mb-4 group-hover:text-accent transition-colors leading-tight">
+                    <h3 className="text-3xl md:text-4xl font-bold mb-4 max-md:mb-2 group-hover:text-accent transition-colors leading-tight">
                       {language === "en" ? (project.titleEn || project.title) : project.title}
                     </h3>
                   </Link>
@@ -224,7 +243,7 @@ export default function WorksCarousel() {
 
           {/* View All Card */}
           {!loading && projects.length > 0 && (
-            <div className="group flex-shrink-0 w-[350px] md:w-[650px] relative scroll-reveal">
+            <div className="group flex-shrink-0 w-[350px] md:w-[650px] relative scroll-reveal max-md:hidden">
               <Link
                 href="/projects"
                 className="flex items-center justify-center w-full aspect-[16/10] rounded-[3rem] border-2 border-dashed border-accent/30 hover:border-accent hover:bg-accent/5 transition-all duration-500 mb-10"
@@ -245,6 +264,22 @@ export default function WorksCarousel() {
             </div>
           )}
         </motion.div>
+
+        {/* Mobile CTA outside of the motion track so it doesn't stack inside the flex column */}
+        {!loading && projects.length > 0 && (
+          <div className="md:hidden w-full flex justify-center mt-2 mb-16 scroll-reveal relative z-20">
+            <Link href="/projects" className="inline-flex w-fit items-center group transition-all hover:scale-[1.02] bg-foreground text-background rounded-full shadow-xl">
+              <div className="px-6 h-12 flex items-center justify-center font-bold text-sm whitespace-nowrap">
+                {language === "es" ? "Ver todos los proyectos" : "View all projects"}
+              </div>
+              <div className="pr-2 pl-1 h-12 flex items-center justify-center">
+                <div className="bg-accent text-white w-8 h-8 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                  <ArrowRight size={16} />
+                </div>
+              </div>
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   )

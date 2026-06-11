@@ -9,9 +9,10 @@ interface CvModalProps {
   isOpen: boolean
   onClose: () => void
   cvUrl: string
+  title?: string
 }
 
-export default function CvModal({ isOpen, onClose, cvUrl }: CvModalProps) {
+export default function CvModal({ isOpen, onClose, cvUrl, title }: CvModalProps) {
   const { t } = useLanguage()
   const [copied, setCopied] = useState(false)
 
@@ -36,7 +37,7 @@ export default function CvModal({ isOpen, onClose, cvUrl }: CvModalProps) {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const shareText = "CV Tomás Nadal"
+  const shareText = title || "CV Tomás Nadal"
   const shareUrl = typeof window !== 'undefined' ? window.location.origin + cvUrl : ''
 
   return (
@@ -49,7 +50,7 @@ export default function CvModal({ isOpen, onClose, cvUrl }: CvModalProps) {
         
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border/50 bg-muted/30">
-          <h3 className="font-bold text-lg">{t("approach.cv") || "Mi CV / My Resume"}</h3>
+          <h3 className="font-bold text-lg">{title || t("approach.cv") || "Mi CV / My Resume"}</h3>
           <div className="flex items-center gap-2">
             
             {/* Action Buttons */}

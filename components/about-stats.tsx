@@ -1,7 +1,7 @@
 "use client"
  
 import { useEffect, useState, useRef } from "react"
-import { ArrowRight, FileText } from "lucide-react"
+import { ArrowRight, FileCode, FileBarChart } from "lucide-react"
 import { FaGithub, FaLinkedin } from "react-icons/fa"
 import { useLanguage } from "./language-provider"
 import { client } from "@/sanity/lib/client"
@@ -11,15 +11,18 @@ const technologies = [
   "React",
   "Next.js",
   "Tailwind CSS",
-  "HTML5",
-  "CSS3",
-  "JavaScript",
   "TypeScript",
   "Node.js",
-  "Firebase",
   "Python",
   "R",
-  "Git",
+  "SQL",
+  "Pandas",
+  "Machine Learning",
+  "Data Analysis",
+  "Estadística",
+  "Leadership",
+  "Product Strategy",
+  "Git"
 ]
  
 function CountUp({ end, duration = 3500 }: { end: number; duration?: number }) {
@@ -95,13 +98,13 @@ export default function AboutStats() {
     <section id="about" className="w-full bg-background text-foreground border-b border-border/10 px-6 md:px-12 lg:px-20 overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-3 min-h-[30vh] max-w-7xl w-full mx-auto">
         {/* Left Side: Stats */}
-        <div className="py-12 md:py-16 md:pr-12 lg:pr-16 border-b md:border-b-0 md:border-r border-border/10 flex flex-col justify-between">
-          <div>
-            <h3 className="text-foreground font-bold text-3xl mb-12 scroll-reveal">{t("about.tag")}</h3>
+        <div className="py-12 md:py-16 md:pr-12 lg:pr-16 md:border-r border-border/10 flex flex-col justify-between max-md:order-last max-md:border-none max-md:pt-6 max-md:pb-12">
+          <div className="w-full">
+            <h3 className="text-foreground font-bold text-3xl mb-12 scroll-reveal max-md:hidden">{t("about.tag")}</h3>
             
-            <div className="grid grid-cols-3 gap-8 scroll-reveal">
-              <div className="mb-6">
-                <h2 className="text-6xl font-bold tracking-tighter whitespace-nowrap">
+            <div className="grid grid-cols-3 gap-8 scroll-reveal max-md:flex max-md:justify-start max-md:gap-10 max-md:w-full">
+              <div className="mb-6 max-md:text-left">
+                <h2 className="text-6xl font-bold tracking-tighter whitespace-nowrap max-md:text-5xl">
                   <CountUp end={5} />
                   <span className="text-accent">+</span>
                 </h2>
@@ -110,8 +113,8 @@ export default function AboutStats() {
                 </p>
               </div>
  
-              <div className="mb-6">
-                <h2 className="text-6xl font-bold tracking-tighter whitespace-nowrap">
+              <div className="mb-6 max-md:text-left">
+                <h2 className="text-6xl font-bold tracking-tighter whitespace-nowrap max-md:text-5xl">
                   <CountUp end={projectCount} />
                   <span className="text-accent">+</span>
                 </h2>
@@ -120,8 +123,8 @@ export default function AboutStats() {
                 </p>
               </div>
 
-              <div className="mb-6">
-                <h2 className="text-6xl font-bold tracking-tighter whitespace-nowrap">
+              <div className="mb-6 max-md:text-left">
+                <h2 className="text-6xl font-bold tracking-tighter whitespace-nowrap max-md:text-5xl">
                   <CountUp end={age} />
                 </h2>
                 <p className="text-muted-foreground text-sm font-medium mt-2">
@@ -130,7 +133,7 @@ export default function AboutStats() {
               </div>
             </div>
             
-            <div className="relative overflow-hidden mt-8 max-w-md h-8 scroll-reveal">
+            <div className="relative overflow-hidden mt-8 max-w-md h-8 scroll-reveal max-md:hidden">
               <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent z-10" />
               <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent z-10" />
               <motion.div 
@@ -152,51 +155,64 @@ export default function AboutStats() {
         </div>
  
         {/* Right Side: Statement */}
-        <div className="py-12 md:py-16 md:pl-12 lg:pl-16 col-span-2 flex flex-col justify-center gap-12 scroll-reveal">
-          <h2 className="text-[2.2rem] leading-[1.2] font-medium tracking-tight max-w-3xl">
-            {t("about.statement")}
-          </h2>
+        <div className="py-12 md:py-16 md:pl-12 lg:pl-16 col-span-2 flex flex-col justify-center gap-12 scroll-reveal max-md:order-first max-md:pb-6">
+          <div>
+            <h2 className="text-[2.2rem] leading-[1.2] font-medium tracking-tight max-w-3xl max-md:text-[1.75rem]">
+              {t("about.statement")}
+            </h2>
+          </div>
           
-          <div className="flex flex-wrap items-center gap-8">
-            <a href="mailto:tomasnadal04@gmail.com" className="inline-flex items-center group transition-all hover:scale-[1.02]">
-              <div className="bg-foreground text-background px-6 h-12 flex items-center justify-center rounded-l-full font-bold text-sm whitespace-nowrap">
+          <div className="flex items-center gap-4 md:gap-8 max-[400px]:flex-wrap">
+            <a href="mailto:tomasnadal04@gmail.com" className="inline-flex w-fit items-center group transition-all hover:scale-[1.02] bg-foreground text-background rounded-full">
+              <div className="px-5 md:px-6 h-10 md:h-12 flex items-center justify-center font-bold text-xs md:text-sm whitespace-nowrap">
                 {t("about.btn")}
               </div>
-              <div className="bg-foreground pr-2 pl-1 h-12 rounded-r-full flex items-center justify-center">
-                <div className="bg-accent text-white w-8 h-8 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                  <ArrowRight size={16} />
+              <div className="pr-1.5 md:pr-2 pl-1 h-10 md:h-12 flex items-center justify-center">
+                <div className="bg-accent text-white w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                  <ArrowRight size={16} className="max-md:w-3 max-md:h-3" />
                 </div>
               </div>
             </a>
             
             {/* Social Links */}
-            <div className="flex gap-4">
+            <div className="flex gap-3 md:gap-4">
               <a 
                 href="https://github.com/eltanook" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-foreground hover:text-accent transition-all duration-500 group"
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-muted flex items-center justify-center text-foreground hover:text-accent transition-all duration-500 group shrink-0"
                 aria-label="GitHub"
               >
-                <FaGithub size={20} className="group-hover:scale-110 transition-transform" />
+                <FaGithub className="w-4 h-4 md:w-5 md:h-5 group-hover:scale-110 transition-transform" />
               </a>
               <a 
                 href="https://www.linkedin.com/in/tomasnadal/" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-foreground hover:text-accent transition-all duration-500 group"
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-muted flex items-center justify-center text-foreground hover:text-accent transition-all duration-500 group shrink-0"
                 aria-label="LinkedIn"
               >
-                <FaLinkedin size={20} className="group-hover:scale-110 transition-transform" />
+                <FaLinkedin className="w-4 h-4 md:w-5 md:h-5 group-hover:scale-110 transition-transform" />
               </a>
               <a 
                 href={language === "es" ? "/cv.pdf" : "/cv-en.pdf"} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-foreground hover:text-accent transition-all duration-500 group"
-                aria-label="CV"
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-muted flex items-center justify-center text-foreground hover:text-accent transition-all duration-500 group shrink-0"
+                aria-label="CV Software Engineering"
+                title={t("approach.cvWeb") || "CV Software Engineering"}
               >
-                <FileText size={20} className="group-hover:scale-110 transition-transform" />
+                <FileCode className="w-4 h-4 md:w-5 md:h-5 group-hover:scale-110 transition-transform" />
+              </a>
+              <a 
+                href={language === "es" ? "/cv-data.pdf" : "/cv-data-en.pdf"} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-muted flex items-center justify-center text-foreground hover:text-accent transition-all duration-500 group shrink-0"
+                aria-label="CV Data Science"
+                title={t("approach.cvData") || "CV Data Science"}
+              >
+                <FileBarChart className="w-4 h-4 md:w-5 md:h-5 group-hover:scale-110 transition-transform" />
               </a>
             </div>
           </div>
