@@ -127,26 +127,26 @@ export default function ApproachAccordion() {
               <div className="absolute bottom-4 right-4 z-10 md:hidden flex flex-col gap-2 items-end">
                 <button 
                   onClick={(e) => { e.stopPropagation(); setActiveCvType("web"); setIsCvOpen(true); }}
-                  className="inline-flex w-fit items-center group transition-all hover:scale-[1.02] bg-accent text-white rounded-full shadow-xl"
+                  className="inline-flex w-fit items-center group transition-all hover:scale-[1.02] bg-foreground text-background rounded-full shadow-xl"
                 >
                   <div className="px-4 h-10 flex items-center justify-center font-bold text-xs whitespace-nowrap">
                     {t("approach.cvWeb") || "CV Software Eng."}
                   </div>
                   <div className="pr-1.5 pl-1 h-10 flex items-center justify-center">
-                    <div className="bg-white text-black w-7 h-7 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                    <div className="bg-accent text-white w-7 h-7 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
                       <ArrowRight size={14} />
                     </div>
                   </div>
                 </button>
                 <button 
                   onClick={(e) => { e.stopPropagation(); setActiveCvType("data"); setIsCvOpen(true); }}
-                  className="inline-flex w-fit items-center group transition-all hover:scale-[1.02] bg-accent text-white rounded-full shadow-xl"
+                  className="inline-flex w-fit items-center group transition-all hover:scale-[1.02] bg-foreground text-background rounded-full shadow-xl"
                 >
                   <div className="px-4 h-10 flex items-center justify-center font-bold text-xs whitespace-nowrap">
                     {t("approach.cvData") || "CV Data Science"}
                   </div>
                   <div className="pr-1.5 pl-1 h-10 flex items-center justify-center">
-                    <div className="bg-white text-black w-7 h-7 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                    <div className="bg-accent text-white w-7 h-7 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
                       <ArrowRight size={14} />
                     </div>
                   </div>

@@ -5,7 +5,6 @@ import { ArrowRight, FileCode, FileBarChart } from "lucide-react"
 import { FaGithub, FaLinkedin } from "react-icons/fa"
 import { useLanguage } from "./language-provider"
 import { client } from "@/sanity/lib/client"
-import { motion } from "framer-motion"
 
 const technologies = [
   "React",
@@ -136,20 +135,31 @@ export default function AboutStats() {
             <div className="relative overflow-hidden mt-8 max-w-md h-8 scroll-reveal max-md:hidden">
               <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent z-10" />
               <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent z-10" />
-              <motion.div 
-                className="flex w-max gap-3 hover:[animation-play-state:paused]"
-                animate={{ x: ["0%", "-50%"] }}
-                transition={{ repeat: Infinity, ease: "linear", duration: 50 }}
+              <div 
+                className="flex w-max animate-scroll-left no-transition hover:[animation-play-state:paused]"
+                style={{ animationDuration: "25s" }}
               >
-                {[...technologies, ...technologies].map((tech, index) => (
-                  <span
-                    key={`${tech}-${index}`}
-                    className="text-xs px-3 py-1 rounded-full bg-accent/10 text-accent font-medium whitespace-nowrap flex-shrink-0 border border-accent/20"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </motion.div>
+                <div className="flex gap-3 pr-3 flex-shrink-0">
+                  {technologies.map((tech, index) => (
+                    <span
+                      key={`tech-1-${index}`}
+                      className="text-xs px-3 py-1 rounded-full bg-accent/10 text-accent font-medium whitespace-nowrap flex-shrink-0 border border-accent/20"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+                <div className="flex gap-3 pr-3 flex-shrink-0">
+                  {technologies.map((tech, index) => (
+                    <span
+                      key={`tech-2-${index}`}
+                      className="text-xs px-3 py-1 rounded-full bg-accent/10 text-accent font-medium whitespace-nowrap flex-shrink-0 border border-accent/20"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>

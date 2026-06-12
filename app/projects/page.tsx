@@ -141,7 +141,7 @@ export default function ProjectsPage() {
         </header>
 
         <div className="flex flex-col lg:flex-row gap-12">
-          <aside className="lg:w-72 shrink-0 scroll-reveal">
+          <aside className="lg:w-72 shrink-0 scroll-reveal relative z-30">
             <div className="sticky top-32 space-y-10">
               <div>
                 <h3 className="text-xs font-bold  tracking-widest text-foreground/40 mb-4">{t("projects.search")}</h3>

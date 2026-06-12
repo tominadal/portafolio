@@ -6,6 +6,7 @@ import ApproachAccordion from "@/components/approach-accordion"
 import ZevetixSection from "@/components/zevetix-section"
 import LatestArticles from "@/components/latest-articles"
 import CTATestimonials from "@/components/cta-testimonials"
+import Testimonials from "@/components/testimonials"
 import Footer from "@/components/footer"
 
 export default function Home() {
@@ -17,8 +18,9 @@ export default function Home() {
       <WorksCarousel />
       <ApproachAccordion />
       <ZevetixSection />
-      <LatestArticles />
       <CTATestimonials />
+      <LatestArticles />
+      <Testimonials />
       <Footer />
     </main>
   )

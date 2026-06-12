@@ -60,21 +60,12 @@ const oldProjects = [
 export default function CTATestimonials() {
   const { t, language } = useLanguage()
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
-
   const inicoImagesRow1 = [
-    "/inicios-1.png",
-    "/inicios-2.png",
     "/inicios-6.png",
-    "/inicios-7.png"
+    "/inicios-2.png",
+    "/inicios-1.png"
   ]
 
   const inicoImagesRow2 = [
@@ -92,9 +83,9 @@ export default function CTATestimonials() {
   })
 
   // Top row moves left
-  const x1 = useTransform(scrollYProgress, [0, 1], ["0%", "-12%"])
+  const x1 = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"])
   // Bottom row moves right
-  const x2 = useTransform(scrollYProgress, [0, 1], ["-12%", "0%"])
+  const x2 = useTransform(scrollYProgress, [0, 1], ["-20%", "0%"])
 
   // Prevent scroll when modal is open
   useEffect(() => {
@@ -104,37 +95,73 @@ export default function CTATestimonials() {
   }, [isModalOpen])
 
   return (
-    <section className="w-full bg-secondary/30 dark:bg-muted/10 px-8 pt-24 pb-0 overflow-hidden relative border-t border-border/10">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 lg:gap-24 mb-24">
+    <section className="w-full bg-secondary/30 dark:bg-muted/10 px-8 py-24 overflow-hidden relative border-t border-border/10">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 lg:gap-24">
         {/* Left Side: Image */}
         <div ref={containerRef} className="w-full md:w-1/2 rounded-[2.5rem] overflow-hidden relative aspect-[4/3] scroll-reveal group bg-black/5 dark:bg-white/5 border border-border/20">
            
            <div className="absolute inset-0 flex flex-col justify-center gap-6 -rotate-[12deg] scale-[1.15] pointer-events-none z-0">
-             <motion.div 
-               className="flex gap-6 w-max" 
-               style={isMobile ? undefined : { x: x1 }}
-               animate={isMobile ? { x: ["0%", "-50%"] } : undefined}
-               transition={isMobile ? { repeat: Infinity, ease: "linear", duration: 40 } : undefined}
-             >
-               {duplicatedImagesRow1.map((src, index) => (
-                 <div key={`row1-${index}`} className="relative w-64 md:w-80 h-44 md:h-56 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10">
-                   <Image src={src} alt={`Mis inicios ${index + 1}`} fill sizes="(max-width: 768px) 256px, 320px" quality={100} className="object-cover" />
-                 </div>
-               ))}
-             </motion.div>
+           {/* Mobile Container (Autoplay CSS animation, no scroll binding) */}
+           <div className="absolute inset-0 flex flex-col justify-center gap-6 -rotate-[12deg] scale-[1.15] pointer-events-none z-0 md:hidden">
+              <div className="flex w-max animate-scroll-left no-transition">
+                <div className="flex gap-6 pr-6 flex-shrink-0">
+                  {inicoImagesRow1.map((src, index) => (
+                    <div key={`row1-mobile1-${index}`} className="relative w-64 h-44 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10">
+                      <Image src={src} alt={`Mis inicios ${index + 1}`} fill sizes="(max-width: 768px) 256px, 320px" quality={100} className="object-cover" />
+                    </div>
+                  ))}
+                </div>
+                <div className="flex gap-6 pr-6 flex-shrink-0">
+                  {inicoImagesRow1.map((src, index) => (
+                    <div key={`row1-mobile2-${index}`} className="relative w-64 h-44 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10">
+                      <Image src={src} alt={`Mis inicios ${index + 1}`} fill sizes="(max-width: 768px) 256px, 320px" quality={100} className="object-cover" />
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-             <motion.div 
-               className="flex gap-6 w-max" 
-               style={isMobile ? undefined : { x: x2 }}
-               animate={isMobile ? { x: ["-50%", "0%"] } : undefined}
-               transition={isMobile ? { repeat: Infinity, ease: "linear", duration: 40 } : undefined}
-             >
-               {duplicatedImagesRow2.map((src, index) => (
-                 <div key={`row2-${index}`} className="relative w-64 md:w-80 h-44 md:h-56 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10">
-                   <Image src={src} alt={`Mis inicios ${index + 1}`} fill sizes="(max-width: 768px) 256px, 320px" quality={100} className="object-cover" />
-                 </div>
-               ))}
-             </motion.div>
+              <div className="flex w-max animate-scroll-right no-transition">
+                <div className="flex gap-6 pr-6 flex-shrink-0">
+                  {inicoImagesRow2.map((src, index) => (
+                    <div key={`row2-mobile1-${index}`} className="relative w-64 h-44 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10">
+                      <Image src={src} alt={`Mis inicios ${index + 1}`} fill sizes="(max-width: 768px) 256px, 320px" quality={100} className="object-cover" />
+                    </div>
+                  ))}
+                </div>
+                <div className="flex gap-6 pr-6 flex-shrink-0">
+                  {inicoImagesRow2.map((src, index) => (
+                    <div key={`row2-mobile2-${index}`} className="relative w-64 h-44 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10">
+                      <Image src={src} alt={`Mis inicios ${index + 1}`} fill sizes="(max-width: 768px) 256px, 320px" quality={100} className="object-cover" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+           </div>
+
+           {/* Desktop Container (Scroll-driven motion, visible only on md and up) */}
+           <div className="absolute inset-0 flex flex-col justify-center gap-6 -rotate-[12deg] scale-[1.15] pointer-events-none z-0 max-md:hidden">
+              <motion.div 
+                className="flex gap-6 w-max no-transition" 
+                style={{ x: x1 }}
+              >
+                {duplicatedImagesRow1.map((src, index) => (
+                  <div key={`row1-desktop-${index}`} className="relative w-80 h-56 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10">
+                    <Image src={src} alt={`Mis inicios ${index + 1}`} fill sizes="320px" quality={100} className="object-cover" />
+                  </div>
+                ))}
+              </motion.div>
+
+              <motion.div 
+                className="flex gap-6 w-max no-transition" 
+                style={{ x: x2 }}
+              >
+                {duplicatedImagesRow2.map((src, index) => (
+                  <div key={`row2-desktop-${index}`} className="relative w-80 h-56 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border border-black/10 dark:border-white/10">
+                    <Image src={src} alt={`Mis inicios ${index + 1}`} fill sizes="320px" quality={100} className="object-cover" />
+                  </div>
+                ))}
+              </motion.div>
+           </div>
            </div>
             
             {/* Resting Label */}
@@ -199,32 +226,6 @@ export default function CTATestimonials() {
         </div>
       </div>
 
-      {/* Testimonials Block */}
-      <div id="testimonials" className="max-w-7xl mx-auto border-t border-border/10 pt-12 pb-24 grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-12">
-        <div className="flex justify-between items-start">
-          <h3 className="font-medium">{t("test.title")}</h3>
-          <a href="https://www.linkedin.com/in/tomasnadal/" target="_blank" rel="noopener noreferrer" className="text-accent text-sm font-medium hover:underline underline-offset-4 hidden md:block">{t("test.explore")}</a>
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-16">
-          <div>
-            <p className="font-medium text-lg leading-snug mb-6">
-              {t("test.1.quote")}
-            </p>
-            <p className="text-muted-foreground text-sm">
-              {t("test.1.author")}
-            </p>
-          </div>
-          <div>
-            <p className="font-medium text-lg leading-snug mb-6">
-              {t("test.2.quote")}
-            </p>
-            <p className="text-muted-foreground text-sm">
-              {t("test.2.author")}
-            </p>
-          </div>
-        </div>
-      </div>
 
       {/* Modal Mis Inicios */}
       {isModalOpen && (

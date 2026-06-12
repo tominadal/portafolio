@@ -127,12 +127,12 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`text-2xl font-bold transition-all ${isActive ? "text-accent ml-4" : "text-foreground"
+                  className={`text-2xl font-bold transition-all ${isActive ? "text-accent" : "text-foreground"
                     }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <span className="flex items-center gap-4">
-                    {isActive && <span className="w-2 h-2 rounded-full bg-accent" />}
+                  <span className="flex items-center gap-3">
+                    {isActive && <span className="text-accent text-5xl leading-none select-none relative top-[8px]">*</span>}
                     {link.name}
                   </span>
                 </Link>

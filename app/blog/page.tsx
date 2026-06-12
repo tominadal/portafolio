@@ -90,7 +90,7 @@ export default function BlogPage() {
 
   return (
     <main className="min-h-screen bg-background pt-32">
-      <div className="max-w-7xl mx-auto px-8 pb-24">
+      <div className="max-w-7xl mx-auto px-8 pb-12 md:pb-24">
         <header className="mb-20 scroll-reveal">
           <h1 className="text-[clamp(2.5rem,8vw,5.5rem)] leading-tight font-medium tracking-tight mb-6">
             {t("blog.title")}
@@ -104,7 +104,7 @@ export default function BlogPage() {
 
         {/* Featured Section */}
         {featuredPosts.length > 0 && (
-          <div className="mb-24">
+          <div className="mb-12 md:mb-24">
             <h2 className="text-xs font-bold  tracking-[0.2em] text-accent mb-10 scroll-reveal">
               {language === "es" ? "Artículo destacado" : "Featured article"}
             </h2>
@@ -124,6 +124,8 @@ export default function BlogPage() {
                           src={post.image} 
                           alt={language === "en" ? (post.titleEn || post.title) : post.title} 
                           fill 
+                          priority
+                          quality={95}
                           sizes="(max-width: 1024px) 100vw, 50vw"
                           className="object-cover group-hover:scale-105 transition-transform duration-1000"
                         />
@@ -171,7 +173,7 @@ export default function BlogPage() {
 
         {/* Regular Section */}
         {regularPosts.length > 0 && (
-          <div className="mb-24 pt-12 border-t border-border/10">
+          <div className="mb-12 md:mb-24 pt-12 border-t border-border/10">
             <div className="relative z-20 flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-4 scroll-reveal">
               <h2 className="text-xs font-bold tracking-[0.2em] text-foreground/40">
                 {language === "es" ? "Todos los artículos" : "All articles"}
@@ -203,7 +205,8 @@ export default function BlogPage() {
                           src={post.image} 
                           alt={language === "en" ? (post.titleEn || post.title) : post.title} 
                           fill 
-                          sizes="(max-width: 1024px) 100vw, 33vw"
+                          quality={85}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           className="object-cover group-hover:scale-105 transition-transform duration-1000"
                         />
                       ) : (

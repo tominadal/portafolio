@@ -4,12 +4,13 @@ import Image from "next/image"
 import { ArrowRight, Moon, Sun, Globe } from "lucide-react"
 import { useLanguage, Language } from "./language-provider"
 import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { motion, useMotionValue, useSpring } from "framer-motion"
 
 export default function Hero() {
   const { t, language } = useLanguage()
   const [mounted, setMounted] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [hasAnimated, setHasAnimated] = useState(false)
   const [loadingComplete, setLoadingComplete] = useState(false)
   const [faceComplete, setFaceComplete] = useState(false)
@@ -41,8 +42,97 @@ export default function Hero() {
   const bgX = useSpring(mouseX, springConfig)
   const bgY = useSpring(mouseY, springConfig)
 
+  const containerRef = useRef<HTMLDivElement>(null)
+  const textRef = useRef<HTMLHeadingElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const [fontSize, setFontSize] = useState<string>("")
+  const [isHidden, setIsHidden] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (!mounted) return
+
+    const adjustFontSize = () => {
+      const text = textRef.current
+      const content = contentRef.current
+      if (!text || !content) return
+
+      const isMobileView = window.innerWidth < 768
+
+      if (isMobileView) {
+        // Safe base size for mobile: clamp(5rem, 22vw, 16.1rem)
+        // 5rem = 80px, 16.1rem = 257.6px
+        let baseSize = Math.min(Math.max(window.innerWidth * 0.22, 80), 257.6)
+        
+        // Measure unconstrained length
+        text.style.fontSize = `${baseSize}px`
+        const textLength = text.scrollWidth
+        
+        // Mobile vertical height constraint: 82% of viewport height
+        const maxAvailableHeight = window.innerHeight * 0.82
+        
+        if (textLength > maxAvailableHeight && textLength > 0) {
+          const ratio = maxAvailableHeight / textLength
+          baseSize = baseSize * ratio
+        }
+        text.style.fontSize = ""
+        setFontSize(`${baseSize}px`)
+      } else {
+        // Safe base size for desktop: clamp(5.5rem, 24vw, 16.1rem)
+        // 5.5rem = 88px, 16.1rem = 257.6px
+        let baseSize = Math.min(Math.max(window.innerWidth * 0.24, 88), 257.6)
+        
+        // Measure unconstrained length
+        text.style.fontSize = `${baseSize}px`
+        const textWidth = text.scrollWidth
+        
+        // Desktop width constraint: screen width minus padding
+        const maxAvailableWidth = window.innerWidth - 80
+        
+        if (textWidth > maxAvailableWidth && textWidth > 0) {
+          const ratio = maxAvailableWidth / textWidth
+          baseSize = baseSize * ratio
+        }
+        text.style.fontSize = ""
+        setFontSize(`${baseSize}px`)
+      }
+
+      // Check overlap/collision
+      const contentRect = content.getBoundingClientRect()
+      const textRect = text.getBoundingClientRect()
+      
+      const overlap = (
+        textRect.width > 0 &&
+        contentRect.width > 0 &&
+        textRect.left - 20 < contentRect.right &&
+        textRect.right + 20 > contentRect.left &&
+        textRect.top - 20 < contentRect.bottom &&
+        textRect.bottom + 20 > contentRect.top
+      )
+      setIsHidden(overlap)
+    }
+
+    adjustFontSize()
+    window.addEventListener("resize", adjustFontSize)
+    
+    const resizeObserver = new ResizeObserver(() => {
+      adjustFontSize()
+    })
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current)
+    }
+
+    return () => {
+      window.removeEventListener("resize", adjustFontSize)
+      resizeObserver.disconnect()
+    }
+  }, [mounted, loadingComplete])
+
   // Avoid hydration mismatch and check if animation played
   useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
     const animated = sessionStorage.getItem('heroAnimated')
     if (animated) {
       setHasAnimated(true)
@@ -53,6 +143,8 @@ export default function Hero() {
       sessionStorage.setItem('heroAnimated', 'true')
     }
     setMounted(true)
+
+    return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -115,7 +207,7 @@ export default function Hero() {
         animate={{ opacity: loadingComplete ? 1 : 0, y: loadingComplete ? 0 : 20 }}
         transition={{ duration: 1, ease: "easeOut" }}
       >
-        <div className="max-w-2xl scroll-reveal max-md:w-[65%]">
+        <div ref={contentRef} className="max-w-2xl scroll-reveal max-md:w-[65%]">
           <h1 className="text-[clamp(2.1rem,6vw,3.45rem)] font-medium leading-tight text-white mb-10 tracking-tight">
             {t("hero.description.start")}
             <motion.span 
@@ -124,9 +216,9 @@ export default function Hero() {
                 backgroundImage: 'linear-gradient(transparent calc(100% - 5px), #ff620a 5px)',
                 display: 'inline'
               }}
-              initial={hasAnimated ? false : { backgroundSize: "0% 100%" }}
-              animate={{ backgroundSize: loadingComplete ? "100% 100%" : "0% 100%" }}
-              transition={{ delay: 1.5, duration: 1.2, ease: "easeInOut" }}
+              initial={hasAnimated ? false : { backgroundSize: isMobile ? "100% 100%" : "0% 100%" }}
+              animate={{ backgroundSize: (isMobile || loadingComplete) ? "100% 100%" : "0% 100%" }}
+              transition={isMobile ? { duration: 0 } : { delay: 1.5, duration: 1.2, ease: "easeInOut" }}
             >
               {t("hero.description.highlight")}
             </motion.span>
@@ -161,17 +253,35 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      <div className="absolute max-md:bottom-[8%] max-md:right-0 max-md:[writing-mode:vertical-rl] max-md:[text-orientation:sideways] max-md:rotate-180 md:bottom-12 md:left-0 md:w-full md:flex md:items-end md:justify-start md:px-8 pointer-events-none z-20">
+      <div 
+        ref={containerRef}
+        style={{
+          fontSize: fontSize ? fontSize : undefined,
+          opacity: isHidden ? 0 : 1,
+          visibility: isHidden ? "hidden" : "visible",
+          transition: "opacity 0.25s ease, visibility 0.25s ease"
+        }}
+        className="absolute max-md:bottom-[8%] max-md:right-0 max-md:[writing-mode:vertical-rl] max-md:[text-orientation:sideways] max-md:rotate-180 md:bottom-12 md:left-0 md:w-full md:flex md:items-end md:justify-start md:px-8 pointer-events-none z-20"
+      >
         <div className="relative max-md:whitespace-nowrap">
           {/* Base text (low opacity) */}
-          <h2 className="max-md:text-[clamp(5rem,22vw,16.1rem)] md:text-[clamp(5.5rem,24vw,16.1rem)] leading-none font-bold text-white/20 tracking-tighter select-none whitespace-nowrap">
+          <h2 
+            ref={textRef}
+            style={{
+              ...(fontSize ? { fontSize } : {}),
+              opacity: loadingComplete ? 0 : 1,
+              transition: "opacity 0.5s ease"
+            }}
+            className="max-md:text-[clamp(5rem,22vw,16.1rem)] md:text-[clamp(5.5rem,24vw,16.1rem)] leading-none font-bold text-white/20 tracking-tighter select-none whitespace-nowrap"
+          >
             Tomás Nadal<span className="text-white/20 align-top ml-2">&reg;</span>
           </h2>
           
           {/* Animated fill text */}
           <motion.h2 
-            className="absolute top-0 left-0 max-md:text-[clamp(5rem,22vw,16.1rem)] md:text-[clamp(5.5rem,24vw,16.1rem)] leading-none font-bold text-white tracking-tighter select-none whitespace-nowrap max-md:!clip-path-none"
-            initial={hasAnimated ? false : { clipPath: "inset(0 100% 0 0)", opacity: 0 }}
+            style={fontSize ? { fontSize } : undefined}
+            className="absolute top-0 left-0 max-md:text-[clamp(5rem,22vw,16.1rem)] md:text-[clamp(5.5rem,24vw,16.1rem)] leading-none font-bold text-white tracking-tighter select-none whitespace-nowrap"
+            initial={hasAnimated ? false : { clipPath: isMobile ? "inset(0 0 100% 0)" : "inset(0 100% 0 0)", opacity: 0 }}
             animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
             transition={{ duration: 1.5, ease: "easeInOut", delay: 0.5 }}
             onAnimationComplete={() => setLoadingComplete(true)}

@@ -194,7 +194,21 @@
     to { transform: translateX(-50%); }
   }
   .animate-scroll-left {
-    animation: scroll-left 30s linear infinite;
+    animation: scroll-left 55s linear infinite;
+    transition: none !important;
+  }
+
+  @keyframes scroll-right {
+    from { transform: translateX(-50%); }
+    to { transform: translateX(0); }
+  }
+  .animate-scroll-right {
+    animation: scroll-right 55s linear infinite;
+    transition: none !important;
+  }
+
+  .no-transition {
+    transition: none !important;
   }
 }
 

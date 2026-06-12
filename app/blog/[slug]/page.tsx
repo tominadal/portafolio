@@ -177,13 +177,15 @@ export default function BlogArticlePage({ params }: { params: Promise<{ slug: st
           </p>
         </div>
 
-        {/* Featured Image */}
         <div className="relative h-[320px] md:h-[400px] rounded-[3rem] overflow-hidden mb-16 bg-muted/20 scroll-reveal">
           {blogPost.image ? (
             <Image
               src={blogPost.image}
               alt={language === "es" ? (blogPost.title || blogPost.titleEn) : (blogPost.titleEn || blogPost.title)}
               fill
+              priority
+              quality={95}
+              sizes="(max-width: 1024px) 100vw, 1024px"
               className="object-cover transition-all duration-700"
             />
           ) : (
@@ -307,6 +309,8 @@ export default function BlogArticlePage({ params }: { params: Promise<{ slug: st
                         src={post.image}
                         alt={language === "es" ? (post.title || post.titleEn) : (post.titleEn || post.title)}
                         fill
+                        quality={85}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 500px"
                         className="object-cover group-hover:scale-105 transition-transform duration-1000"
                       />
                     ) : (

@@ -58,7 +58,7 @@ export default function LatestArticles() {
   if (loading || posts.length === 0) return null
 
   return (
-    <section className="w-full bg-secondary/30 dark:bg-muted/10 px-8 py-24 border-t border-border/10">
+    <section className="w-full bg-secondary/30 dark:bg-muted/10 px-8 py-24">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-16 scroll-reveal">
           <h2 className="text-4xl md:text-5xl font-medium tracking-tight">
@@ -83,8 +83,9 @@ export default function LatestArticles() {
                     src={post.image} 
                     alt={language === "en" ? (post.titleEn || post.title) : post.title} 
                     fill 
+                    quality={100}
                     sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover object-[center_25%] group-hover:scale-105 transition-transform duration-1000"
+                    className="object-cover object-center group-hover:scale-105 transition-transform duration-1000"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">{t("general.noImage")}</div>

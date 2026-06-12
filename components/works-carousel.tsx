@@ -246,9 +246,23 @@ export default function WorksCarousel() {
             <div className="group flex-shrink-0 w-[350px] md:w-[650px] relative scroll-reveal max-md:hidden">
               <Link
                 href="/projects"
-                className="flex items-center justify-center w-full aspect-[16/10] rounded-[3rem] border-2 border-dashed border-accent/30 hover:border-accent hover:bg-accent/5 transition-all duration-500 mb-10"
+                className="relative flex items-center justify-center w-full aspect-[16/10] rounded-[3rem] hover:bg-accent/5 transition-all duration-500 mb-10"
               >
-                <div className="text-center">
+                <svg className="absolute inset-0 w-full h-full pointer-events-none rounded-[3rem]">
+                  <rect 
+                    x="2" 
+                    y="2" 
+                    width="calc(100% - 4px)" 
+                    height="calc(100% - 4px)" 
+                    rx="46" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="3" 
+                    strokeDasharray="24 24" 
+                    className="text-accent/30 group-hover:text-accent transition-colors duration-500" 
+                  />
+                </svg>
+                <div className="text-center relative z-10">
                   <p className="text-sm font-bold tracking-[0.2em] uppercase mb-4 group-hover:text-accent transition-colors">
                     {language === "es" ? "Ver todos los proyectos" : "View all projects"}
                   </p>
@@ -267,7 +281,7 @@ export default function WorksCarousel() {
 
         {/* Mobile CTA outside of the motion track so it doesn't stack inside the flex column */}
         {!loading && projects.length > 0 && (
-          <div className="md:hidden w-full flex justify-center mt-2 mb-16 scroll-reveal relative z-20">
+          <div className="md:hidden w-full flex justify-center mt-2 mb-6 scroll-reveal relative z-20">
             <Link href="/projects" className="inline-flex w-fit items-center group transition-all hover:scale-[1.02] bg-foreground text-background rounded-full shadow-xl">
               <div className="px-6 h-12 flex items-center justify-center font-bold text-sm whitespace-nowrap">
                 {language === "es" ? "Ver todos los proyectos" : "View all projects"}
