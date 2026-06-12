@@ -7,7 +7,8 @@ import { urlForImage } from "@/sanity/lib/image"
 import Image from "next/image"
 import Link from "next/link"
 import Footer from "@/components/footer"
-import { ExternalLink, ArrowUpRight, Search, ChevronLeft, ChevronRight, LayoutGrid, List, Eye, ChevronDown } from "lucide-react"
+import { ExternalLink, ArrowUpRight, Search, ChevronLeft, ChevronRight, LayoutGrid, List, Eye } from "lucide-react"
+import CustomSelect from "@/components/custom-select"
 
 interface Project {
   _id: string
@@ -25,7 +26,7 @@ interface Project {
   isDataAi?: boolean
 }
 
-const categories = ["All", "landing page", "website corporativo", "landing page / e-commerce híbrido", "website / portal reservas"]
+const categories = ["All", "landing page", "website corporativo", "landing page / e-commerce híbrido", "website / portal reservas", "ciencia de datos"]
 const LIST_ITEMS_PER_PAGE = 6
 const GRID_ITEMS_PER_PAGE = 8
 
@@ -38,8 +39,7 @@ export default function ProjectsPage() {
   const [sortBy, setSortBy] = useState("recent")
   const [currentPage, setCurrentPage] = useState(1)
   const [viewMode, setViewMode] = useState<"list" | "grid">("list")
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false)
-  const [showDataAiOnly, setShowDataAiOnly] = useState(false)
+
 
   const itemsPerPage = viewMode === "grid" ? GRID_ITEMS_PER_PAGE : LIST_ITEMS_PER_PAGE
 
@@ -84,21 +84,6 @@ export default function ProjectsPage() {
 
   const filteredProjects = useMemo(() => {
     return allProjects
-      .map(project => {
-        const isDataAi = 
-          project.category.toLowerCase().includes("data") || 
-          project.category.toLowerCase().includes("ia") || 
-          project.category.toLowerCase().includes("ai") ||
-          (project.tags && project.tags.some(t => 
-            t.toLowerCase().includes("ia") || 
-            t.toLowerCase().includes("ai") || 
-            t.toLowerCase().includes("data") || 
-            t.toLowerCase().includes("python") || 
-            t.toLowerCase().includes("machine learning") || 
-            t.toLowerCase().includes("estadística")
-          )) || false;
-        return { ...project, isDataAi }
-      })
       .filter((project) => {
         const title = language === "en" ? (project.titleEn || project.title) : project.title
         const desc = language === "en" ? (project.descriptionEn || project.description) : project.description
@@ -109,9 +94,8 @@ export default function ProjectsPage() {
           (project.tags && project.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())))
           
         const matchesCategory = selectedCategory === "All" || project.category === selectedCategory
-        const matchesAiFilter = showDataAiOnly ? project.isDataAi : true
         
-        return matchesSearch && matchesCategory && matchesAiFilter
+        return matchesSearch && matchesCategory
       })
       .sort((a, b) => {
         if (sortBy === "recent") return (a.order || 0) - (b.order || 0)
@@ -178,41 +162,16 @@ export default function ProjectsPage() {
 
               <div>
                 <h3 className="text-xs font-bold tracking-widest text-foreground/40 mb-4">{t("projects.categories")}</h3>
-                <div className="relative mb-6">
-                  <select
+                <div className="mb-6">
+                  <CustomSelect
+                    options={categories.map((cat) => ({ value: cat, label: cat }))}
                     value={selectedCategory}
-                    onChange={(e) => {
-                      setSelectedCategory(e.target.value)
+                    onChange={(val) => {
+                      setSelectedCategory(val)
                       setCurrentPage(1)
                     }}
-                    className="w-full pl-4 pr-10 py-4 bg-muted/30 border border-border/50 rounded-2xl text-sm font-medium focus:outline-none focus:border-accent transition-all appearance-none cursor-pointer"
-                  >
-                    {categories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40 pointer-events-none" />
+                  />
                 </div>
-                <button
-                  onClick={() => {
-                    setShowDataAiOnly(!showDataAiOnly)
-                    setCurrentPage(1)
-                  }}
-                  className={`w-full py-4 px-4 rounded-2xl text-sm font-bold transition-all border ${
-                    showDataAiOnly 
-                      ? "bg-accent text-white border-accent shadow-lg shadow-accent/20" 
-                      : "bg-muted/30 border-border/50 text-foreground/60 hover:text-foreground"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span>✨ {language === "es" ? "Destacar IA & Datos" : "Highlight AI & Data"}</span>
-                    <div className={`w-10 h-6 rounded-full transition-colors flex items-center px-1 ${showDataAiOnly ? "bg-white/20" : "bg-foreground/10"}`}>
-                      <div className={`w-4 h-4 rounded-full bg-current transition-transform ${showDataAiOnly ? "translate-x-4" : "translate-x-0"}`} />
-                    </div>
-                  </div>
-                </button>
               </div>
 
               <div>
@@ -284,12 +243,6 @@ export default function ProjectsPage() {
                   style={{ transitionDelay: `${(idx % 2) * 100}ms` }}
                 >
                   <div className={`relative ${viewMode === "grid" ? "h-72 w-full mb-4" : "h-56 sm:h-[240px] w-full md:w-1/2 shrink-0"} overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-1000 bg-muted/20`}>
-                    {project.isDataAi && (
-                      <div className="absolute top-4 left-4 z-20 bg-accent text-white px-3 py-1.5 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-xl flex items-center gap-1.5 pointer-events-none">
-                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                        {language === "es" ? "IA & Datos" : "AI & Data"}
-                      </div>
-                    )}
                     <Link href={`/projects/${project.slug.current}`} className="block w-full h-full">
                       {project.image ? (
                         <Image 

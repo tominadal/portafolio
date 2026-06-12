@@ -47,10 +47,10 @@ export const metadata: Metadata = {
     "Data Science",
     "Web Development",
   ],
-  authors: [{ name: "Tomás Nadal", url: "https://tomasnadal.qzz.io" }],
+  authors: [{ name: "Tomás Nadal", url: "https://tomasnadal.vercel.app" }],
   creator: "Tomás Nadal",
   publisher: "Tomás Nadal",
-  metadataBase: new URL("https://tomasnadal.qzz.io"),
+  metadataBase: new URL("https://tomasnadal.vercel.app"),
   alternates: {
     canonical: "/",
     languages: {
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_AR",
     alternateLocale: ["en_US"],
-    url: "https://tomasnadal.qzz.io",
+    url: "https://tomasnadal.vercel.app",
     title: "Tomás Nadal - Full Stack Developer",
     description:
       "Portfolio profesional de Tomás Nadal - Full Stack Developer especializado en React, Next.js y soluciones digitales innovadoras.",
@@ -113,7 +113,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Person",
               name: "Tomás Nadal",
-              url: "https://tomasnadal.qzz.io",
+              url: "https://tomasnadal.vercel.app",
               jobTitle: "Full Stack Developer",
               sameAs: [
                 "https://github.com/eltanook",

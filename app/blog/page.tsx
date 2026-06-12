@@ -7,7 +7,8 @@ import { urlForImage } from "@/sanity/lib/image"
 import Image from "next/image"
 import Link from "next/link"
 import Footer from "@/components/footer"
-import { Clock, ArrowRight, ArrowUpRight, ChevronDown } from "lucide-react"
+import { Clock, ArrowRight, ArrowUpRight } from "lucide-react"
+import CustomSelect from "@/components/custom-select"
 
 interface BlogPost {
   _id: string
@@ -171,24 +172,20 @@ export default function BlogPage() {
         {/* Regular Section */}
         {regularPosts.length > 0 && (
           <div className="mb-24 pt-12 border-t border-border/10">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-4 scroll-reveal">
+            <div className="relative z-20 flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-4 scroll-reveal">
               <h2 className="text-xs font-bold tracking-[0.2em] text-foreground/40">
                 {language === "es" ? "Todos los artículos" : "All articles"}
               </h2>
               
-              <div className="relative min-w-[200px] w-full sm:w-auto">
-                <select
+              <div className="min-w-[200px] w-full sm:w-auto">
+                <CustomSelect
+                  options={categories.map((cat) => ({
+                    value: cat,
+                    label: cat === "all" ? (language === "es" ? "Todas las categorías" : "All categories") : cat,
+                  }))}
                   value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full pl-4 pr-10 py-3 bg-muted/30 border border-border/50 rounded-xl text-sm font-medium focus:outline-none focus:border-accent transition-all appearance-none cursor-pointer"
-                >
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat === "all" ? (language === "es" ? "Todas las categorías" : "All categories") : cat}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40 pointer-events-none" />
+                  onChange={(val) => setSelectedCategory(val)}
+                />
               </div>
             </div>
 
