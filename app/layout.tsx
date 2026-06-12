@@ -25,27 +25,32 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Tomás Nadal - Full Stack Developer",
-    template: "Tomás Nadal - %s",
+    default: "Tomás Nadal · Full Stack Developer & Data Scientist",
+    template: "%s · Tomás Nadal",
   },
   description:
-    "Portfolio profesional de Tomás Nadal - Full Stack Developer especializado en React, Next.js, Node.js y soluciones digitales innovadoras. Desarrollo web, análisis de datos y liderazgo de proyectos.",
+    "Full Stack Developer y Data Scientist radicado en Buenos Aires. Especializado en React, Next.js, Python y soluciones digitales que fusionan código, datos y diseño para hacer de la tecnología una herramienta al servicio del prójimo.",
   keywords: [
     "Tomás Nadal",
     "Full Stack Developer",
+    "Data Scientist",
     "Desarrollador Web",
-    "React",
+    "React Developer",
     "Next.js",
     "Node.js",
     "TypeScript",
     "JavaScript",
+    "Python",
     "Portfolio",
     "Buenos Aires",
     "Argentina",
     "Nexium",
     "Zevetix",
-    "Data Science",
+    "Ciencia de Datos",
+    "Desarrollo Web Argentina",
     "Web Development",
+    "Landing Page",
+    "E-commerce",
   ],
   authors: [{ name: "Tomás Nadal", url: "https://tomasnadal.vercel.app" }],
   creator: "Tomás Nadal",
@@ -63,25 +68,26 @@ export const metadata: Metadata = {
     locale: "es_AR",
     alternateLocale: ["en_US"],
     url: "https://tomasnadal.vercel.app",
-    title: "Tomás Nadal - Full Stack Developer",
+    title: "Tomás Nadal · Full Stack Developer & Data Scientist",
     description:
-      "Portfolio profesional de Tomás Nadal - Full Stack Developer especializado en React, Next.js y soluciones digitales innovadoras.",
-    siteName: "Tomás Nadal Portfolio",
+      "Full Stack Developer y Data Scientist. Fusiono código y datos para hacer de la tecnología una herramienta al servicio del prójimo.",
+    siteName: "Tomás Nadal",
     images: [
       {
-        url: "/logo.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Tomás Nadal - Full Stack Developer",
+        alt: "Tomás Nadal · Full Stack Developer & Data Scientist — Buenos Aires",
+        type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tomás Nadal - Full Stack Developer",
+    title: "Tomás Nadal · Full Stack Developer & Data Scientist",
     description:
-      "Portfolio profesional de Tomás Nadal - Full Stack Developer especializado en React, Next.js y soluciones digitales innovadoras.",
-    images: ["/logo.png"],
+      "Full Stack Developer y Data Scientist. Fusiono código y datos para hacer de la tecnología una herramienta al servicio del prójimo.",
+    images: ["/og-image.png"],
     creator: "@tomasnadal",
   },
   robots: {
@@ -95,6 +101,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  category: "technology",
 }
 
 export default function RootLayout({
@@ -114,13 +121,23 @@ export default function RootLayout({
               "@type": "Person",
               name: "Tomás Nadal",
               url: "https://tomasnadal.vercel.app",
-              jobTitle: "Full Stack Developer",
+              image: "https://tomasnadal.vercel.app/og-image.png",
+              jobTitle: "Full Stack Developer & Data Scientist",
+              description: "Full Stack Developer y Data Scientist radicado en Buenos Aires. Especializado en React, Next.js, Python y soluciones digitales innovadoras.",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Buenos Aires",
+                addressCountry: "AR",
+              },
               sameAs: [
                 "https://github.com/eltanook",
                 "https://www.linkedin.com/in/tomasnadal/",
                 "https://www.instagram.com/tominadal_/",
               ],
-              description: "Full Stack Developer especializado en React, Next.js y soluciones digitales innovadoras.",
+              knowsAbout: [
+                "React", "Next.js", "Node.js", "TypeScript", "Python",
+                "Data Science", "Web Development", "Full Stack Development",
+              ],
             }),
           }}
         />
