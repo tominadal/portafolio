@@ -300,9 +300,9 @@ export default function Hero() {
       >
         <div className="flex items-center gap-1.5 max-md:hidden">
           <div className="w-2 h-2 rounded-full bg-[#ff620a] animate-pulse"></div>
-          <span>{language === "es" ? "Disponible para proyectos" : "Available for projects"}</span>
+          <span>{language === "es" ? "Disponible para nuevos desafíos." : "Available for new challenges."}</span>
         </div>
-        <span>&copy; 2026 {t("hero.rights")}</span>
+        <span>* {t("hero.rights")}</span>
       </motion.div>
       
       <motion.div 
