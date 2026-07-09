@@ -261,7 +261,7 @@ export default function Hero() {
           visibility: isHidden ? "hidden" : "visible",
           transition: "opacity 0.25s ease, visibility 0.25s ease"
         }}
-        className="absolute max-md:bottom-[8%] max-md:right-0 max-md:[writing-mode:vertical-rl] max-md:[text-orientation:sideways] max-md:rotate-180 md:bottom-12 md:left-0 md:w-full md:flex md:items-end md:justify-start md:px-8 pointer-events-none z-20"
+        className="absolute max-md:top-1/2 max-md:-translate-y-1/2 max-md:right-0 max-md:[writing-mode:vertical-rl] max-md:[text-orientation:sideways] max-md:rotate-180 md:bottom-12 md:left-0 md:w-full md:flex md:items-end md:justify-start md:px-8 pointer-events-none z-20"
       >
         <div className="relative max-md:whitespace-nowrap">
           {/* Base text (low opacity) */}

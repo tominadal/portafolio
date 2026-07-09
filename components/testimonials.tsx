@@ -11,7 +11,7 @@ export default function Testimonials() {
         <div className="flex justify-between items-start">
           <h3 className="font-medium">{t("test.title")}</h3>
           <a 
-            href="https://www.linkedin.com/in/tomasnadal/" 
+            href="https://github.com/eltanook" 
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-accent text-sm font-medium hover:underline underline-offset-4 hidden md:block"

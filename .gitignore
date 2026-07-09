@@ -40,3 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 web_anterior/
+
+# CV Markdown sources & master template (private, never commit)
+public/markdowns-cvs/

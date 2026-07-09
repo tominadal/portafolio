@@ -1,145 +1,147 @@
-"use client"
+'use client'
 
-import React, { useEffect, useState, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useEffect, useRef } from 'react'
 
 export function CustomCursor() {
-  const [cursorState, setCursorState] = useState({
-    isPointer: false,
-    isClicking: false,
-    isVisible: false
-  })
-  
   const cursorRef = useRef<HTMLDivElement>(null)
-  const pos = useRef({ x: 0, y: 0 })
-  const requestRef = useRef<number | null>(null)
+  const dotRef    = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // 1. Mouse Movement Handling (High Performance)
-    const handleMouseMove = (e: MouseEvent) => {
-      const target = e.target as HTMLElement
-      
-      // If we are over an iframe, hide cursor and stop processing
-      if (target && (target.tagName === "IFRAME" || target.closest("iframe"))) {
-        setCursorState(prev => ({ ...prev, isVisible: false }))
-        return
-      }
+    // Touch devices: don't initialize
+    if (window.matchMedia('(pointer: coarse)').matches) return
 
-      pos.current = { x: e.clientX, y: e.clientY }
-      
-      setCursorState(prev => {
-        const nextState = { ...prev }
-        if (!prev.isVisible) nextState.isVisible = true
+    let mouseX = -200
+    let mouseY = -200
+    let raf: number
+    let rafCount = 0
+    const REFRESH_INTERVAL = 60
 
-        if (target) {
-          const isClickable = 
-            target.tagName === "BUTTON" ||
-            target.tagName === "A" ||
-            target.closest("button") ||
-            target.closest("a")
-          
-          if (isClickable !== prev.isPointer) {
-            nextState.isPointer = !!isClickable
-          }
-        }
-        return nextState
+    const onMove = (e: MouseEvent) => {
+      mouseX = e.clientX
+      mouseY = e.clientY - 5
+    }
+
+    const onMouseDown = () => dotRef.current?.classList.add('cursor-click')
+    const onMouseUp   = () => dotRef.current?.classList.remove('cursor-click')
+
+    const onEnterLink = () => dotRef.current?.classList.add('cursor-hover')
+    const onLeaveLink = () => dotRef.current?.classList.remove('cursor-hover')
+
+    // Hide cursor over iframes (CV viewer)
+    const onEnterIframe = () => {
+      if (cursorRef.current) cursorRef.current.style.opacity = '0'
+    }
+    const onLeaveIframe = () => {
+      if (cursorRef.current) cursorRef.current.style.opacity = '1'
+    }
+
+    const boundElements = new WeakSet<Element>()
+
+    const attachListeners = () => {
+      document.querySelectorAll('a, button, [role="button"], input, label, select').forEach((el) => {
+        if (boundElements.has(el)) return
+        boundElements.add(el)
+        el.addEventListener('mouseenter', onEnterLink)
+        el.addEventListener('mouseleave', onLeaveLink)
+      })
+      document.querySelectorAll('iframe').forEach((el) => {
+        if (boundElements.has(el)) return
+        boundElements.add(el)
+        el.addEventListener('mouseenter', onEnterIframe)
+        el.addEventListener('mouseleave', onLeaveIframe)
       })
     }
 
-    // 2. Animation Loop (Zero Lag)
-    const animate = () => {
+    const tick = () => {
       if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0)`
+        cursorRef.current.style.transform = `translate(${mouseX}px, ${mouseY}px)`
       }
-      requestRef.current = requestAnimationFrame(animate)
+      rafCount++
+      if (rafCount % REFRESH_INTERVAL === 0) attachListeners()
+      raf = requestAnimationFrame(tick)
     }
 
-    // 3. Event Listeners
-    const handleMouseDown = () => setCursorState(prev => ({ ...prev, isClicking: true }))
-    const handleMouseUp = () => setCursorState(prev => ({ ...prev, isClicking: false }))
-    const handleMouseLeave = () => setCursorState(prev => ({ ...prev, isVisible: false }))
-    const handleMouseEnter = () => setCursorState(prev => ({ ...prev, isVisible: true }))
-    
-    // Handle iframes to avoid cursor getting stuck
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement
-      const isIframe = target && (target.tagName === "IFRAME" || target.closest("iframe"))
-      if (isIframe) {
-        setCursorState(prev => ({ ...prev, isVisible: false }))
-      }
-    }
+    window.addEventListener('mousemove', onMove, { passive: true })
+    window.addEventListener('mousedown', onMouseDown, { passive: true })
+    window.addEventListener('mouseup',   onMouseUp,   { passive: true })
 
-    const handleMouseOut = (e: MouseEvent) => {
-      // If relatedTarget is null, it means we left the window or entered an iframe
-      if (!e.relatedTarget) {
-        setCursorState(prev => ({ ...prev, isVisible: false }))
-      }
-    }
-
-    const handleWindowBlur = () => setCursorState(prev => ({ ...prev, isVisible: false }))
-
-    window.addEventListener("mousemove", handleMouseMove, { passive: true })
-    window.addEventListener("mousedown", handleMouseDown)
-    window.addEventListener("mouseup", handleMouseUp)
-    window.addEventListener("mouseover", handleMouseOver)
-    window.addEventListener("mouseout", handleMouseOut)
-    window.addEventListener("blur", handleWindowBlur)
-    document.addEventListener("mouseleave", handleMouseLeave)
-    document.addEventListener("mouseenter", handleMouseEnter)
-    
-    requestRef.current = requestAnimationFrame(animate)
+    attachListeners()
+    raf = requestAnimationFrame(tick)
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
-      window.removeEventListener("mousedown", handleMouseDown)
-      window.removeEventListener("mouseup", handleMouseUp)
-      window.removeEventListener("mouseover", handleMouseOver)
-      window.removeEventListener("mouseout", handleMouseOut)
-      window.removeEventListener("blur", handleWindowBlur)
-      document.removeEventListener("mouseleave", handleMouseLeave)
-      document.removeEventListener("mouseenter", handleMouseEnter)
-      if (requestRef.current) cancelAnimationFrame(requestRef.current)
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mousedown', onMouseDown)
+      window.removeEventListener('mouseup',   onMouseUp)
+      cancelAnimationFrame(raf)
     }
   }, [])
 
-  // Don't show on touch devices (pointer: coarse)
-  if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
-    return null
-  }
-
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: `
-        body:has(iframe:hover) #custom-cursor-container {
-          display: none !important;
+      <style>{`
+        /* Hide native cursor on fine-pointer (mouse) devices */
+        @media (pointer: fine) {
+          *, *::before, *::after { cursor: none !important; }
         }
-      `}} />
-      <div 
-        id="custom-cursor-container"
+
+        /* Hide on touch */
+        @media (pointer: coarse) {
+          .tn-cursor-wrapper { display: none !important; }
+        }
+
+        .tn-cursor-wrapper {
+          position: fixed;
+          top: 0;
+          left: 0;
+          pointer-events: none;
+          z-index: 99999;
+          will-change: transform;
+          mix-blend-mode: difference;
+          transition: opacity 0.2s ease;
+        }
+
+        .tn-cursor-dot {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) scale(1);
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          /* Light mode: #009df5 inverted against white bg = #ff620a (Orange) */
+          background: #009df5;
+          border: 1.2px solid #009df5;
+          will-change: width, height, transform, background-color, opacity, border-color;
+          transition:
+            width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+            height 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+            background-color 0.3s ease,
+            transform 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 0.2s ease;
+        }
+
+        /* Dark mode: #ff620a inverted against black bg = #ff620a (Orange) */
+        :global(.dark) .tn-cursor-dot {
+          background: #ff620a;
+          border-color: #ff620a;
+        }
+
+        .tn-cursor-dot.cursor-hover {
+          width: 58px;
+          height: 58px;
+        }
+
+        .tn-cursor-dot.cursor-click {
+          transform: translate(-50%, -50%) scale(0.65);
+        }
+      `}</style>
+
+      <div
         ref={cursorRef}
-        className="fixed top-0 left-0 pointer-events-none z-[9999] will-change-transform !transition-none"
-        style={{ transform: "translate3d(-100px, -100px, 0)" }}
+        className="tn-cursor-wrapper"
+        aria-hidden="true"
       >
-        <AnimatePresence>
-          {cursorState.isVisible && (
-            <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ 
-                scale: cursorState.isClicking ? 0.8 : cursorState.isPointer ? 1.4 : 1,
-                opacity: 1,
-                 backgroundColor: cursorState.isPointer ? "rgba(255, 98, 10, 0.6)" : "rgba(255, 98, 10, 0.35)",
-                 borderColor: cursorState.isPointer ? "rgba(255, 98, 10, 0.9)" : "rgba(255, 98, 10, 0.6)"
-               }}
-              exit={{ scale: 0, opacity: 0 }}
-              className="w-6 h-6 rounded-full border backdrop-blur-[2px] !transition-none"
-              style={{ x: "-50%", y: "-50%" }}
-              transition={{ 
-                scale: { type: "spring", stiffness: 400, damping: 28 },
-                opacity: { duration: 0.2 }
-              }}
-            />
-          )}
-        </AnimatePresence>
+        <div ref={dotRef} className="tn-cursor-dot" />
       </div>
     </>
   )

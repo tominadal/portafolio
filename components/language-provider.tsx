@@ -20,7 +20,7 @@ const translations = {
     "nav.contact": "Contacto",
     "nav.expertise": "Experiencia",
     "nav.works": "Trabajos",
-    "nav.testimonials": "Testimonios",
+    "nav.testimonials": "Filosofía",
     "nav.connect": "Conectar",
     "nav.sendMessage": "Contáctame",
 
@@ -62,8 +62,9 @@ const translations = {
     "approach.whatWeDo": "Mi CV",
     "approach.cuz": "— a la izquierda mis habilidades, abajo mis currículums.",
     "approach.cv": "Mis CVs",
-    "approach.cvWeb": "CV Desarrollador Full Stack",
+    "approach.cvWeb": "CV Desarrollador",
     "approach.cvData": "CV Data Scientist",
+    "approach.cvGeneral": "CV General",
     "approach.downloadCv": "Descargar",
     "approach.shareWhatsapp": "Compartir por WhatsApp",
     "approach.copyLink": "Copiar enlace",
@@ -93,13 +94,13 @@ const translations = {
     "cta.story": "Mi camino comenzó en 2020. Me formé inicialmente de manera autodidacta mientras estaba en la escuela secundaria, construyendo desde cero mi lugar en un mundo que me resultaba fascinante, pero del que no tenía conocimientos técnicos. Con el tiempo, combiné la formación académica de mi Licenciatura en Ciencia de Datos en UNSAM con la práctica constante, proyectos para clientes reales y experiencia en el mercado freelance. Hoy fusiono ingeniería de software, análisis de datos e IA para desarrollar soluciones inteligentes y de alto impacto. Además, cofundé Nexium Solutions, donde participé en más de 50 proyectos, y actualmente dirijo Zevetix, sumando otros 50 proyectos enfocados en soluciones digitales modernas y escalables.",
     "cta.btn": "Contactame",
     
-    // Testimonials
-    "test.title": "Testimonios y recomendaciones",
-    "test.explore": "Visitar Linkedin",
-    "test.1.quote": "\"Tomás entendió exactamente lo que necesitábamos. Entregó una arquitectura sólida que nos permitió escalar sin problemas cuando aumentaron nuestros usuarios.\"",
-    "test.1.author": "Martín R., CTO",
-    "test.2.quote": "\"El nivel de compromiso que le pone a los proyectos hace la diferencia. Nos ayudó a ordenar nuestra base de datos y mejoró notablemente los tiempos de carga.\"",
-    "test.2.author": "Laura G., Product Manager",
+    // Testimonials (Now: Principles)
+    "test.title": "Filosofía de Trabajo",
+    "test.explore": "Visitar mi GitHub",
+    "test.1.quote": "\"El código no es el fin, es la herramienta. La tecnología solo tiene sentido cuando resuelve un problema real y cuantificable en el mundo de los negocios.\"",
+    "test.1.author": "Principio #1: Enfoque a Resultados",
+    "test.2.quote": "\"Una arquitectura limpia desde el día uno ahorra meses de refactorización en el futuro. Escalar no debería ser un dolor de cabeza, sino un proceso natural.\"",
+    "test.2.author": "Principio #2: Escalabilidad Real",
 
     // Footer
     "footer.office": "(Ubicación)",
@@ -149,7 +150,7 @@ const translations = {
     "nav.contact": "Contact",
     "nav.expertise": "Expertise",
     "nav.works": "Works",
-    "nav.testimonials": "Testimonials",
+    "nav.testimonials": "Philosophy",
     "nav.connect": "Get Connected",
     "nav.sendMessage": "Contact Me",
 
@@ -191,8 +192,9 @@ const translations = {
     "approach.whatWeDo": "Methodology",
     "approach.cuz": "— a summary of my background and skills.",
     "approach.cv": "My CV",
-    "approach.cvWeb": "CV Software Eng.",
+    "approach.cvWeb": "CV Developer",
     "approach.cvData": "CV Data Science",
+    "approach.cvGeneral": "CV General",
     "approach.downloadCv": "Download",
     "approach.shareWhatsapp": "Share via WhatsApp",
     "approach.copyLink": "Copy link",
@@ -222,13 +224,13 @@ const translations = {
     "cta.story": "My journey started in 2020. I initially trained as a self-taught developer, building from scratch. Today, through my Data Science degree at UNSAM, I merge software engineering with data analysis and AI. I co-founded Nexium (100+ projects) and currently lead Zevetix, building intelligent, high-impact solutions.",
     "cta.btn": "Work with me",
     
-    // Testimonials
-    "test.title": "Client Feedback",
-    "test.explore": "Explore more",
-    "test.1.quote": "\"Tomás understood exactly what we needed. He delivered a solid architecture that allowed us to scale seamlessly when our user base grew.\"",
-    "test.1.author": "Martín R., CTO",
-    "test.2.quote": "\"The level of commitment he puts into projects makes a difference. He helped us organize our database and noticeably improved loading times.\"",
-    "test.2.author": "Laura G., Product Manager",
+    // Testimonials (Now: Principles)
+    "test.title": "Work Philosophy",
+    "test.explore": "View my GitHub",
+    "test.1.quote": "\"Code isn't the end goal, it's the tool. Technology only makes sense when it solves a real and quantifiable problem in the business world.\"",
+    "test.1.author": "Principle #1: Results-Driven",
+    "test.2.quote": "\"A clean architecture from day one saves months of refactoring later. Scaling shouldn't be a headache, but a natural progression.\"",
+    "test.2.author": "Principle #2: True Scalability",
 
     // Footer
     "footer.office": "(Location)",

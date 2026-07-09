@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "build:cv": "python generate_pdf.py"
+    "lint": "eslint"
   },
   "dependencies": {
     "@sanity/client": "^7.22.0",
