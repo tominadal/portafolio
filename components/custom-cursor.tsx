@@ -61,9 +61,27 @@ export function CustomCursor() {
       raf = requestAnimationFrame(tick)
     }
 
+    // Hide cursor when mouse leaves the browser window or tab loses focus
+    const onMouseLeaveDoc = () => {
+      if (cursorRef.current) cursorRef.current.style.opacity = '0'
+    }
+    const onMouseEnterDoc = () => {
+      if (cursorRef.current) cursorRef.current.style.opacity = '1'
+    }
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        if (cursorRef.current) cursorRef.current.style.opacity = '0'
+      } else {
+        if (cursorRef.current) cursorRef.current.style.opacity = '1'
+      }
+    }
+
     window.addEventListener('mousemove', onMove, { passive: true })
     window.addEventListener('mousedown', onMouseDown, { passive: true })
     window.addEventListener('mouseup',   onMouseUp,   { passive: true })
+    document.addEventListener('mouseleave', onMouseLeaveDoc)
+    document.addEventListener('mouseenter', onMouseEnterDoc)
+    document.addEventListener('visibilitychange', onVisibilityChange)
 
     attachListeners()
     raf = requestAnimationFrame(tick)
@@ -72,6 +90,9 @@ export function CustomCursor() {
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mousedown', onMouseDown)
       window.removeEventListener('mouseup',   onMouseUp)
+      document.removeEventListener('mouseleave', onMouseLeaveDoc)
+      document.removeEventListener('mouseenter', onMouseEnterDoc)
+      document.removeEventListener('visibilitychange', onVisibilityChange)
       cancelAnimationFrame(raf)
     }
   }, [])
