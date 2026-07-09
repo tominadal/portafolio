@@ -187,7 +187,7 @@ export default function AboutStats() {
             {/* Social Links */}
             <div className="flex gap-3 md:gap-4">
               <a 
-                href="https://github.com/eltanook" 
+                href="https://github.com/tominadal" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-muted flex items-center justify-center text-foreground hover:text-accent transition-all duration-500 group shrink-0"

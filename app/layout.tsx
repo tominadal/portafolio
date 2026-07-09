@@ -130,7 +130,7 @@ export default function RootLayout({
                 addressCountry: "AR",
               },
               sameAs: [
-                "https://github.com/eltanook",
+                "https://github.com/tominadal",
                 "https://www.linkedin.com/in/tomasnadal/",
                 "https://www.instagram.com/tominadal_/",
               ],

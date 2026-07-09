@@ -108,9 +108,8 @@ export function CustomCursor() {
           width: 34px;
           height: 34px;
           border-radius: 50%;
-          /* Light mode: #009df5 inverted against white bg = #ff620a (Orange) */
-          background: #009df5;
-          border: 1.2px solid #009df5;
+          background: #ff620a;
+          border: 1.2px solid #ff620a;
           will-change: width, height, transform, background-color, opacity, border-color;
           transition:
             width 0.3s cubic-bezier(0.22, 1, 0.36, 1),

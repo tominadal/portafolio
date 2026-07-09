@@ -50,7 +50,7 @@ export default function Footer() {
           <div className="flex items-center justify-between mt-16 border-t border-white/10 pt-8">
             <p className="text-white/50 text-sm">{t("footer.social")}</p>
             <div className="flex gap-3">
-              <a href="https://github.com/eltanook" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors">
+              <a href="https://github.com/tominadal" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors">
                 <FaGithub size={18} />
               </a>
               <a href="https://www.instagram.com/tominadal_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors">

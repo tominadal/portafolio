@@ -1,7 +1,7 @@
 # TOMÁS IGNACIO NADAL
 
 <div class="contact-info">
-CABA, Argentina | tomasnadal04@gmail.com | <a href="https://linkedin.com/in/tomasnadal" target="_blank">linkedin.com/in/tomasnadal</a> | <a href="https://github.com/eltanook" target="_blank">github.com/eltanook</a> | <a href="https://tomasnadal.com.ar" target="_blank">tomasnadal.com.ar</a>
+CABA, Argentina | tomasnadal04@gmail.com | <a href="https://linkedin.com/in/tomasnadal" target="_blank">linkedin.com/in/tomasnadal</a> | <a href="https://github.com/tominadal" target="_blank">github.com/tominadal</a> | <a href="https://tomasnadal.com.ar" target="_blank">tomasnadal.com.ar</a>
 </div>
 
 ## RESUMEN PROFESIONAL

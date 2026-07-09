@@ -41,7 +41,7 @@ const oldProjects = [
     name: "App de mensajería", 
     subEs: "Chat grupal con autenticación y base de datos", 
     subEn: "Group chat application with authentication and database", 
-    url: "https://github.com/eltanook/Chocolate-Messeger" 
+    url: "https://github.com/tominadal/Chocolate-Messeger" 
   },
   { 
     name: "Nokia Snake", 
