@@ -36,8 +36,8 @@ Portfolio profesional desarrollado con Next.js 15, TypeScript y Tailwind CSS. Pr
 
 1. Clonar el repositorio:
 ```bash
-git clone https://github.com/tuusuario/tomas-portfolio.git
-cd tomas-portfolio
+git clone https://github.com/tominadal/portafolio.git
+cd portafolio
 ```
 
 2. Instalar dependencias:
@@ -184,8 +184,8 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 **Tomás Nadal**
 - Email: tomasnadal04@gmail.com
 - LinkedIn: [linkedin.com/in/tomasnadal](https://linkedin.com/in/tomasnadal)
-- GitHub: [@tomasnadal](https://github.com/tomasnadal)
-- Portfolio: [tomasnadal.com](https://tomasnadal.com)
+- GitHub: [@tominadal](https://github.com/tominadal)
+- Portfolio: [tomasnadal.vercel.app](https://tomasnadal.vercel.app)
 
 ---
 
