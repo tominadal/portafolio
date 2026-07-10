@@ -132,12 +132,7 @@ export default function ApproachAccordion() {
                 >
                   {t("approach.cvData") || "CV Data Science"}
                 </button>
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setActiveCvType("general"); setIsCvOpen(true); }}
-                  className="bg-white text-black hover:bg-accent hover:text-white px-6 py-3 rounded-full font-bold shadow-xl translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-150 w-56 text-center text-sm"
-                >
-                  {t("approach.cvGeneral") || "CV General"}
-                </button>
+
               </div>
               <div className="absolute top-0 left-4 text-accent text-8xl md:group-hover:opacity-0 transition-opacity max-md:hidden">
                 *
@@ -170,19 +165,7 @@ export default function ApproachAccordion() {
                     </div>
                   </div>
                 </button>
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setActiveCvType("general"); setIsCvOpen(true); }}
-                  className="inline-flex w-fit items-center group transition-all hover:scale-[1.02] bg-foreground text-background rounded-full shadow-xl"
-                >
-                  <div className="px-4 h-10 flex items-center justify-center font-bold text-xs whitespace-nowrap">
-                    {t("approach.cvGeneral") || "CV General"}
-                  </div>
-                  <div className="pr-1.5 pl-1 h-10 flex items-center justify-center">
-                    <div className="bg-accent text-white w-7 h-7 rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                      <ArrowRight size={14} />
-                    </div>
-                  </div>
-                </button>
+
               </div>
           </div>
         </div>
