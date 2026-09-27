@@ -6,6 +6,12 @@ Founder, Full-Stack Developer, and Data Scientist in training (progressing to 4t
 
 ## WORK EXPERIENCE
 
+### Data & Automation Intern (HR Transformation) - Carrefour Argentina
+Buenos Aires, Argentina (Hybrid) | September 2026 – Present
+- Develop monitoring dashboards and operational views in Data Studio (Looker Studio) for the HR Transformation division.
+- Automate operational workflows and tooling integrations using Google Apps Script functions.
+- Connect and administer cloud data services on Google Cloud Platform (GCP), delivering value through cross-functional teamwork.
+
 ### Founder & Lead Developer - Zevetix Labs
 Buenos Aires, Argentina (Remote) | 2025 – Present
 - Founded a technology consulting firm delivering over 20 projects, personally developing all full-stack solutions and AI automations.
@@ -30,9 +36,9 @@ Buenos Aires, Argentina | 2023 – Present (Currently finishing 3rd year / start
 - Solid knowledge in Algorithms and Data Structures, Exploratory Data Analysis (Pandas, NumPy), and Machine Learning (Scikit-learn).
 
 ## TECHNICAL SKILLS
-- Full-Stack & Architecture: Node.js, Express, PostgreSQL, MySQL, SQL, Firebase, REST APIs, React, Next.js, JavaScript (ES6+), TypeScript, Vercel, Git / GitHub.
-- Data & AI: Python, Pandas, NumPy, Scikit-learn, AI API Integration (OpenAI, Anthropic, Gemini), Local Models (Ollama).
-- Methodologies & Leadership: Kanban, Product Discovery, Development Team Leadership.
+- Full-Stack & Architecture: Node.js, Express, PostgreSQL, MySQL, SQL, Firebase, REST APIs, React, Next.js, JavaScript (ES6+), TypeScript, Google Apps Script, GCP, Vercel, Git / GitHub.
+- Data, BI & AI: Python, Pandas, NumPy, Scikit-learn, Data Studio (Looker Studio), AI API Integration (OpenAI, Anthropic, Gemini), Local Models (Ollama).
+- Methodologies: Teamwork, Kanban, Product Discovery, Development Team Leadership.
 - Languages: Spanish (Native) | English (Advanced — Cambridge CAE C1).
 
 ## CERTIFICATIONS

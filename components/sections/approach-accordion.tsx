@@ -46,6 +46,11 @@ export default function ApproachAccordion() {
       num: "(07)",
       title: t("app.7.title"),
       content: t("app.7.desc"),
+    },
+    {
+      num: "(08)",
+      title: t("app.8.title"),
+      content: t("app.8.desc"),
     }
   ]
 

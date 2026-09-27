@@ -6,6 +6,12 @@ Estudiante avanzado de Licenciatura en Ciencia de Datos (UNSAM, transitando a 4t
 
 ## EXPERIENCIA LABORAL
 
+### Pasante de Datos (Transformación de Recursos Humanos) - Carrefour Argentina
+Buenos Aires, Argentina (Híbrido) | Septiembre 2026 – Actualidad
+- Diseño tableros y reportes interactivos de People Analytics en Data Studio (Looker Studio) para monitorear métricas clave del área de Transformación de Recursos Humanos.
+- Automatizo flujos operativos, procesamiento y validación de datos mediante funciones y scripts en Google Apps Script.
+- Centralizo y consulto datos corporativos en Google Cloud Platform (GCP) para soporte analítico estratégico, colaborando activamente en equipo multidisciplinario.
+
 ### Fundador & Consultor de IA y Datos - Zevetix Labs
 Buenos Aires, Argentina (Remoto) | 2025 – Actualidad
 - Conformé un portafolio de +20 proyectos, siendo el único encargado técnico de diseñar, estructurar y desarrollar automatizaciones y soluciones orientadas a datos.
@@ -30,10 +36,10 @@ Buenos Aires, Argentina | 2023 – Actualidad (Cursando finales de 3er año / in
 - Ciencia de Datos & Machine Learning: Procesamiento de datos (Python, Pandas, NumPy) y visualización exploratoria. Aprendizaje Automático Clásico (Scikit-learn): regresiones, clasificación y clustering. Conocimientos aplicados en herramientas de Business Intelligence (PowerBI/Tableau).
 
 ## HABILIDADES TÉCNICAS
-- Datos & Back-End: Python, Pandas, NumPy, Scikit-learn, SQL, PostgreSQL, MySQL, Node.js.
-- Análisis & BI: Estadística Inferencial, Machine Learning Clásico, Conocimientos de PowerBI/Tableau y Matplotlib/Seaborn.
+- Datos & Back-End: Python, Pandas, NumPy, Scikit-learn, SQL, PostgreSQL, MySQL, Node.js, Google Apps Script, GCP.
+- Análisis & BI: Data Studio (Looker Studio), Estadística Inferencial, Machine Learning Clásico, PowerBI/Tableau, Matplotlib/Seaborn.
 - Inteligencia Artificial: Integración de APIs comerciales (OpenAI, Anthropic, Gemini), Prompt Engineering, experimentación con Ollama y un modelo propio en producción.
-- Metodologías: Kanban (Trello/Notion), Liderazgo Técnico, Product Discovery.
+- Metodologías: Trabajo en Equipo, Kanban (Trello/Notion), Liderazgo Técnico, Product Discovery.
 - Idiomas: Español (Nativo) | Inglés (Avanzado — Cambridge CAE C1).
 
 ## CERTIFICACIONES

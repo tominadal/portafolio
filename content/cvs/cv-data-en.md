@@ -6,6 +6,12 @@ Advanced Data Science student (UNSAM, progressing to 4th year) and Founder of Ze
 
 ## WORK EXPERIENCE
 
+### Data Intern (HR Transformation) - Carrefour Argentina
+Buenos Aires, Argentina (Hybrid) | September 2026 – Present
+- Design interactive dashboards and People Analytics reports in Data Studio (Looker Studio) to track key HR Transformation metrics.
+- Automate operational data workflows, cleaning, and processing using Google Apps Script functions.
+- Centralize and query enterprise data on Google Cloud Platform (GCP) for strategic analytics, collaborating closely within cross-functional teams.
+
 ### Founder & Data/AI Consultant - Zevetix Labs
 Buenos Aires, Argentina (Remote) | 2025 – Present
 - Built a portfolio of +20 projects, being the sole technical person in charge of designing, structuring, and developing data-oriented automations and solutions.
@@ -30,10 +36,10 @@ Buenos Aires, Argentina | 2023 – Present (Currently finishing 3rd year / start
 - Data Science & Machine Learning: Data processing (Python, Pandas, NumPy) and exploratory visualization. Classical Machine Learning (Scikit-learn): regressions, classification, and clustering. Applied knowledge in Business Intelligence tools (PowerBI/Tableau).
 
 ## TECHNICAL SKILLS
-- Data & Back-End: Python, Pandas, NumPy, Scikit-learn, SQL, PostgreSQL, MySQL, Node.js.
-- Analysis & BI: Inferential Statistics, Classical Machine Learning, Knowledge of PowerBI/Tableau and Matplotlib/Seaborn.
+- Data & Back-End: Python, Pandas, NumPy, Scikit-learn, SQL, PostgreSQL, MySQL, Node.js, Google Apps Script, GCP.
+- Analysis & BI: Data Studio (Looker Studio), Inferential Statistics, Classical Machine Learning, PowerBI/Tableau, Matplotlib/Seaborn.
 - Artificial Intelligence: Commercial API Integration (OpenAI, Anthropic, Gemini), Prompt Engineering, experimentation with Ollama and a custom model in production.
-- Methodologies: Kanban (Trello/Notion), Technical Leadership, Product Discovery.
+- Methodologies: Teamwork, Kanban (Trello/Notion), Technical Leadership, Product Discovery.
 - Languages: Spanish (Native) | English (Advanced — Cambridge CAE C1).
 
 ## CERTIFICATIONS

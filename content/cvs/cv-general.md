@@ -6,6 +6,12 @@ Fundador, Desarrollador Full-Stack y Científico de Datos en formación (transit
 
 ## EXPERIENCIA LABORAL
 
+### Pasante de Datos & Automatización (Transformación de Recursos Humanos) - Carrefour Argentina
+Buenos Aires, Argentina (Híbrido) | Septiembre 2026 – Actualidad
+- Desarrollo tableros y paneles de visualización en Data Studio (Looker Studio) para el seguimiento de procesos del área de Transformación de Recursos Humanos.
+- Automatizo flujos de trabajo operativos y conectores entre herramientas internas con funciones en Google Apps Script.
+- Conecto y administro servicios de datos en Google Cloud Platform (GCP), colaborando activamente en equipo multidisciplinario.
+
 ### Fundador & Desarrollador Principal - Zevetix Labs
 Buenos Aires, Argentina (Remoto) | 2025 – Actualidad
 - Fundé una consultora tecnológica con la que he desarrollado más de 20 proyectos, construyendo personalmente todas las soluciones full-stack y automatizaciones con IA.
@@ -30,9 +36,9 @@ Buenos Aires, Argentina | 2023 – Actualidad (Cursando finales de 3er año / in
 - Sólidos conocimientos en Algoritmos y Estructuras de Datos, Análisis Exploratorio de Datos (Pandas, NumPy) y Aprendizaje Automático (Scikit-learn).
 
 ## HABILIDADES TÉCNICAS
-- Full-Stack & Arquitectura: Node.js, Express, PostgreSQL, MySQL, SQL, Firebase, REST APIs, React, Next.js, JavaScript (ES6+), TypeScript, Vercel, Git / GitHub.
-- Datos & IA: Python, Pandas, NumPy, Scikit-learn, Integración de APIs de IA (OpenAI, Anthropic, Gemini), Modelos Locales (Ollama).
-- Metodologías & Liderazgo: Kanban, Product Discovery, Liderazgo de Equipos de Desarrollo.
+- Full-Stack & Arquitectura: Node.js, Express, PostgreSQL, MySQL, SQL, Firebase, REST APIs, React, Next.js, JavaScript (ES6+), TypeScript, Google Apps Script, GCP, Vercel, Git / GitHub.
+- Datos, BI & IA: Python, Pandas, NumPy, Scikit-learn, Data Studio (Looker Studio), Integración de APIs de IA (OpenAI, Anthropic, Gemini), Modelos Locales (Ollama).
+- Metodologías: Trabajo en Equipo, Kanban, Product Discovery, Liderazgo de Equipos de Desarrollo.
 - Idiomas: Español (Nativo) | Inglés (Avanzado — Cambridge CAE C1).
 
 ## CERTIFICACIONES
